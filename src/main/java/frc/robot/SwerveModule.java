@@ -14,7 +14,6 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.lib.math.Conversions;
 import frc.lib.util.SwerveModuleConstants;
 
-//Test
 public class SwerveModule {
     public int moduleNumber;
     private Rotation2d angleOffset;
