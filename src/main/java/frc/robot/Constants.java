@@ -18,7 +18,7 @@ import frc.lib.util.COTSTalonFXSwerveConstants;
 import frc.lib.util.SwerveModuleConstants;
 
 public final class Constants {
-    public static final boolean FIELD_RELATIVE = true;
+    public static final boolean ROBOT_RELATIVE = false;
     public static final boolean OPEN_LOOP = true;
     public static final int CANDLE_ID = 15;
     public static final String PRACTICE_MAC = "00:80:2F:25:DE:54";

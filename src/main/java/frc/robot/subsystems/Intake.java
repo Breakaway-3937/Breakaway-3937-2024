@@ -10,17 +10,17 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Intake extends SubsystemBase {
-  TalonFX intake;
+  private final TalonFX intake;
   /** Creates a new Intake. */
   public Intake() {
     intake = new TalonFX(6);
   }
 
-  public void run(){
+  public void intake(){
     intake.setControl(new DutyCycleOut(1));
   }
 
-  public void otherRun(){
+  public void spit(){
     intake.setControl(new DutyCycleOut(-1));
   }
 

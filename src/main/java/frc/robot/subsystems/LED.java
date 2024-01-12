@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -17,7 +16,7 @@ import com.ctre.phoenix.led.CANdle.VBatOutputMode;
 public class LED extends SubsystemBase {
     private final CANdle candle;
     private final Timer timer;
-    private boolean flag, bad = false; 
+    private boolean flag = false; 
     private int r, g, b, num; 
     private int i = 8;
     private int count = 1;
@@ -36,121 +35,90 @@ public class LED extends SubsystemBase {
         candle.setLEDs(0, 0, 0);
     }
 
-    public void bad(){
-        bad = true;
-    }
-
-    public void notBad(){
-        bad = false;
-    }
-
-    public void setTrackingLEDsOff(boolean bad){
-        if(DriverStation.isDisabled()){
-            this.bad = bad;
-        }
-        else{
-            this.bad = false;
-        }
-    }
-
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
-        if(bad){
-            if(timer.get() > 0.2 && !flag){
-                candle.setLEDs(12, 237, 54);
-                timer.reset();
-                flag = true;
-            }
-            else if(timer.get() > 0.2 && flag){
-                candle.setLEDs(179, 83, 97);
-                timer.reset();
-                flag = false;
-            }
+        if(i > 16){
+            count = 8;
         }
-        else if(DriverStation.isDisabled()){
-            if(i > 16){
-                count = 8;
-            }
-            if(i < 16){
-                count = i - 8;
-            }
-            if(i >= 49){
-                if(timer.get() > 0.01){
-                    candle.setLEDs(0, 0, 0, 0, i - 2, 1);
-                    candle.setLEDs(0, 0, 0, 0, i + 49 - 2, 1);
-                    timer.reset();
-                    i++;
-                    if(i == 60){
-                        i = 8;
-                        if(num == 6){
-                            num = 0;
-                        }
-                        else{
-                            num++;
-                        }
+        if(i < 16){
+            count = i - 8;
+        }
+        if(i >= 49){
+            if(timer.get() > 0.01){
+                candle.setLEDs(0, 0, 0, 0, i - 2, 1);
+                candle.setLEDs(0, 0, 0, 0, i + 49 - 2, 1);
+                timer.reset();
+                i++;
+                if(i == 60){
+                    i = 8;
+                    if(num == 6){
+                        num = 0;
+                    }
+                    else{
+                        num++;
                     }
                 }
             }
-            else if(i < 49){
-                if(timer.get() > 0.01 && !flag){
-                    candle.setLEDs(r, g, b, 0, i, count);
-                    candle.setLEDs(r, g, b, 0, i + 49, count);
-                    timer.reset();
-                    flag = true;
-                }
-                else if(timer.get() > 0.01 && flag){
-                    candle.setLEDs(0, 0, 0, 0, i - 2, 1);
-                    candle.setLEDs(0, 0, 0, 0, i + 49 - 2, 1);
-                    timer.reset();
-                    flag = false;
-                    i++;
-                }
+        }
+        else if(i < 49){
+            if(timer.get() > 0.01 && !flag){
+                candle.setLEDs(r, g, b, 0, i, count);
+                candle.setLEDs(r, g, b, 0, i + 49, count);
+                timer.reset();
+                flag = true;
             }
-
-            switch(num){
-                case 0:
-                r = 255;
-                g = 0;
-                b = 0;
-                break;
-
-                case 1:
-                r = 0;
-                g = 0;
-                b = 255;
-                break;
-
-                case 2:
-                r = 0;
-                g = 255;
-                b = 0;
-                break;
-
-                case 3:
-                r = 255;
-                g = 226;
-                b = 2;
-                break;
-
-                case 4:
-                r = 255;
-                g = 0;
-                b = 255;
-                break;
-
-                case 5:
-                r = 0;
-                g = 244;
-                b = 255;
-                break;
-
-                case 6:
-                r = 220;
-                g = 88;
-                b = 42;
-                break;
+            else if(timer.get() > 0.01 && flag){
+                candle.setLEDs(0, 0, 0, 0, i - 2, 1);
+                candle.setLEDs(0, 0, 0, 0, i + 49 - 2, 1);
+                timer.reset();
+                flag = false;
+                i++;
             }
+        }
+
+        switch(num){
+            case 0:
+            r = 255;
+            g = 0;
+            b = 0;
+            break;
+
+            case 1:
+            r = 0;
+            g = 0;
+            b = 255;
+            break;
+
+            case 2:
+            r = 0;
+            g = 255;
+            b = 0;
+            break;
+
+            case 3:
+            r = 255;
+            g = 226;
+            b = 2;
+            break;
+
+            case 4:
+            r = 255;
+            g = 0;
+            b = 255;
+            break;
+
+            case 5:
+            r = 0;
+            g = 244;
+            b = 255;
+            break;
+
+            case 6:
+            r = 220;
+            g = 88;
+            b = 42;
+            break;
         }
     }
 }

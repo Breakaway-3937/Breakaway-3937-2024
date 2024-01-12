@@ -4,8 +4,17 @@
 
 package frc.robot;
 
+import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.NT4Publisher;
+import org.littletonrobotics.junction.wpilog.WPILOGWriter;
+
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -16,7 +25,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * the package after creating this project, you must also update the build.gradle file in the
  * project.
  */
-public class Robot extends TimedRobot {
+public class Robot extends LoggedRobot {
   public static final CTREConfigs ctreConfigs = new CTREConfigs();
 
   private Command autonomousCommand;
@@ -24,6 +33,10 @@ public class Robot extends TimedRobot {
   private RobotContainer robotContainer;
 
   private boolean flag;
+
+  private PowerDistribution powerDistribution;
+
+  private GenericEntry canUtil = Shuffleboard.getTab("System").add("CanUtil", 0).withPosition(0, 0).getEntry();
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -33,7 +46,24 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
+    Logger.recordMetadata("ProjectName", "MyProject");
+    if(isReal()){
+      Logger.addDataReceiver(new WPILOGWriter());
+      Logger.addDataReceiver(new NT4Publisher());
+      powerDistribution = new PowerDistribution(25, ModuleType.kRev);
+    }
+    else{
+      powerDistribution = new PowerDistribution(25, ModuleType.kRev);
+    }
+    if(Constants.DEBUG){
+      Logger.start();
+    }
     robotContainer = new RobotContainer();
+    powerDistribution.setSwitchableChannel(true);
+    powerDistribution.clearStickyFaults();
+    CommandScheduler.getInstance().setPeriod(0.025);
+    ComplexWidget pdh = Shuffleboard.getTab("System").add("PDH", powerDistribution).withPosition(1, 0);
+    pdh.hashCode();
   }
 
   /**
@@ -50,6 +80,7 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+    canUtil.setDouble(RobotController.getCANStatus().percentBusUtilization * 100);
 
     if(DriverStation.isEStopped() && !flag){
       flag = true;
@@ -61,7 +92,11 @@ public class Robot extends TimedRobot {
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    if(DriverStation.isEStopped() || (DriverStation.isFMSAttached() && DriverStation.getMatchTime() > 145)){
+      CommandScheduler.getInstance().schedule(robotContainer.c_Music.ignoringDisable(true));
+    }
+  }
 
   @Override
   public void disabledPeriodic() {}
