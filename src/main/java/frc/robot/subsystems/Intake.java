@@ -11,21 +11,23 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Intake extends SubsystemBase {
   private final TalonFX intake;
+  private final DutyCycleOut move = new DutyCycleOut(0).withEnableFOC(true);
   /** Creates a new Intake. */
   public Intake() {
     intake = new TalonFX(6);
+
   }
 
   public void intake(){
-    intake.setControl(new DutyCycleOut(1));
+    intake.setControl(move.withOutput(1));
   }
 
   public void spit(){
-    intake.setControl(new DutyCycleOut(-1));
+    intake.setControl(move.withOutput(-1));
   }
 
   public void stop(){
-    intake.setControl(new DutyCycleOut(0));
+    intake.setControl(move.withOutput(0));
   }
 
   @Override
