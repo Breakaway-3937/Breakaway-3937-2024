@@ -56,8 +56,8 @@ public final class Constants {
         public static final double STICK_DEADBAND = 0.1;
         public static final int TRANSLATION_BUTTON = 1;
         public static final int ROTATION_BUTTON = 1;
-        public static final int TRANSLATION_AXIS = 0;
-        public static final int STRAFE_AXIS = 1;
+        public static final int TRANSLATION_AXIS = 1;
+        public static final int STRAFE_AXIS = 0;
         public static final int ROTATION_AXIS = 0;
     }
 
