@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -27,19 +28,24 @@ public class RobotContainer {
     private final int translationAxis = Constants.Controllers.TRANSLATION_AXIS;
     private final int strafeAxis = Constants.Controllers.STRAFE_AXIS;
     private final int rotationAxis = Constants.Controllers.ROTATION_AXIS;
-    private final boolean fieldRelative = Constants.FIELD_RELATIVE;
+    private final boolean robotRelative = Constants.ROBOT_RELATIVE;
 
 
     /* Driver Buttons */
     private final JoystickButton translationButton = new JoystickButton(translationController, Constants.Controllers.TRANSLATION_BUTTON);
-    private final JoystickButton rotationButton = new JoystickButton(rotationController, Constants.Controllers.ROTATION_BUTTON);
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
+    private final LED s_LED = new LED();
+
+    /* Commands */
+    public final Music c_Music = new Music(s_Swerve);
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
-        s_Swerve.setDefaultCommand(new TeleopSwerve(s_Swerve, () -> translationController.getRawAxis(translationAxis), () -> translationController.getRawAxis(strafeAxis), () -> rotationController.getRawAxis(rotationAxis), () -> !fieldRelative));
+        CommandScheduler.getInstance().registerSubsystem(s_Swerve);
+        CommandScheduler.getInstance().registerSubsystem(s_LED);
+        s_Swerve.setDefaultCommand(new TeleopSwerve(s_Swerve, () -> translationController.getRawAxis(translationAxis), () -> translationController.getRawAxis(strafeAxis), () -> rotationController.getRawAxis(rotationAxis), () -> robotRelative));
         // Configure the button bindings
         configureButtonBindings();
     }
