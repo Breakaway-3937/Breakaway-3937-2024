@@ -45,7 +45,7 @@ public class Swerve extends SubsystemBase {
         mod1Cancoder = Shuffleboard.getTab("Drive").add("Mod 1 Cancoder", mSwerveMods[1].getState().angle.getDegrees()).withPosition(1, 0).getEntry();
         mod2Cancoder = Shuffleboard.getTab("Drive").add("Mod 2 Cancoder", mSwerveMods[2].getState().angle.getDegrees()).withPosition(2, 0).getEntry();
         mod3Cancoder = Shuffleboard.getTab("Drive").add("Mod 3 Cancoder", mSwerveMods[3].getState().angle.getDegrees()).withPosition(3, 0).getEntry();
-        yaw = Shuffleboard.getTab("Drive").add("Yaw", getHeading()).withPosition(0, 1).getEntry();
+        yaw = Shuffleboard.getTab("Drive").add("Yaw", getHeading().getDegrees()).withPosition(0, 1).getEntry();
     }
 
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
@@ -128,10 +128,10 @@ public class Swerve extends SubsystemBase {
     public void periodic(){
         swerveOdometry.update(getGyroYaw(), getModulePositions());
         
-        mod0Cancoder.setDouble(mSwerveMods[0].getCANcoder().getRotations());
-        mod1Cancoder.setDouble(mSwerveMods[1].getCANcoder().getRotations());
-        mod2Cancoder.setDouble(mSwerveMods[2].getCANcoder().getRotations());
-        mod3Cancoder.setDouble(mSwerveMods[3].getCANcoder().getRotations());
+        mod0Cancoder.setDouble(mSwerveMods[0].getCANcoder().getDegrees());
+        mod1Cancoder.setDouble(mSwerveMods[1].getCANcoder().getDegrees());
+        mod2Cancoder.setDouble(mSwerveMods[2].getCANcoder().getDegrees());
+        mod3Cancoder.setDouble(mSwerveMods[3].getCANcoder().getDegrees());
         
         yaw.setDouble(gyro.getYaw().getValue());
 
