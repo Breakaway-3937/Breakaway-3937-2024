@@ -12,6 +12,10 @@ import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -31,6 +35,7 @@ public class Swerve extends SubsystemBase {
         gyro = new Pigeon2(Constants.Swerve.PIGEON_ID, "CANivore");
         gyro.getConfigurator().apply(new Pigeon2Configuration());
         gyro.setYaw(0);
+
 
         mSwerveMods = new SwerveModule[] {
             new SwerveModule(0, Constants.Swerve.Mod0.CONSTANTS),
@@ -123,6 +128,16 @@ public class Swerve extends SubsystemBase {
             mod.resetToAbsolute();
         }
     }
+
+    public ChassisSpeeds getSpeed(){
+        return Constants.Swerve.SWERVE_KINEMATICS.toChassisSpeeds(getModuleStates());
+    }
+
+    public void configPathPlanner(){
+        AutoBuilder.configureHolonomic(this::getPose, this::setPose, this::getSpeed, (speeds)->setModuleStates(Constants.Swerve.SWERVE_KINEMATICS.toSwerveModuleStates(speeds)), new HolonomicPathFollowerConfig(new PIDConstants(5.0, 0.0, 0.0), new PIDConstants(5.0, 0.0, 0.0), Constants.Swerve.MAX_SPEED, 0.4318, new ReplanningConfig()), () -> false, this);
+    }
+
+
 
     @Override
     public void periodic(){
