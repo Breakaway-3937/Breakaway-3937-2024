@@ -24,7 +24,7 @@ public class SwerveModule {
     private final SimpleMotorFeedforward driveFeedForward = new SimpleMotorFeedforward(Constants.Swerve.DRIVE_KS, Constants.Swerve.DRIVE_KV, Constants.Swerve.DRIVE_KA);
 
     /* drive motor control requests */
-    private final DutyCycleOut driveDutyCycle = new DutyCycleOut(moduleNumber).withEnableFOC(true);
+    private final DutyCycleOut driveDutyCycle = new DutyCycleOut(0).withEnableFOC(true);
     private final VelocityVoltage driveVelocity = new VelocityVoltage(0);
 
     /* Angle Motor Control Requests */
