@@ -1,5 +1,9 @@
 package frc.robot;
 
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Enumeration;
+
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
@@ -9,84 +13,121 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.GenericHID;
 import frc.lib.util.COTSTalonFXSwerveConstants;
 import frc.lib.util.SwerveModuleConstants;
 
 public final class Constants {
-    public static final double stickDeadband = 0.1;
-    public static final boolean PRACTICE_BOT = false;
+    public static final boolean FIELD_RELATIVE = true;
+    public static final boolean OPEN_LOOP = true;
+    public static final int CANDLE_ID = 15;
+    public static final String PRACTICE_MAC = "00:80:2F:25:DE:54";
+    public static final boolean PRACTICE_BOT = getMACAddress().equals(PRACTICE_MAC);
+    public static final boolean DEBUG = true;
+
+    public static final class Controllers{
+        public static final GenericHID TRANSLATION_CONTROLLER = new GenericHID(0);
+        public static final GenericHID ROTATION_CONTROLLER = new GenericHID(1);
+        public static final GenericHID XBOX_CONTROLLER = new GenericHID(2);
+        public static final GenericHID BUTTON_GRID = new GenericHID(3);
+        public static final int XBOX_CONTROLLER_A_BUTTON = 1;
+        public static final int XBOX_CONTROLLER_B_BUTTON = 2;
+        public static final int XBOX_CONTROLLER_X_BUTTON = 3;
+        public static final int XBOX_CONTROLLER_Y_BUTTON = 4;
+        public static final int XBOX_CONTROLLER_LB_BUTTON = 5;
+        public static final int XBOX_CONTROLLER_RB_BUTTON = 6;
+        public static final int XBOX_CONTROLLER_BACK_BUTTON = 7;
+        public static final int XBOX_CONTROLLER_START_BUTTON = 8;
+        public static final int XBOX_CONTROLLER_LEFT_SIICK_BUTTON = 9;
+        public static final int XBOX_CONTROLLER_RIGHT_STICK_BUTTON = 10;
+        public static final int UP = 0;
+        public static final int RIGHT = 90;
+        public static final int DOWN = 180;
+        public static final int LEFT = 270;
+        public static final int BUTTON_GRID_HIGH_LEFT = 3;
+        public static final int BUTTON_GRID_HIGH_MID = 2;
+        public static final int BUTTON_GRID_HIGH_RIGHT = 1;
+        public static final int BUTTON_GRID_MID_LEFT = 6;
+        public static final int BUTTON_GRID_MID_MID = 5;
+        public static final int BUTTON_GRID_MID_RIGHT = 4;
+        public static final int BUTTON_GRID_HYBRID_LEFT = 7;
+        public static final int BUTTON_GRID_HYBRID_MID = 8;
+        public static final int BUTTON_GRID_HYBRID_RIGHT = 9;
+        public static final double STICK_DEADBAND = 0.1;
+        public static final int TRANSLATION_BUTTON = 1;
+        public static final int ROTATION_BUTTON = 1;
+        public static final int TRANSLATION_AXIS = 0;
+        public static final int STRAFE_AXIS = 1;
+        public static final int ROTATION_AXIS = 0;
+    }
 
     public static final class Swerve {
-        public static final int pigeonID = 20;
+        public static final int PIGEON_ID = 20;
+        public static final boolean INVERT_GYRO = false;
 
-        public static final COTSTalonFXSwerveConstants chosenModule =  //TODO: This must be tuned to specific robot
-        COTSTalonFXSwerveConstants.SDS.MK4.Falcon500(COTSTalonFXSwerveConstants.SDS.MK4.driveRatios.L2);
+
+        public static final COTSTalonFXSwerveConstants CHOSEN_MODULE = COTSTalonFXSwerveConstants.SDS.MK4.Falcon500(COTSTalonFXSwerveConstants.SDS.MK4.driveRatios.L2);
 
         /* Drivetrain Constants */
-        public static final double trackWidth = Units.inchesToMeters(21.73); //TODO: This must be tuned to specific robot
-        public static final double wheelBase = Units.inchesToMeters(21.73); //TODO: This must be tuned to specific robot
-        public static final double wheelCircumference = chosenModule.wheelCircumference;
+        public static final double TRACK_WIDTH = 0.45;
+        public static final double WHEEL_BASE = 0.645;
+        public static final double WHEEL_DIAMETER = Units.inchesToMeters(3.86);
+        public static final double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI;
 
-        /* Swerve Kinematics 
-         * No need to ever change this unless you are not doing a traditional rectangular/square 4 module swerve */
-         public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(
-            new Translation2d(wheelBase / 2.0, trackWidth / 2.0),
-            new Translation2d(wheelBase / 2.0, -trackWidth / 2.0),
-            new Translation2d(-wheelBase / 2.0, trackWidth / 2.0),
-            new Translation2d(-wheelBase / 2.0, -trackWidth / 2.0));
+        public static final SwerveDriveKinematics SWERVE_KINEMATICS = new SwerveDriveKinematics(
+            new Translation2d(WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0),
+            new Translation2d(WHEEL_BASE / 2.0, -TRACK_WIDTH / 2.0),
+            new Translation2d(-WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0),
+            new Translation2d(-WHEEL_BASE / 2.0, -TRACK_WIDTH / 2.0));
 
-        /* Module Gear Ratios */
-        public static final double driveGearRatio = chosenModule.driveGearRatio;
-        public static final double angleGearRatio = chosenModule.angleGearRatio;
+
+        public static final double DRIVE_GEAR_RATIO = (6.75 / 1.0);
+        public static final double ANGLE_GEAR_RATIO = (12.8 / 1.0);
 
         /* Motor Inverts */
-        public static final InvertedValue angleMotorInvert = chosenModule.angleMotorInvert;
-        public static final InvertedValue driveMotorInvert = chosenModule.driveMotorInvert;
+        public static final InvertedValue ANGLE_MOTOR_INVERT = CHOSEN_MODULE.angleMotorInvert;
+        public static final InvertedValue DRIVE_MOTOR_INVERT = CHOSEN_MODULE.driveMotorInvert;
 
         /* Angle Encoder Invert */
-        public static final SensorDirectionValue cancoderInvert = chosenModule.cancoderInvert;
+        public static final SensorDirectionValue CANCODER_INVERT = CHOSEN_MODULE.cancoderInvert;
 
         /* Swerve Current Limiting */
-        public static final int angleCurrentLimit = 25;
-        public static final int angleCurrentThreshold = 40;
-        public static final double angleCurrentThresholdTime = 0.1;
-        public static final boolean angleEnableCurrentLimit = true;
+        public static final int ANGLE_CONTINUOUS_CURRENT_LIMIT = 25;
+        public static final int ANGLE_PEAK_CURRENT_LIMIT = 40;
+        public static final double ANGLE_PEAK_CURRENT_DURATION = 0.1;
+        public static final boolean ANGLE_ENABLE_CURRENT_LIMIT = true;
 
-        public static final int driveCurrentLimit = 35;
-        public static final int driveCurrentThreshold = 60;
-        public static final double driveCurrentThresholdTime = 0.1;
-        public static final boolean driveEnableCurrentLimit = true;
+        public static final int DRIVE_CONTINUOUS_CURRENT_LIMIT = 35;
+        public static final int DRIVE_PEAK_CURRENT_LIMIT = 50;
+        public static final double DRIVE_PEAK_CURRENT_DURATION = 0.1;
+        public static final boolean DRIVE_ENABLE_CURRENT_LIMIT = true;
 
-        /* These values are used by the drive falcon to ramp in open loop and closed loop driving.
-         * We found a small open loop ramp (0.25) helps with tread wear, tipping, etc */
-        public static final double openLoopRamp = 0.25;
-        public static final double closedLoopRamp = 0.0;
+        public static final double OPEN_LOOP_RAMP = 0.25;
+        public static final double CLOSED_LOOP_RAMP = 0.0;
 
         /* Angle Motor PID Values */
-        public static final double angleKP = chosenModule.angleKP;
-        public static final double angleKI = chosenModule.angleKI;
-        public static final double angleKD = chosenModule.angleKD;
+        public static final double ANGLE_KP = CHOSEN_MODULE.angleKP;
+        public static final double ANGLE_KI = CHOSEN_MODULE.angleKI;
+        public static final double ANGLE_KD = CHOSEN_MODULE.angleKD;
 
         /* Drive Motor PID Values */
-        public static final double driveKP = 0.12; //TODO: This must be tuned to specific robot
-        public static final double driveKI = 0.0;
-        public static final double driveKD = 0.0;
-        public static final double driveKF = 0.0;
+        public static final double DRIVE_KP = 0.12; //TODO: This must be tuned to specific robot
+        public static final double DRIVE_KI = 0.0;
+        public static final double DRIVE_KD = 0.0;
+        public static final double DRIVE_KF = 0.0;
 
         /* Drive Motor Characterization Values From SYSID */
-        public static final double driveKS = 0.32; //TODO: This must be tuned to specific robot
-        public static final double driveKV = 1.51;
-        public static final double driveKA = 0.27;
+        public static final double DRIVE_KS = (0.53906 / 12);
+        public static final double DRIVE_KV = (2.2756 / 12);
+        public static final double DRIVE_KA = (0.065383 / 12);
 
         /* Swerve Profiling Values */
-        /** Meters per Second */
-        public static final double maxSpeed = 4.5; //TODO: This must be tuned to specific robot
-        /** Radians per Second */
-        public static final double maxAngularVelocity = 10.0; //TODO: This must be tuned to specific robot
+        public static final double MAX_SPEED = 4.5;
+        public static final double MAX_ANGULAR_VELOCITY = 11.5;
 
         /* Neutral Modes */
-        public static final NeutralModeValue angleNeutralMode = NeutralModeValue.Coast;
-        public static final NeutralModeValue driveNeutralMode = NeutralModeValue.Brake;
+        public static final NeutralModeValue ANGLE_NEUTRAL_MODE = NeutralModeValue.Brake;
+        public static final NeutralModeValue DRIVE_NEUTRAL_MODE = NeutralModeValue.Brake;
 
         /* Front Left Module - Module 0 */
         public static final class Mod0 {
@@ -134,19 +175,38 @@ public final class Constants {
 
     }
 
-    public static final class AutoConstants { //TODO: The below constants are used in the example auto, and must be tuned to specific robot
-        public static final double kMaxSpeedMetersPerSecond = 3;
-        public static final double kMaxAccelerationMetersPerSecondSquared = 3;
-        public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
-        public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
-    
-        public static final double kPXController = 1;
-        public static final double kPYController = 1;
-        public static final double kPThetaController = 1;
-    
-        /* Constraint for the motion profilied robot angle controller */
-        public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
-            new TrapezoidProfile.Constraints(
-                kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
+    public static final class AutoConstants {
+        public static final double KMAX_SPEED_METERS_PER_SECOND = Integer.MAX_VALUE;
+        public static final double KMAX_ACCELERATION_METERS_PER_SECOND_SQUARED = Integer.MAX_VALUE;
+        public static final double KP_X_CONTROLLER = 1;
+        public static final double KP_Y_CONTROLLER = 1;
+        public static final double KP_THETA_CONTROLLER = 5;
+        public static final double KMAX_ANGULAR_SPEED_RADIANS_PER_SECOND = Math.PI;
+        public static final double KMAX_ANGULAR_SPEED_RADIANS_PER_SECOND_SQUARED = Math.PI;
+        public static final TrapezoidProfile.Constraints KTHETA_CONTROLLER_CONSTRAINTS = new TrapezoidProfile.Constraints(KMAX_ANGULAR_SPEED_RADIANS_PER_SECOND, KMAX_ANGULAR_SPEED_RADIANS_PER_SECOND_SQUARED);
+    }
+
+    public static String getMACAddress() {
+        try{
+            Enumeration<NetworkInterface> nwInterface = NetworkInterface.getNetworkInterfaces();
+            StringBuilder ret = new StringBuilder();
+            while(nwInterface.hasMoreElements()){
+                NetworkInterface nis = nwInterface.nextElement();
+                if(nis != null && "eth0".equals(nis.getDisplayName())){
+                    byte[] mac = nis.getHardwareAddress();
+                    if(mac != null){
+                        for(int i = 0; i < mac.length; i++){
+                            ret.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? ":" : ""));
+                        }
+                        String addr = ret.toString();
+                        return addr;
+                    }
+                    else {}
+                } 
+                else {}
+            }
+        } 
+        catch (SocketException | NullPointerException e) {}
+        return "";
     }
 }
