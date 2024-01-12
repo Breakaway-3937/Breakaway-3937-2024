@@ -32,6 +32,8 @@ public final class CTREConfigs {
         swerveAngleFXConfig.Slot0.kI = Constants.Swerve.ANGLE_KI;
         swerveAngleFXConfig.Slot0.kD = Constants.Swerve.ANGLE_KD;
 
+        swerveAngleFXConfig.Audio.AllowMusicDurDisable = true;
+
         /** Swerve Drive Motor Configuration */
         /* Motor Inverts and Neutral Mode */
         swerveDriveFXConfig.MotorOutput.Inverted = Constants.Swerve.DRIVE_MOTOR_INVERT;
@@ -57,5 +59,7 @@ public final class CTREConfigs {
 
         swerveDriveFXConfig.ClosedLoopRamps.DutyCycleClosedLoopRampPeriod = Constants.Swerve.CLOSED_LOOP_RAMP;
         swerveDriveFXConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = Constants.Swerve.CLOSED_LOOP_RAMP;
+
+        swerveDriveFXConfig.Audio.AllowMusicDurDisable = true;
     }
 }

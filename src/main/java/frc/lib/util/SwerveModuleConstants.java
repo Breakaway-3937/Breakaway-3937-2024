@@ -17,7 +17,7 @@ public class SwerveModuleConstants {
      * @param angleOffset
      */
     public SwerveModuleConstants(int driveMotorID, int angleMotorID, int canCoderID, Rotation2d angleOffset, Rotation2d angleOffsetPractice) {
-        if(true){
+        if(!Constants.PRACTICE_BOT){
             this.driveMotorID = driveMotorID;
             this.angleMotorID = angleMotorID;
             this.cancoderID = canCoderID;
