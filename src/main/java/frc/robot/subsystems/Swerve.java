@@ -24,6 +24,8 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Swerve extends SubsystemBase {
@@ -32,6 +34,7 @@ public class Swerve extends SubsystemBase {
     private final Pigeon2 gyro;
     private final GenericEntry mod0Cancoder, mod1Cancoder, mod2Cancoder, mod3Cancoder, yaw;
     private boolean flip = false;
+    private final Field2d field = new Field2d(); 
 
     public Swerve() {
         gyro = new Pigeon2(Constants.Swerve.PIGEON_ID, "CANivore");
@@ -53,6 +56,7 @@ public class Swerve extends SubsystemBase {
         mod2Cancoder = Shuffleboard.getTab("Drive").add("Mod 2 Cancoder", mSwerveMods[2].getState().angle.getDegrees()).withPosition(2, 0).getEntry();
         mod3Cancoder = Shuffleboard.getTab("Drive").add("Mod 3 Cancoder", mSwerveMods[3].getState().angle.getDegrees()).withPosition(3, 0).getEntry();
         yaw = Shuffleboard.getTab("Drive").add("Yaw", getHeading().getDegrees()).withPosition(0, 1).getEntry();
+        SmartDashboard.putData(field);
     }
 
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
@@ -146,6 +150,8 @@ public class Swerve extends SubsystemBase {
     @Override
     public void periodic(){
         swerveOdometry.update(getGyroYaw(), getModulePositions());
+
+        field.setRobotPose(getPose());
         
         mod0Cancoder.setDouble(mSwerveMods[0].getCANcoder().getDegrees());
         mod1Cancoder.setDouble(mSwerveMods[1].getCANcoder().getDegrees());
