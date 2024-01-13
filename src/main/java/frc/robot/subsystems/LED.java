@@ -65,13 +65,6 @@ public class LED extends SubsystemBase {
         candle.setLEDs(255, 255, 0);
     }
 
-    public void purple(){
-        red = false;
-        white = false;
-        green = false;
-        candle.setLEDs(136, 0, 209);
-    }
-
     public void blue(){
         red = false;
         white = false;
