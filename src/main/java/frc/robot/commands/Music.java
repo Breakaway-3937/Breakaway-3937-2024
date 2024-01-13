@@ -25,6 +25,7 @@ public class Music extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    count = (int) (Math.random() * 11);
     for(int i = 0; i < 4; i++){
       orchestra.addInstrument(s_Swerve.mSwerveMods[i].getDriveMotor());
       orchestra.addInstrument(s_Swerve.mSwerveMods[i].getAngleMotor());
