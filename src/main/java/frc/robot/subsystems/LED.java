@@ -16,16 +16,18 @@ import com.ctre.phoenix.led.CANdle.VBatOutputMode;
 
 public class LED extends SubsystemBase {
     private final CANdle candle;
-    private final Timer timer, timer1;
-    private boolean green, red, white, flag, flag2, flag3, flag4, flag5 = false; 
-    private int r, g, b, num; 
+    private final Timer timer, timer1, autoTimer;
+    private boolean green, red, white, flag, flag2, flag3, flag4, flag5, autoFlag = false; 
+    private int r, g, b, num, counter; 
     private int i = 8;
     private int count = 1;
+
 
     public LED() {
         candle = new CANdle(Constants.CANDLE_ID, "CANivore");
         timer = new Timer();
         timer1 = new Timer();
+        autoTimer = new Timer();
         timer.start();
         CANdleConfiguration configAll = new CANdleConfiguration();
         configAll.statusLedOffWhenActive = false;
@@ -98,6 +100,8 @@ public class LED extends SubsystemBase {
     public void periodic() {
         // This method will be called once per scheduler run
         if(DriverStation.isDisabled()){
+            autoFlag = false;
+            counter = 0;
             if(i > 16){
                 count = 8;
             }
@@ -181,14 +185,18 @@ public class LED extends SubsystemBase {
             }
         }
         else if(DriverStation.isAutonomousEnabled()){
-            Timer autoTimer = new Timer();
-            autoTimer.start();
-            while(DriverStation.isAutonomousEnabled()){
-                int counter = (int)autoTimer.get();
-                candle.setLEDs(0, 0, 255, 0, i, counter);
+            if(!autoFlag){
+                candle.setLEDs(0, 0, 0);
+                autoTimer.start();
+                autoFlag = true;
             }
+            counter = (int) autoTimer.get();
+            if(counter > 14){
+                counter++;
+            }
+            candle.setLEDs(0, 0, 254, 0, 8, counter * 3);
+            candle.setLEDs(0, 0, 254, 0, 57, counter * 3);
         }
-
         else if(green){
             setOthersFalse("green");
             if(!flag3){
