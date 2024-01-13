@@ -17,7 +17,7 @@ import com.ctre.phoenix.led.CANdle.VBatOutputMode;
 public class LED extends SubsystemBase {
     private final CANdle candle;
     private final Timer timer, timer1;
-    private boolean green, red, white, flag, flag2, flag3, flag4, flag5, bad = false; 
+    private boolean green, red, white, flag, flag2, flag3, flag4, flag5 = false; 
     private int r, g, b, num; 
     private int i = 8;
     private int count = 1;
@@ -41,21 +41,18 @@ public class LED extends SubsystemBase {
         red = false;
         white = false;
         green = true;
-        bad = false;
     }
 
     public void red(){
         red = true;
         white = false;
         green = false;
-        bad = false;
     }
 
     public void white(){
         red = false;
         white = true;
         green = false;
-        bad = false;
     }
 
     public void yellow(){
@@ -100,19 +97,7 @@ public class LED extends SubsystemBase {
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
-        if(bad){
-            if(timer.get() > 0.2 && !flag){
-                candle.setLEDs(12, 237, 54);
-                timer.reset();
-                flag = true;
-            }
-            else if(timer.get() > 0.2 && flag){
-                candle.setLEDs(179, 83, 97);
-                timer.reset();
-                flag = false;
-            }
-        }
-        else if(DriverStation.isDisabled()){
+        if(DriverStation.isDisabled()){
             if(i > 16){
                 count = 8;
             }
@@ -195,6 +180,15 @@ public class LED extends SubsystemBase {
                 break;
             }
         }
+        else if(DriverStation.isAutonomousEnabled()){
+            Timer autoTimer = new Timer();
+            autoTimer.start();
+            while(DriverStation.isAutonomousEnabled()){
+                int counter = (int)autoTimer.get();
+                candle.setLEDs(0, 0, 255, 0, i, counter);
+            }
+        }
+
         else if(green){
             setOthersFalse("green");
             if(!flag3){
