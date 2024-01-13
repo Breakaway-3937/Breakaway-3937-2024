@@ -11,7 +11,6 @@ import com.ctre.phoenix6.signals.SensorDirectionValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.GenericHID;
 import frc.lib.util.COTSTalonFXSwerveConstants;
@@ -71,7 +70,7 @@ public final class Constants {
         /* Drivetrain Constants */
         public static final double TRACK_WIDTH = 0.45;
         public static final double WHEEL_BASE = 0.645;
-        public static final double WHEEL_DIAMETER = Units.inchesToMeters(3.86);
+        public static final double WHEEL_DIAMETER = Units.inchesToMeters(3.8);
         public static final double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI;
 
         public static final SwerveDriveKinematics SWERVE_KINEMATICS = new SwerveDriveKinematics(
@@ -111,7 +110,7 @@ public final class Constants {
         public static final double ANGLE_KD = CHOSEN_MODULE.angleKD;
 
         /* Drive Motor PID Values */
-        public static final double DRIVE_KP = 0.12; //TODO: This must be tuned to specific robot
+        public static final double DRIVE_KP = 2.75;
         public static final double DRIVE_KI = 0.0;
         public static final double DRIVE_KD = 0.0;
         public static final double DRIVE_KF = 0.0;
@@ -173,17 +172,6 @@ public final class Constants {
                 new SwerveModuleConstants(DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, CANCODER_ID, ANGLE_OFFSET, ANGLE_OFFSET_PRACTICE);
         }
 
-    }
-
-    public static final class AutoConstants {
-        public static final double KMAX_SPEED_METERS_PER_SECOND = Integer.MAX_VALUE;
-        public static final double KMAX_ACCELERATION_METERS_PER_SECOND_SQUARED = Integer.MAX_VALUE;
-        public static final double KP_X_CONTROLLER = 1;
-        public static final double KP_Y_CONTROLLER = 1;
-        public static final double KP_THETA_CONTROLLER = 5;
-        public static final double KMAX_ANGULAR_SPEED_RADIANS_PER_SECOND = Math.PI;
-        public static final double KMAX_ANGULAR_SPEED_RADIANS_PER_SECOND_SQUARED = Math.PI;
-        public static final TrapezoidProfile.Constraints KTHETA_CONTROLLER_CONSTRAINTS = new TrapezoidProfile.Constraints(KMAX_ANGULAR_SPEED_RADIANS_PER_SECOND, KMAX_ANGULAR_SPEED_RADIANS_PER_SECOND_SQUARED);
     }
 
     public static String getMACAddress() {

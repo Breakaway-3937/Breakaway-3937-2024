@@ -57,6 +57,7 @@ public class RobotContainer {
         s_Swerve.setDefaultCommand(new TeleopSwerve(s_Swerve, () -> translationController.getRawAxis(translationAxis), () -> translationController.getRawAxis(strafeAxis), () -> rotationController.getRawAxis(rotationAxis), () -> robotRelative));
         s_Swerve.configPathPlanner();
         NamedCommands.registerCommand("greenLEDS", new InstantCommand(() -> s_LED.green()));
+        NamedCommands.registerCommand("redLEDS", new InstantCommand(() -> s_LED.red()));
         autoChooser = AutoBuilder.buildAutoChooser();
         Shuffleboard.getTab("Auto").add("Auto", autoChooser).withPosition(0, 0);
         Shuffleboard.selectTab("Auto");

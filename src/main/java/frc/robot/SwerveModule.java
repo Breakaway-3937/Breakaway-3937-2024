@@ -25,7 +25,7 @@ public class SwerveModule {
 
     /* Drive Motor Control Requests */
     private final DutyCycleOut driveDutyCycle = new DutyCycleOut(0).withEnableFOC(true);
-    private final VelocityVoltage driveVelocity = new VelocityVoltage(0);
+    private final VelocityVoltage driveVelocity = new VelocityVoltage(0).withEnableFOC(true);
 
     /* Angle Motor Control Requests */
     private final PositionVoltage anglePosition = new PositionVoltage(0);
