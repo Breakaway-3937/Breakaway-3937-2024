@@ -37,9 +37,9 @@ public class RobotContainer {
     private final int rotationAxis = Constants.Controllers.ROTATION_AXIS;
     private final boolean robotRelative = Constants.ROBOT_RELATIVE;
 
-
     /* Driver Buttons */
     private final JoystickButton translationButton = new JoystickButton(translationController, Constants.Controllers.TRANSLATION_BUTTON);
+    private final JoystickButton rotationButton = new JoystickButton(rotationController, Constants.Controllers.ROTATION_BUTTON);
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
@@ -58,7 +58,7 @@ public class RobotContainer {
         s_Swerve.configPathPlanner();
         NamedCommands.registerCommand("greenLEDS", new InstantCommand(() -> s_LED.green()));
         NamedCommands.registerCommand("redLEDS", new InstantCommand(() -> s_LED.red()));
-        autoChooser = AutoBuilder.buildAutoChooser();
+        autoChooser = AutoBuilder.buildAutoChooser("DO NOTHING");
         Shuffleboard.getTab("Auto").add("Auto", autoChooser).withPosition(0, 0);
         Shuffleboard.selectTab("Auto");
         Logger.recordOutput("Auto", autoChooser.getSelected().toString());
@@ -75,6 +75,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         translationButton.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
+        //rotationButton.whileTrue(s_Swerve.autoPathfind(null));
     }
 
     /**
