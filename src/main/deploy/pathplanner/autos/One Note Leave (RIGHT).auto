@@ -2,19 +2,25 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.9332557963361545,
-      "y": 6.5736095381965205
+      "x": 1.285153447499878,
+      "y": 3.96062546511058
     },
-    "rotation": 0
+    "rotation": 127.26640190097721
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "Test"
+            "pathName": "One Note Leave (RIGHT)"
           }
         }
       ]

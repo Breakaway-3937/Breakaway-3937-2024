@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.826233516872876,
-      "y": 6.817890245946252
+      "x": 1.3983141750744656,
+      "y": 6.666195588030274
     },
-    "rotation": -119.57783868138065
+    "rotation": -136.6602823689828
   },
   "command": {
     "type": "sequential",
@@ -14,7 +14,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "One Piece"
+            "pathName": "Three Note (LEFT)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
           }
         }
       ]
