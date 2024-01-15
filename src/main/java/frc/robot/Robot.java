@@ -32,7 +32,7 @@ public class Robot extends LoggedRobot {
 
   private RobotContainer robotContainer;
 
-  private boolean flag;
+  private boolean flag, teleop;
 
   private PowerDistribution powerDistribution;
 
@@ -88,12 +88,16 @@ public class Robot extends LoggedRobot {
       Shuffleboard.getTab("Death").add("Death2", "MARKKKKKKKK!!!!!!").withPosition(0, 1);
       Shuffleboard.selectTab("Death");
     }
+
+    if(DriverStation.isFMSAttached() && DriverStation.isTeleop()){
+      teleop = true;
+    }
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    if(DriverStation.isEStopped() || (DriverStation.isFMSAttached() && DriverStation.getMatchTime() > 145)){
+    if(DriverStation.isEStopped() || (DriverStation.isFMSAttached() && DriverStation.getMatchTime() < 3 && teleop)){
       CommandScheduler.getInstance().schedule(robotContainer.c_Music.ignoringDisable(true));
     }
   }
