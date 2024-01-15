@@ -35,7 +35,6 @@ public class Swerve extends SubsystemBase {
     private final Pigeon2 gyro;
     private final GenericEntry mod0Cancoder, mod1Cancoder, mod2Cancoder, mod3Cancoder, yaw, poseX, poseY;
     private final ComplexWidget fieldWidget;
-    private boolean flip = false;
     private final Field2d field = new Field2d(); 
 
     public Swerve() {
@@ -62,6 +61,7 @@ public class Swerve extends SubsystemBase {
         poseY = Shuffleboard.getTab("Drive").add("Y", 0).withPosition(1, 3).getEntry();
         fieldWidget = Shuffleboard.getTab("Drive").add("Field", field).withPosition(4, 0).withSize(2, 2);
         fieldWidget.toString();
+        configPathPlanner();
     }
 
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
@@ -149,11 +149,14 @@ public class Swerve extends SubsystemBase {
     }
 
     public void configPathPlanner(){
-        var alliance = DriverStation.getAlliance();
-        if(alliance.isPresent()){
-            flip = alliance.get() == DriverStation.Alliance.Red;
-        }
-        AutoBuilder.configureHolonomic(this::getPose, this::setPose, this::getSpeed, (speeds) -> setModuleStates(Constants.Swerve.SWERVE_KINEMATICS.toSwerveModuleStates(speeds)), new HolonomicPathFollowerConfig(new PIDConstants(5.0, 0.0, 0.0), new PIDConstants(5.0, 0.0, 0.0), Constants.Swerve.MAX_SPEED, 0.4318, new ReplanningConfig()), () -> flip, this);
+        AutoBuilder.configureHolonomic(this::getPose, this::setPose, this::getSpeed, (speeds) -> setModuleStates(Constants.Swerve.SWERVE_KINEMATICS.toSwerveModuleStates(speeds)), new HolonomicPathFollowerConfig(new PIDConstants(5.0, 0.0, 0.0), new PIDConstants(5.0, 0.0, 0.0), Constants.Swerve.MAX_SPEED, 0.4318, new ReplanningConfig()), () -> 
+        {
+            var alliance = DriverStation.getAlliance();
+            if (alliance.isPresent()) {
+                return alliance.get() == DriverStation.Alliance.Red;
+            }
+            return false;
+        }, this);
     }
 
     @Override
