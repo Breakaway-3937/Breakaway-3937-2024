@@ -12,9 +12,9 @@
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "wait",
           "data": {
-            "name": "greenLEDS"
+            "waitTime": 0
           }
         }
       ]
