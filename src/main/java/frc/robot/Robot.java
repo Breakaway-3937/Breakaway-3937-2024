@@ -129,6 +129,7 @@ public class Robot extends LoggedRobot {
     if(autonomousCommand != null){
       autonomousCommand.cancel();
     }
+    Shuffleboard.selectTab("Drive");
   }
 
   /** This function is called periodically during operator control. */
