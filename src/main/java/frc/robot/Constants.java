@@ -180,6 +180,14 @@ public final class Constants {
 
     }
 
+    public static final class Intake {
+        public static final int INTAKE_MOTOR_ID = 0; //FIXME
+    }
+
+    public static final class Shooter {
+        public static final int SHOOTER_MOTOR_ID = 0; //FIXME
+    }
+
     public static String getMACAddress() {
         try{
             Enumeration<NetworkInterface> nwInterface = NetworkInterface.getNetworkInterfaces();

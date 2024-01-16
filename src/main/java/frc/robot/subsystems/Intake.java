@@ -4,30 +4,28 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.controls.DutyCycleOut;
-import com.ctre.phoenix6.hardware.TalonFX;
-
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class Intake extends SubsystemBase {
-  private final TalonFX intake;
-  private final DutyCycleOut move = new DutyCycleOut(0).withEnableFOC(true);
+  private final CANSparkMax intakeMotor;
   /** Creates a new Intake. */
   public Intake() {
-    intake = new TalonFX(6);
-
+    intakeMotor = new CANSparkMax(Constants.Intake.INTAKE_MOTOR_ID, MotorType.kBrushless);
   }
 
   public void intake(){
-    intake.setControl(move.withOutput(1));
+    intakeMotor.set(1);
   }
 
   public void spit(){
-    intake.setControl(move.withOutput(-1));
+    intakeMotor.set(-1);
   }
 
   public void stop(){
-    intake.setControl(move.withOutput(0));
+    intakeMotor.stopMotor();
   }
 
   @Override
