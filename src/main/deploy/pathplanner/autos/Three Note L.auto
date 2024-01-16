@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.9332557963361545,
-      "y": 6.5736095381965205
+      "x": 1.3983141750744656,
+      "y": 6.666195588030274
     },
-    "rotation": 0
+    "rotation": -136.6602823689828
   },
   "command": {
     "type": "sequential",
@@ -14,7 +14,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Test"
+            "pathName": "Three Note L"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
           }
         }
       ]

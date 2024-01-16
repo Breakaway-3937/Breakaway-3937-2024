@@ -2,19 +2,25 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.826233516872876,
-      "y": 6.817890245946252
+      "x": 1.285153447499878,
+      "y": 3.96062546511058
     },
-    "rotation": -119.57783868138065
+    "rotation": 127.26640190097721
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "One Piece"
+            "pathName": "One Note Leave R"
           }
         }
       ]

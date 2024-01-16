@@ -23,17 +23,18 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Swerve extends SubsystemBase {
     public final SwerveDriveOdometry swerveOdometry;
     public final SwerveModule[] mSwerveMods;
     private final Pigeon2 gyro;
-    private final GenericEntry mod0Cancoder, mod1Cancoder, mod2Cancoder, mod3Cancoder, yaw;
-    private boolean flip = false;
+    private final GenericEntry mod0Cancoder, mod1Cancoder, mod2Cancoder, mod3Cancoder, yaw, poseX, poseY;
+    private final ComplexWidget fieldWidget;
     private final Field2d field = new Field2d(); 
 
     public Swerve() {
@@ -56,7 +57,11 @@ public class Swerve extends SubsystemBase {
         mod2Cancoder = Shuffleboard.getTab("Drive").add("Mod 2 Cancoder", mSwerveMods[2].getState().angle.getDegrees()).withPosition(2, 0).getEntry();
         mod3Cancoder = Shuffleboard.getTab("Drive").add("Mod 3 Cancoder", mSwerveMods[3].getState().angle.getDegrees()).withPosition(3, 0).getEntry();
         yaw = Shuffleboard.getTab("Drive").add("Yaw", getHeading().getDegrees()).withPosition(0, 1).getEntry();
-        SmartDashboard.putData(field);
+        poseX = Shuffleboard.getTab("Drive").add("X", 0).withPosition(0, 3).getEntry();
+        poseY = Shuffleboard.getTab("Drive").add("Y", 0).withPosition(1, 3).getEntry();
+        fieldWidget = Shuffleboard.getTab("Drive").add("Field", field).withPosition(4, 0).withSize(2, 2);
+        fieldWidget.toString();
+        configPathPlanner();
     }
 
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
@@ -80,7 +85,6 @@ public class Swerve extends SubsystemBase {
         }
     }    
 
-    /* Used by SwerveControllerCommand in Auto */
     public void setModuleStates(SwerveModuleState[] desiredStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Swerve.MAX_SPEED);
         
@@ -123,6 +127,7 @@ public class Swerve extends SubsystemBase {
 
     public void zeroHeading(){
         swerveOdometry.resetPosition(getGyroYaw(), getModulePositions(), new Pose2d(getPose().getTranslation(), new Rotation2d()));
+        gyro.setYaw(0);
     }
 
     public Rotation2d getGyroYaw() {
@@ -139,12 +144,19 @@ public class Swerve extends SubsystemBase {
         return Constants.Swerve.SWERVE_KINEMATICS.toChassisSpeeds(getModuleStates());
     }
 
+    public Command autoPathfind(Pose2d target){
+        return AutoBuilder.pathfindToPose(target, Constants.Swerve.CONSTRAINTS);
+    }
+
     public void configPathPlanner(){
-        var alliance = DriverStation.getAlliance();
-        if(alliance.isPresent()){
-            flip = alliance.get() == DriverStation.Alliance.Red;
-        }
-        AutoBuilder.configureHolonomic(this::getPose, this::setPose, this::getSpeed, (speeds) -> setModuleStates(Constants.Swerve.SWERVE_KINEMATICS.toSwerveModuleStates(speeds)), new HolonomicPathFollowerConfig(new PIDConstants(5.0, 0.0, 0.0), new PIDConstants(5.0, 0.0, 0.0), Constants.Swerve.MAX_SPEED, 0.4318, new ReplanningConfig()), () -> flip, this);
+        AutoBuilder.configureHolonomic(this::getPose, this::setPose, this::getSpeed, (speeds) -> setModuleStates(Constants.Swerve.SWERVE_KINEMATICS.toSwerveModuleStates(speeds)), new HolonomicPathFollowerConfig(new PIDConstants(5.0, 0.0, 0.0), new PIDConstants(5.0, 0.0, 0.0), Constants.Swerve.MAX_SPEED, 0.4318, new ReplanningConfig()), () -> 
+        {
+            var alliance = DriverStation.getAlliance();
+            if (alliance.isPresent()) {
+                return alliance.get() == DriverStation.Alliance.Red;
+            }
+            return false;
+        }, this);
     }
 
     @Override
@@ -152,6 +164,8 @@ public class Swerve extends SubsystemBase {
         swerveOdometry.update(getGyroYaw(), getModulePositions());
 
         field.setRobotPose(getPose());
+        poseX.setDouble(getPose().getX());
+        poseY.setDouble(getPose().getY());
         
         mod0Cancoder.setDouble(mSwerveMods[0].getCANcoder().getDegrees());
         mod1Cancoder.setDouble(mSwerveMods[1].getCANcoder().getDegrees());
