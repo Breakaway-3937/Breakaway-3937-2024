@@ -9,6 +9,7 @@ import org.littletonrobotics.junction.Logger;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -48,6 +49,8 @@ public class Shooter extends SubsystemBase {
 
     shootMotorConfig.MotionMagic.MotionMagicAcceleration = 0; //FIXME
     shootMotorConfig.MotionMagic.MotionMagicJerk = 0; //FIXME
+
+    shootMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
     shooterMotor.getConfigurator().apply(shootMotorConfig);
     shooterMotorOne.getConfigurator().apply(shootMotorConfig);
