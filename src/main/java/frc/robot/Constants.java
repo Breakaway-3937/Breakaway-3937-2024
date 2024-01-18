@@ -181,7 +181,8 @@ public final class Constants {
     }
 
     public static final class Intake {
-        public static final int INTAKE_MOTOR_ID = 0; //FIXME
+        public static final int FRONT_INTAKE_MOTOR_ID = 0; //FIXME
+        public static final int BACK_INTAKE_MOTOR_ID = 0; //FIXME
     }
 
     public static final class Shooter {
