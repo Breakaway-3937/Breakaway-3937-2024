@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -18,17 +19,18 @@ import frc.robot.Constants;
 
 public class Shooter extends SubsystemBase {
 
-  private final TalonFX shooterMotor, shooterMotorOne;
-  private TalonFXConfiguration shootMotorConfig = new TalonFXConfiguration();
+  private final TalonFX shooterMotor, followerShooterMotor;
+  private final TalonFXConfiguration shooterMotorConfig = new TalonFXConfiguration();
   private final MotionMagicVelocityVoltage request = new MotionMagicVelocityVoltage(0);
-  private final GenericEntry shootEncoderEntry;
+  private final Follower followerRequest = new Follower(Constants.Shooter.SHOOTER_MOTOR_ID, false);
+  private final GenericEntry shooterEncoderEntry;
 
   /** Creates a new Shooter. */
   public Shooter() {
     shooterMotor = new TalonFX(Constants.Shooter.SHOOTER_MOTOR_ID);
-    shooterMotorOne = new TalonFX(Constants.Shooter.SHOOTER_MOTOR_ID); //FIXME
-    configShootMotors();
-    shootEncoderEntry = Shuffleboard.getTab("Shooter").add("ShootMotor", getShooterVelocity()).withPosition(0,0).getEntry();
+    followerShooterMotor = new TalonFX(Constants.Shooter.FOLLOWER_SHOOTER_MOTOR_ID);
+    configShooterMotors();
+    shooterEncoderEntry = Shuffleboard.getTab("Shooter").add("Shooter", getShooterVelocity()).withPosition(0,0).getEntry();
   }
 
   public void runShooter(double speed){
@@ -39,27 +41,34 @@ public class Shooter extends SubsystemBase {
     return shooterMotor.getVelocity().getValueAsDouble();
   }
 
-  private void configShootMotors(){
+  private void configShooterMotors(){
     shooterMotor.getConfigurator().apply(new TalonFXConfiguration());
-    shooterMotorOne.getConfigurator().apply(new TalonFXConfiguration());
+    followerShooterMotor.getConfigurator().apply(new TalonFXConfiguration());
 
-    shootMotorConfig.Slot0.kP = 0; //FIXME
-    shootMotorConfig.Slot0.kI = 0; //FIXME
-    shootMotorConfig.Slot0.kD = 0; //FIXME
+    shooterMotorConfig.Slot0.kP = 0; //FIXME
+    shooterMotorConfig.Slot0.kI = 0;
+    shooterMotorConfig.Slot0.kD = 0; //FIXME
 
-    shootMotorConfig.MotionMagic.MotionMagicAcceleration = 0; //FIXME
-    shootMotorConfig.MotionMagic.MotionMagicJerk = 0; //FIXME
+    shooterMotorConfig.CurrentLimits.SupplyCurrentLimit = 35;
+    shooterMotorConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+    shooterMotorConfig.CurrentLimits.SupplyCurrentThreshold = 50;
+    shooterMotorConfig.CurrentLimits.SupplyTimeThreshold = 0.1;
 
-    shootMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    shooterMotorConfig.MotionMagic.MotionMagicCruiseVelocity = 0; //FIXME
+    shooterMotorConfig.MotionMagic.MotionMagicAcceleration = 0; //FIXME
 
-    shooterMotor.getConfigurator().apply(shootMotorConfig);
-    shooterMotorOne.getConfigurator().apply(shootMotorConfig);
+    shooterMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+
+    shooterMotor.getConfigurator().apply(shooterMotorConfig);
+    followerShooterMotor.getConfigurator().apply(shooterMotorConfig);
+
+    followerShooterMotor.setControl(followerRequest);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    shootEncoderEntry.setDouble(getShooterVelocity());
+    shooterEncoderEntry.setDouble(getShooterVelocity());
     Logger.recordOutput("Shooter", getShooterVelocity());
   }
 }

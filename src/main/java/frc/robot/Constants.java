@@ -187,6 +187,7 @@ public final class Constants {
 
     public static final class Shooter {
         public static final int SHOOTER_MOTOR_ID = 0; //FIXME
+        public static final int FOLLOWER_SHOOTER_MOTOR_ID = 0; //FIXME
     }
 
     public static String getMACAddress() {
