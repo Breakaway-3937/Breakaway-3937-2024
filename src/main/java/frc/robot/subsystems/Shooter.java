@@ -18,6 +18,7 @@ public class Shooter extends SubsystemBase {
 
   private final TalonFX shootMotor;
   private TalonFXConfiguration shootMotorConfig = new TalonFXConfiguration();
+  private final MotionMagicVelocityVoltage request = new MotionMagicVelocityVoltage(0);
   private final GenericEntry shootEncoderEntry;
 
   /** Creates a new Shooter. */
@@ -30,16 +31,25 @@ public class Shooter extends SubsystemBase {
   }
 
   public void runShooter(){
-    shootMotor.set(1);
+    shootMotor.set
+  }
+
+  
+  public double getShooterPosition(){
+    return shootMotor.getRotorPosition().getValue();
   }
 
   private void configShootMotor(){
     shootMotor.getConfigurator().apply(new TalonFXConfiguration());
-    shootMotor.getConfigurator().apply(shootMotorConfig);
-  }
 
-  public double getShooterPosition(){
-    return shootMotor.getRotorPosition().getValue();
+    shootMotorConfig.slot0Configs.kP = 0; //FIXME
+    shootMotorConfig.slot0Configs.kI = 0; //FIXME
+    shootMotorConfig.slot0Configs.kD = 0; //FIXME
+
+    shootMotorConfig.motionMagicConfig.MotionMagicAcceleration = 0; //FIXME
+    motionMagicConfigs.MotionMagicJerk = 4000;
+
+    shootMotor.getConfigurator().apply(shootMotorConfig);
   }
 
   @Override
