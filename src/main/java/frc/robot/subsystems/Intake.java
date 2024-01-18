@@ -20,31 +20,37 @@ public class Intake extends SubsystemBase {
 
   private final GenericEntry intakeEncoderEntry;
   private RelativeEncoder intakeEncoder;
+  private final CANSparkMax frontIntakeMotor, backIntakeMotor;
 
-  private final CANSparkMax intakeMotor;
   /** Creates a new Intake. */
   public Intake() {
-    intakeMotor = new CANSparkMax(Constants.Intake.INTAKE_MOTOR_ID, MotorType.kBrushless);
+    frontIntakeMotor = new CANSparkMax(Constants.Intake.FRONT_INTAKE_MOTOR_ID, MotorType.kBrushless);
+    backIntakeMotor = new CANSparkMax(Constants.Intake.BACK_INTAKE_MOTOR_ID, MotorType.kBrushless);
     intakeEncoderEntry = Shuffleboard.getTab("Intake").add("IntakeMotor", getIntakePosition()).withPosition(0,0).getEntry();
   }
 
   private void configIntakeMotor(){
-    intakeMotor.restoreFactoryDefaults();
-    intakeEncoder = intakeMotor.getEncoder();
+    frontIntakeMotor.restoreFactoryDefaults();
+    intakeEncoder = frontIntakeMotor.getEncoder();
     intakeEncoder.setPosition(0);
-    intakeMotor.setIdleMode(IdleMode.kBrake);
+    frontIntakeMotor.setIdleMode(IdleMode.kBrake);
+
+    backIntakeMotor.restoreFactoryDefaults();
+    intakeEncoder = backIntakeMotor.getEncoder();
+    intakeEncoder.setPosition(0);
+    backIntakeMotor.setIdleMode(IdleMode.kBrake);
   }
 
   public void intake(){
-    intakeMotor.set(1);
+    frontIntakeMotor.set(1);
   }
 
   public void spit(){
-    intakeMotor.set(-1);
+    frontIntakeMotor.set(-1);
   }
 
   public void stop(){
-    intakeMotor.stopMotor();
+    frontIntakeMotor.stopMotor();
   }
 
   public double getIntakePosition(){
