@@ -24,16 +24,13 @@ public class Shooter extends SubsystemBase {
   /** Creates a new Shooter. */
   public Shooter() {
     shootMotor = new TalonFX(Constants.Shooter.SHOOTER_MOTOR_ID);
-    shootMotor.getConfigurator().apply(new TalonFXConfiguration());
-    shootMotorConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
-    shootMotor.getConfigurator().apply(shootMotorConfig);
+    configShootMotor();
     shootEncoderEntry = Shuffleboard.getTab("Shooter").add("ShootMotor", getShooterPosition()).withPosition(0,0).getEntry();
   }
 
-  public void runShooter(){
-    shootMotor.set
+  public void runShooter(double speed){
+    shootMotor.setControl(request.withVelocity(speed));
   }
-
   
   public double getShooterPosition(){
     return shootMotor.getRotorPosition().getValue();
