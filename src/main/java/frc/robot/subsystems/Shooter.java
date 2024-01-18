@@ -60,6 +60,6 @@ public class Shooter extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     shootEncoderEntry.setDouble(getShooterVelocity());
-    Logger.getInstance().recordOutput("Shooter", getShooterVelocity());
+    Logger.recordOutput("Shooter", getShooterVelocity());
   }
 }
