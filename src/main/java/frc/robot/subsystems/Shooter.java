@@ -42,7 +42,7 @@ public class Shooter extends SubsystemBase {
     shooterMotor.getConfigurator().apply(new TalonFXConfiguration());
     shooterMotorOne.getConfigurator().apply(new TalonFXConfiguration());
 
-    shootMotorConfig.Slot0 = 0; //FIXME
+    shootMotorConfig.Slot0.kP = 0; //FIXME
     shootMotorConfig.Slot0.kI = 0; //FIXME
     shootMotorConfig.Slot0.kD = 0; //FIXME
 
