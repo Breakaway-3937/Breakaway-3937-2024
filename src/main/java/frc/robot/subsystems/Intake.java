@@ -26,10 +26,11 @@ public class Intake extends SubsystemBase {
   public Intake() {
     frontIntakeMotor = new CANSparkMax(Constants.Intake.FRONT_INTAKE_MOTOR_ID, MotorType.kBrushless);
     backIntakeMotor = new CANSparkMax(Constants.Intake.BACK_INTAKE_MOTOR_ID, MotorType.kBrushless);
+    configIntakeMotors();
     intakeEncoderEntry = Shuffleboard.getTab("Intake").add("IntakeMotor", getIntakePosition()).withPosition(0,0).getEntry();
   }
 
-  private void configIntakeMotor(){
+  private void configIntakeMotors(){
     frontIntakeMotor.restoreFactoryDefaults();
     intakeEncoder = frontIntakeMotor.getEncoder();
     intakeEncoder.setPosition(0);
