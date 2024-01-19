@@ -191,6 +191,11 @@ public final class Constants {
         public static final int WRIST_MOTOR_ID = 0; //FIXME
     }
 
+    public static final class Elevator {
+        public static final int ELEVATOR_MOTOR_ID = 0; //FIXME
+        public static final int FOLLOWER_ELEVATOR_MOTOR_ID = 0; //FIXME
+    }
+
     public static String getMACAddress() {
         try{
             Enumeration<NetworkInterface> nwInterface = NetworkInterface.getNetworkInterfaces();

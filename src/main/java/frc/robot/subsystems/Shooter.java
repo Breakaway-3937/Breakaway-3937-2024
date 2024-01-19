@@ -29,8 +29,7 @@ public class Shooter extends SubsystemBase {
   private final TalonFXConfiguration shooterMotorConfig = new TalonFXConfiguration();
   private final CANSparkMax wristMotor;
   private RelativeEncoder wristEncoder;
-  private SparkPIDController pid1;
-  private double wristkP, wristkI, wristkD, wristkFF;
+  private SparkPIDController pid;
   private final MotionMagicVelocityVoltage request = new MotionMagicVelocityVoltage(0);
   private final Follower followerRequest = new Follower(Constants.Shooter.SHOOTER_MOTOR_ID, false);
   private final GenericEntry shooterEncoderEntry, wristEncoderEntry;
@@ -41,8 +40,7 @@ public class Shooter extends SubsystemBase {
     followerShooterMotor = new TalonFX(Constants.Shooter.FOLLOWER_SHOOTER_MOTOR_ID);
     wristMotor = new CANSparkMax(Constants.Shooter.WRIST_MOTOR_ID, MotorType.kBrushless);
     configShooterMotors();
-    setPIDValues();
-    configWristMotors();
+    configWristMotor();
     shooterEncoderEntry = Shuffleboard.getTab("Shooter").add("Shooter", getShooterVelocity()).withPosition(0,0).getEntry();
     wristEncoderEntry = Shuffleboard.getTab("Shooter").add("Wrist", getWrist()).withPosition(1, 0).getEntry();
   }
@@ -53,6 +51,14 @@ public class Shooter extends SubsystemBase {
   
   public double getShooterVelocity(){
     return shooterMotor.getVelocity().getValueAsDouble();
+  }
+
+  public void setWrist(double position){
+    pid.setReference(position, ControlType.kSmartMotion);
+  }
+
+  public double getWrist(){
+    return wristEncoder.getPosition();
   }
 
   private void configShooterMotors(){
@@ -79,38 +85,23 @@ public class Shooter extends SubsystemBase {
     followerShooterMotor.setControl(followerRequest);
   }
 
-  public void setWrist(double position){
-    pid1.setReference(position, ControlType.kSmartMotion);
-  }
-
-  public double getWrist(){
-    return wristEncoder.getPosition();
-  }
-
-  private void configWristMotors(){
+  private void configWristMotor(){
     wristMotor.restoreFactoryDefaults();
     wristMotor.setIdleMode(IdleMode.kBrake);
 
-    wristMotor.setSmartCurrentLimit(50);
+    wristMotor.setSmartCurrentLimit(35);
 
     wristEncoder = wristMotor.getEncoder();
-    pid1 = wristMotor.getPIDController();
-    pid1.setFeedbackDevice(wristEncoder);
+    pid = wristMotor.getPIDController();
+    pid.setFeedbackDevice(wristEncoder);
     wristEncoder.setPosition(0);
-    pid1.setOutputRange(-1, 1);
-    pid1.setSmartMotionMaxVelocity(3000, 0);
-    pid1.setSmartMotionMaxAccel(1500, 0);
-    pid1.setP(wristkP);
-    pid1.setI(wristkI);
-    pid1.setD(wristkD);
-    pid1.setFF(wristkFF);
-  }
-
-  public void setPIDValues(){
-    wristkP = 0; //FIXME
-    wristkI = 0;
-    wristkD = 0; //FIXME
-    wristkFF = 0; //FIXME
+    pid.setOutputRange(-1, 1);
+    pid.setSmartMotionMaxVelocity(0, 0); //FIXME
+    pid.setSmartMotionMaxAccel(0, 0); //FIXME
+    pid.setP(0); //FIXME
+    pid.setI(0);
+    pid.setD(0); //FIXME
+    pid.setFF(0); //FIXME
   }
 
   @Override
