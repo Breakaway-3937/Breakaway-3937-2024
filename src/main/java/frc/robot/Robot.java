@@ -34,9 +34,19 @@ public class Robot extends LoggedRobot {
 
   private boolean flag, teleop;
 
+  private static boolean front = true;
+
   private PowerDistribution powerDistribution;
 
   private GenericEntry canUtil = Shuffleboard.getTab("System").add("CanUtil", 0).withPosition(0, 0).getEntry();
+
+  public static boolean getFront(){
+    return front;
+  }
+
+  public static void setFront(boolean newFront){
+    front = newFront;
+  }
 
   /**
    * This function is run when the robot is first started up and should be used for any

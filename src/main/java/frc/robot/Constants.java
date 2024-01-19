@@ -198,6 +198,11 @@ public final class Constants {
         public static final int FOLLOWER_ELEVATOR_MOTOR_ID = 0; //FIXME
     }
 
+    public static final class Vision {
+        public static final String FRONT_CAMERA_NAME = "FrontCamera";
+        public static final String BACK_CAMERA_NAME = "BackCamera";
+    }
+
     public static String getMACAddress() {
         try{
             Enumeration<NetworkInterface> nwInterface = NetworkInterface.getNetworkInterfaces();

@@ -43,9 +43,11 @@ public class RobotContainer {
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
     private final LED s_LED = new LED();
+    private final Vision s_Vision = new Vision();
 
     /* Commands */
     public final Music c_Music = new Music(s_Swerve);
+    private final Align c_Align = new Align(s_Swerve, s_Vision, () -> translationController.getRawAxis(translationAxis), () -> translationController.getRawAxis(strafeAxis), () -> robotRelative);
 
     private final SendableChooser<Command> autoChooser;
 
@@ -70,7 +72,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         translationButton.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
-        //rotationButton.whileTrue(s_Swerve.autoPathfind(null));
+        rotationButton.whileTrue(c_Align);
     }
 
     /**

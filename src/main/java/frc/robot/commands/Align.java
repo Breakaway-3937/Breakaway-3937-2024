@@ -1,0 +1,64 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
+package frc.robot.commands;
+
+import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
+
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
+import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.Vision;
+
+public class Align extends Command {
+  private final Swerve s_Swerve;
+  private final Vision s_Vision;
+  private final DoubleSupplier translationSup;
+  private final DoubleSupplier strafeSup;
+  private final BooleanSupplier robotCentricSup;
+
+  /** Creates a new Align. */
+  public Align(Swerve s_Swerve, Vision s_Vision, DoubleSupplier translationSup, DoubleSupplier strafeSup, BooleanSupplier robotCentricSup) {
+    this.s_Swerve = s_Swerve;
+    this.s_Vision = s_Vision;
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(s_Swerve, s_Vision);
+    this.translationSup = translationSup;
+    this.strafeSup = strafeSup;
+    this.robotCentricSup = robotCentricSup;
+  }
+
+  // Called when the command is initially scheduled.
+  @Override
+  public void initialize() {}
+
+  // Called every time the scheduler runs while the command is scheduled.
+  @Override
+  public void execute() {
+    /* Get Values, Deadband*/
+    double translationVal = MathUtil.applyDeadband(translationSup.getAsDouble(), Constants.Controllers.STICK_DEADBAND);
+    double strafeVal = MathUtil.applyDeadband(strafeSup.getAsDouble(), Constants.Controllers.STICK_DEADBAND);
+
+    /* Drive */
+    s_Swerve.drive(
+        new Translation2d(translationVal, strafeVal).times(Constants.Swerve.MAX_SPEED), 
+        s_Vision.getAprilTagRotationSpeed(), 
+        !robotCentricSup.getAsBoolean(), 
+        true
+    );
+  }
+
+  // Called once the command ends or is interrupted.
+  @Override
+  public void end(boolean interrupted) {}
+
+  // Returns true when the command should end.
+  @Override
+  public boolean isFinished() {
+    return false;
+  }
+}
