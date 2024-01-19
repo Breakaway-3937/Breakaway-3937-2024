@@ -41,6 +41,7 @@ public class Shooter extends SubsystemBase {
     followerShooterMotor = new TalonFX(Constants.Shooter.FOLLOWER_SHOOTER_MOTOR_ID);
     wristMotor = new CANSparkMax(Constants.Shooter.WRIST_MOTOR_ID, MotorType.kBrushless);
     configShooterMotors();
+    setPIDValues();
     configWristMotors();
     shooterEncoderEntry = Shuffleboard.getTab("Shooter").add("Shooter", getShooterVelocity()).withPosition(0,0).getEntry();
     wristEncoderEntry = Shuffleboard.getTab("Shooter").add("Wrist", getWrist()).withPosition(1, 0).getEntry();
@@ -103,6 +104,13 @@ public class Shooter extends SubsystemBase {
     pid1.setI(wristkI);
     pid1.setD(wristkD);
     pid1.setFF(wristkFF);
+  }
+
+  public void setPIDValues(){
+    wristkP = 0; //FIXME
+    wristkI = 0;
+    wristkD = 0; //FIXME
+    wristkFF = 0; //FIXME
   }
 
   @Override
