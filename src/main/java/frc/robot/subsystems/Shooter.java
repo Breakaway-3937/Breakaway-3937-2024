@@ -19,6 +19,9 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -32,7 +35,9 @@ public class Shooter extends SubsystemBase {
   private SparkPIDController pid;
   private final MotionMagicVelocityVoltage request = new MotionMagicVelocityVoltage(0);
   private final Follower followerRequest = new Follower(Constants.Shooter.SHOOTER_MOTOR_ID, false);
-  private final GenericEntry shooterEncoderEntry, wristEncoderEntry;
+  private final GenericEntry shooterEncoderEntry, wristEncoderEntry, pneumaticEntry;
+  private final DoubleSolenoid pneumatic;
+  private boolean pneumaticBool;
 
   /** Creates a new Shooter. */
   public Shooter() {
@@ -41,8 +46,11 @@ public class Shooter extends SubsystemBase {
     wristMotor = new CANSparkMax(Constants.Shooter.WRIST_MOTOR_ID, MotorType.kBrushless);
     configShooterMotors();
     configWristMotor();
+    pneumatic = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.Shooter.FORWARD_CHANNEL, Constants.Shooter.REVERSE_CHANNEL);
+    setPneumaticReverse();
     shooterEncoderEntry = Shuffleboard.getTab("Shooter").add("Shooter", getShooterVelocity()).withPosition(0,0).getEntry();
     wristEncoderEntry = Shuffleboard.getTab("Shooter").add("Wrist", getWrist()).withPosition(1, 0).getEntry();
+    pneumaticEntry = Shuffleboard.getTab("Shooter").add("Pneumatic", false).withPosition(2, 0).getEntry();
   }
 
   public void runShooter(double speed){
@@ -59,6 +67,20 @@ public class Shooter extends SubsystemBase {
 
   public double getWrist(){
     return wristEncoder.getPosition();
+  }
+
+  public void setPneumaticForward(){
+    pneumatic.set(Value.kForward);
+    pneumaticBool = true;
+  }
+
+  public void setPneumaticReverse(){
+    pneumatic.set(Value.kReverse);
+    pneumaticBool = false;
+  }
+
+  public boolean getPneumatic(){
+    return pneumaticBool;
   }
 
   private void configShooterMotors(){
@@ -111,5 +133,7 @@ public class Shooter extends SubsystemBase {
     Logger.recordOutput("Shooter", getShooterVelocity());
     wristEncoderEntry.setDouble(getWrist());
     Logger.recordOutput("Wrist", getWrist());
+    pneumaticEntry.setBoolean(getPneumatic());
+    Logger.recordOutput("Pneumatic", getPneumatic());
   }
 }
