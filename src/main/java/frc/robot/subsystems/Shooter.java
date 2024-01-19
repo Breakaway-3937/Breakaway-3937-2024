@@ -134,6 +134,6 @@ public class Shooter extends SubsystemBase {
     wristEncoderEntry.setDouble(getWrist());
     Logger.recordOutput("Wrist", getWrist());
     pneumaticEntry.setBoolean(getPneumatic());
-    Logger.recordOutput("Pneumatic", getPneumatic());
+    Logger.recordOutput("ShooterPneumatic", getPneumatic());
   }
 }

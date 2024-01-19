@@ -14,6 +14,9 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -23,14 +26,19 @@ public class Elevator extends SubsystemBase {
   private final CANSparkMax elevatorMotor, followerElevatorMotor;
   private RelativeEncoder elevatorEncoder;
   private SparkPIDController pid;
-  private final GenericEntry elevatorEncoderEntry;
+  private final GenericEntry elevatorEncoderEntry, brakeEntry;
+  private final DoubleSolenoid brake;
+  private boolean brakeBool;
 
   /** Creates a new Elevator. */
   public Elevator() {
     elevatorMotor = new CANSparkMax(Constants.Elevator.ELEVATOR_MOTOR_ID, MotorType.kBrushless);
     followerElevatorMotor = new CANSparkMax(Constants.Elevator.FOLLOWER_ELEVATOR_MOTOR_ID, MotorType.kBrushless);
     configElevatorMotors();
+    brake = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.Shooter.FORWARD_CHANNEL, Constants.Shooter.REVERSE_CHANNEL);
+    setBrakeOff();
     elevatorEncoderEntry = Shuffleboard.getTab("Elevator").add("Elevator", getElevator()).withPosition(0,0).getEntry();
+    brakeEntry = Shuffleboard.getTab("Elevator").add("Brake", false).withPosition(1, 0).getEntry();
   }
 
   public void setElevator(double position){
@@ -39,6 +47,20 @@ public class Elevator extends SubsystemBase {
 
   public double getElevator(){
     return elevatorEncoder.getPosition();
+  }
+
+  public void setBrakeOn(){
+    brake.set(Value.kForward);
+    brakeBool = true;
+  }
+
+  public void setBrakeOff(){
+    brake.set(Value.kReverse);
+    brakeBool = false;
+  }
+
+  public boolean getBrake(){
+    return brakeBool;
   }
 
   private void configElevatorMotors(){
@@ -69,5 +91,7 @@ public class Elevator extends SubsystemBase {
     // This method will be called once per scheduler run
     elevatorEncoderEntry.setDouble(getElevator());
     Logger.recordOutput("Elevator", getElevator());
+    brakeEntry.setBoolean(getBrake());
+    Logger.recordOutput("ElevatorBrake", getBrake());
   }
 }
