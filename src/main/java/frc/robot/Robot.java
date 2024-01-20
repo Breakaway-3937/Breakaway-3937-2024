@@ -58,7 +58,7 @@ public class Robot extends LoggedRobot {
     // autonomous chooser on the dashboard.
     Logger.recordMetadata("ProjectName", "MyProject");
     if(isReal()){
-      Logger.addDataReceiver(new WPILOGWriter());
+      Logger.addDataReceiver(new WPILOGWriter("/media/sda1/"));
       Logger.addDataReceiver(new NT4Publisher());
       powerDistribution = new PowerDistribution(25, ModuleType.kRev);
     }
