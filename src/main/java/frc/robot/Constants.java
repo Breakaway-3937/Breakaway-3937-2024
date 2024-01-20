@@ -29,13 +29,13 @@ public final class Constants {
     public static final int CANDLE_ID = 15;
     public static final String PRACTICE_MAC = "00:80:2F:25:DE:54";
     public static final boolean PRACTICE_BOT = getMACAddress().equals(PRACTICE_MAC);
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = false;
 
     public static final class Controllers{
         public static final GenericHID TRANSLATION_CONTROLLER = new GenericHID(0);
         public static final GenericHID ROTATION_CONTROLLER = new GenericHID(1);
         public static final GenericHID XBOX_CONTROLLER = new GenericHID(2);
-        public static final GenericHID BUTTON_GRID = new GenericHID(3);
+        public static final GenericHID BUTTONS = new GenericHID(3);
         public static final int XBOX_CONTROLLER_A_BUTTON = 1;
         public static final int XBOX_CONTROLLER_B_BUTTON = 2;
         public static final int XBOX_CONTROLLER_X_BUTTON = 3;

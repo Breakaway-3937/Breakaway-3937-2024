@@ -28,7 +28,7 @@ public class RobotContainer {
     private final Joystick translationController = new Joystick(Constants.Controllers.TRANSLATION_CONTROLLER.getPort());
     private final Joystick rotationController = new Joystick(Constants.Controllers.ROTATION_CONTROLLER.getPort());
     public final XboxController xboxController = new XboxController(Constants.Controllers.XBOX_CONTROLLER.getPort());
-    public final Joystick buttonGrid = new Joystick(Constants.Controllers.BUTTON_GRID.getPort());
+    public final Joystick buttons = new Joystick(Constants.Controllers.BUTTONS.getPort());
 
     /* Drive Controls */
     private final int translationAxis = Constants.Controllers.TRANSLATION_AXIS;
@@ -39,6 +39,14 @@ public class RobotContainer {
     /* Driver Buttons */
     private final JoystickButton translationButton = new JoystickButton(translationController, Constants.Controllers.TRANSLATION_BUTTON);
     private final JoystickButton rotationButton = new JoystickButton(rotationController, Constants.Controllers.ROTATION_BUTTON);
+    private final JoystickButton button1 = new JoystickButton(buttons, 1);
+    private final JoystickButton button2 = new JoystickButton(buttons, 2);
+    private final JoystickButton button3 = new JoystickButton(buttons,3);
+    private final JoystickButton button4 = new JoystickButton(buttons,4);
+    private final JoystickButton button5 = new JoystickButton(buttons, 5);
+    private final JoystickButton button6 = new JoystickButton(buttons, 6);
+    private final JoystickButton button7 = new JoystickButton(buttons, 7);
+    private final JoystickButton button8 = new JoystickButton(buttons, 8);
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
@@ -71,7 +79,7 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         /* Driver Buttons */
-        translationButton.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
+        button1.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
         rotationButton.whileTrue(c_Align);
     }
 

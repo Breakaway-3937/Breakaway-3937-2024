@@ -55,7 +55,7 @@ public class Vision extends SubsystemBase {
     if(Robot.getFront()){
       var result = frontCamera.getLatestResult();
       if(result.hasTargets()){
-        return result.getBestTarget().getYaw() * 0.8 / 40.0;
+        return -result.getBestTarget().getYaw() * 0.8 / 30.0;
       }
       else{
         return getPoseRotationSpeed();
@@ -64,7 +64,7 @@ public class Vision extends SubsystemBase {
     else{
       var result = backCamera.getLatestResult();
       if(result.hasTargets()){
-        return result.getBestTarget().getYaw() * 0.8 / 40.0;
+        return -result.getBestTarget().getYaw() * 0.8 / 30.0;
       }
       else{
         return getPoseRotationSpeed();
