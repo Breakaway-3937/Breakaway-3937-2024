@@ -51,6 +51,10 @@ public class Vision extends SubsystemBase {
     }
   }
 
+  public double getNoteRotationSpeed(){
+    return getXAngle() * 0.8 / 40.0;
+  }
+
   private double getPoseRotationSpeed(){
     return 0; //FIXME
   }
@@ -60,11 +64,11 @@ public class Vision extends SubsystemBase {
   }
 
   public double getXAngle(){
-    return ty.getDouble(0);
+    return tx.getDouble(0);
   }
 
   public double getYAngle(){
-    return tx.getDouble(0);
+    return ty.getDouble(0);
   }
 
   public double getTargetArea(){
