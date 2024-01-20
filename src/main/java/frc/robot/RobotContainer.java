@@ -51,11 +51,11 @@ public class RobotContainer {
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
     private final LED s_LED = new LED();
-    private final Vision s_Vision = new Vision(s_Swerve);
+    //private final Vision s_Vision = new Vision(s_Swerve);
 
     /* Commands */
     public final Music c_Music = new Music(s_Swerve);
-    private final Align c_Align = new Align(s_Swerve, s_Vision, () -> translationController.getRawAxis(translationAxis), () -> translationController.getRawAxis(strafeAxis), () -> robotRelative);
+    //private final Align c_Align = new Align(s_Swerve, s_Vision, () -> translationController.getRawAxis(translationAxis), () -> translationController.getRawAxis(strafeAxis), () -> robotRelative);
 
     private final SendableChooser<Command> autoChooser;
 
@@ -63,7 +63,7 @@ public class RobotContainer {
     public RobotContainer() {
         CommandScheduler.getInstance().registerSubsystem(s_Swerve);
         CommandScheduler.getInstance().registerSubsystem(s_LED);
-        CommandScheduler.getInstance().registerSubsystem(s_Vision);
+        //CommandScheduler.getInstance().registerSubsystem(s_Vision);
 
         s_Swerve.setDefaultCommand(new TeleopSwerve(s_Swerve, () -> translationController.getRawAxis(translationAxis), () -> translationController.getRawAxis(strafeAxis), () -> rotationController.getRawAxis(rotationAxis), () -> robotRelative));
         autoChooser = AutoBuilder.buildAutoChooser("DO NOTHING");
@@ -82,7 +82,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         button1.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
-        rotationButton.whileTrue(c_Align);
+        //rotationButton.whileTrue(c_Align);
     }
 
     /**
