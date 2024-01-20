@@ -60,8 +60,8 @@ public class Swerve extends SubsystemBase {
         mod2Cancoder = Shuffleboard.getTab("Drive").add("Mod 2 Cancoder", mSwerveMods[2].getState().angle.getDegrees()).withPosition(2, 0).getEntry();
         mod3Cancoder = Shuffleboard.getTab("Drive").add("Mod 3 Cancoder", mSwerveMods[3].getState().angle.getDegrees()).withPosition(3, 0).getEntry();
         yaw = Shuffleboard.getTab("Drive").add("Yaw", getHeading().getDegrees()).withPosition(0, 1).getEntry();
-        poseX = Shuffleboard.getTab("Drive").add("X", 0).withPosition(0, 3).getEntry();
-        poseY = Shuffleboard.getTab("Drive").add("Y", 0).withPosition(1, 3).getEntry();
+        poseX = Shuffleboard.getTab("Drive").add("X", 0).withPosition(0, 2).getEntry();
+        poseY = Shuffleboard.getTab("Drive").add("Y", 0).withPosition(1, 2).getEntry();
         fieldWidget = Shuffleboard.getTab("Drive").add("Field", field).withPosition(4, 0).withSize(2, 2);
         fieldWidget.toString();
         configPathPlanner();

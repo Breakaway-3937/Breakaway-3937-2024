@@ -73,7 +73,7 @@ public class Vision extends SubsystemBase {
   }
 
   public double getNoteRotationSpeed(){
-    return getXAngle() * 0.8 / 40.0;
+    return -getXAngle() * 0.8 / 30.0;
   }
 
   public Optional<EstimatedRobotPose> getEstimatedGlobalPose(){
@@ -86,7 +86,7 @@ public class Vision extends SubsystemBase {
   }
 
   private double getPoseRotationSpeed(){
-    return (s_Swerve.getGyroYaw().getRadians() - Math.atan((targetY - s_Swerve.getPose().getY()) / (targetX - s_Swerve.getPose().getX()))) * 0.8 / 40.0;
+    return -(s_Swerve.getGyroYaw().getRadians() - Math.atan((targetY - s_Swerve.getPose().getY()) / (targetX - s_Swerve.getPose().getX()))) * 0.8 / 30.0;
   }
 
   public boolean hasValidTarget(){

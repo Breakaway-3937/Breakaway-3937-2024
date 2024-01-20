@@ -29,7 +29,7 @@ public final class Constants {
     public static final int CANDLE_ID = 15;
     public static final String PRACTICE_MAC = "00:80:2F:25:DE:54";
     public static final boolean PRACTICE_BOT = getMACAddress().equals(PRACTICE_MAC);
-    public static final boolean DEBUG = false;
+    public static final boolean DEBUG = true;
 
     public static final class Controllers{
         public static final GenericHID TRANSLATION_CONTROLLER = new GenericHID(0);
@@ -50,15 +50,6 @@ public final class Constants {
         public static final int RIGHT = 90;
         public static final int DOWN = 180;
         public static final int LEFT = 270;
-        public static final int BUTTON_GRID_HIGH_LEFT = 3;
-        public static final int BUTTON_GRID_HIGH_MID = 2;
-        public static final int BUTTON_GRID_HIGH_RIGHT = 1;
-        public static final int BUTTON_GRID_MID_LEFT = 6;
-        public static final int BUTTON_GRID_MID_MID = 5;
-        public static final int BUTTON_GRID_MID_RIGHT = 4;
-        public static final int BUTTON_GRID_HYBRID_LEFT = 7;
-        public static final int BUTTON_GRID_HYBRID_MID = 8;
-        public static final int BUTTON_GRID_HYBRID_RIGHT = 9;
         public static final double STICK_DEADBAND = 0.1;
         public static final int TRANSLATION_BUTTON = 1;
         public static final int ROTATION_BUTTON = 1;

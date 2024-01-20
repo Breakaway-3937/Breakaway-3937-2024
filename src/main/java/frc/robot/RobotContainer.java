@@ -63,6 +63,8 @@ public class RobotContainer {
     public RobotContainer() {
         CommandScheduler.getInstance().registerSubsystem(s_Swerve);
         CommandScheduler.getInstance().registerSubsystem(s_LED);
+        CommandScheduler.getInstance().registerSubsystem(s_Vision);
+
         s_Swerve.setDefaultCommand(new TeleopSwerve(s_Swerve, () -> translationController.getRawAxis(translationAxis), () -> translationController.getRawAxis(strafeAxis), () -> rotationController.getRawAxis(rotationAxis), () -> robotRelative));
         autoChooser = AutoBuilder.buildAutoChooser("DO NOTHING");
         Shuffleboard.getTab("Auto").add("Auto", autoChooser).withPosition(0, 0);
