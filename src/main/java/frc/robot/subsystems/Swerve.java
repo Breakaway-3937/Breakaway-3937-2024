@@ -5,10 +5,12 @@ import frc.robot.Constants;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
+import java.util.Optional;
+
 import org.littletonrobotics.junction.Logger;
+import org.photonvision.EstimatedRobotPose;
 
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
@@ -17,6 +19,7 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -30,12 +33,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Swerve extends SubsystemBase {
-    public final SwerveDriveOdometry swerveOdometry;
     public final SwerveModule[] mSwerveMods;
     private final Pigeon2 gyro;
     private final GenericEntry mod0Cancoder, mod1Cancoder, mod2Cancoder, mod3Cancoder, yaw, poseX, poseY;
     private final ComplexWidget fieldWidget;
     private final Field2d field = new Field2d(); 
+    private final SwerveDrivePoseEstimator poseEstimator;
 
     public Swerve() {
         gyro = new Pigeon2(Constants.Swerve.PIGEON_ID, "CANivore");
@@ -50,7 +53,7 @@ public class Swerve extends SubsystemBase {
             new SwerveModule(3, Constants.Swerve.Mod3.CONSTANTS)
         };
 
-        swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.SWERVE_KINEMATICS, getGyroYaw(), getModulePositions());
+        poseEstimator = new SwerveDrivePoseEstimator(Constants.Swerve.SWERVE_KINEMATICS, getGyroYaw(), getModulePositions(), getPose(), Constants.Swerve.STATE_STDS, Constants.Vision.VISION_STDS);
 
         mod0Cancoder = Shuffleboard.getTab("Drive").add("Mod 0 Cancoder", mSwerveMods[0].getState().angle.getDegrees()).withPosition(0, 0).getEntry();
         mod1Cancoder = Shuffleboard.getTab("Drive").add("Mod 1 Cancoder", mSwerveMods[1].getState().angle.getDegrees()).withPosition(1, 0).getEntry();
@@ -110,23 +113,19 @@ public class Swerve extends SubsystemBase {
     }
 
     public Pose2d getPose() {
-        return swerveOdometry.getPoseMeters();
+        return poseEstimator.getEstimatedPosition();
     }
 
     public void setPose(Pose2d pose) {
-        swerveOdometry.resetPosition(getGyroYaw(), getModulePositions(), pose);
+        poseEstimator.resetPosition(getGyroYaw(), getModulePositions(), pose);
     }
 
     public Rotation2d getHeading(){
         return getPose().getRotation();
     }
 
-    public void setHeading(Rotation2d heading){
-        swerveOdometry.resetPosition(getGyroYaw(), getModulePositions(), new Pose2d(getPose().getTranslation(), heading));
-    }
-
     public void zeroHeading(){
-        swerveOdometry.resetPosition(getGyroYaw(), getModulePositions(), new Pose2d(getPose().getTranslation(), new Rotation2d()));
+        poseEstimator.resetPosition(getGyroYaw(), getModulePositions(), new Pose2d(getPose().getTranslation(), new Rotation2d()));
         gyro.setYaw(0);
     }
 
@@ -149,7 +148,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public void configPathPlanner(){
-        AutoBuilder.configureHolonomic(this::getPose, this::setPose, this::getSpeed, (speeds) -> setModuleStates(Constants.Swerve.SWERVE_KINEMATICS.toSwerveModuleStates(speeds)), new HolonomicPathFollowerConfig(new PIDConstants(5.0, 0.0, 0.0), new PIDConstants(5.0, 0.0, 0.0), Constants.Swerve.MAX_SPEED, 0.4318, new ReplanningConfig()), () -> 
+        AutoBuilder.configureHolonomic(this::getPose, this::setPose, this::getSpeed, (speeds) -> setModuleStates(Constants.Swerve.SWERVE_KINEMATICS.toSwerveModuleStates(speeds)), new HolonomicPathFollowerConfig(new PIDConstants(5.0, 0.0, 0.0), new PIDConstants(5.0, 0.0, 0.0), Constants.Swerve.MAX_SPEED, Constants.Swerve.DRIVE_BASE_RADIUS, new ReplanningConfig()), () -> 
         {
             var alliance = DriverStation.getAlliance();
             if (alliance.isPresent()) {
@@ -159,9 +158,15 @@ public class Swerve extends SubsystemBase {
         }, this);
     }
 
+    public void updatePoseVision(Optional<EstimatedRobotPose> pose){
+        if(pose.isPresent()){
+            poseEstimator.addVisionMeasurement(pose.get().estimatedPose.toPose2d(), pose.get().timestampSeconds);
+        }
+    }
+
     @Override
     public void periodic(){
-        swerveOdometry.update(getGyroYaw(), getModulePositions());
+        poseEstimator.update(getGyroYaw(), getModulePositions());
 
         field.setRobotPose(getPose());
         poseX.setDouble(getPose().getX());
@@ -176,6 +181,6 @@ public class Swerve extends SubsystemBase {
 
         Logger.recordOutput("Yaw", getGyroYaw());
         Logger.recordOutput("Swerve States", getModuleStates());
-        Logger.recordOutput("Pose", swerveOdometry.getPoseMeters());
+        Logger.recordOutput("Pose", getPose());
     }
 }

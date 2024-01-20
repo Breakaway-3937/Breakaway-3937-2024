@@ -9,9 +9,15 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.pathplanner.lib.path.PathConstraints;
 
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.GenericHID;
 import frc.lib.util.COTSTalonFXSwerveConstants;
@@ -62,6 +68,8 @@ public final class Constants {
     }
 
     public static final class Swerve {
+        public static final Vector<N3> STATE_STDS = VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5));
+
         public static final int PIGEON_ID = 20;
         public static final boolean INVERT_GYRO = false;
 
@@ -69,8 +77,9 @@ public final class Constants {
         public static final COTSTalonFXSwerveConstants CHOSEN_MODULE = COTSTalonFXSwerveConstants.SDS.MK4.Falcon500(COTSTalonFXSwerveConstants.SDS.MK4.driveRatios.L2);
 
         /* Drivetrain Constants */
-        public static final double TRACK_WIDTH = 0.45;
-        public static final double WHEEL_BASE = 0.645;
+        public static final double DRIVE_BASE_RADIUS = 0.4318; //FIXME 0.3804
+        public static final double TRACK_WIDTH = 0.45; //FIXME 0.57
+        public static final double WHEEL_BASE = 0.645; //FIXME 0.57
         public static final double WHEEL_DIAMETER = Units.inchesToMeters(3.9);
         public static final double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI;
 
@@ -129,10 +138,10 @@ public final class Constants {
         public static final NeutralModeValue ANGLE_NEUTRAL_MODE = NeutralModeValue.Brake;
         public static final NeutralModeValue DRIVE_NEUTRAL_MODE = NeutralModeValue.Brake;
 
-        /*Auto Path Finding Constraints*/
+        /* Auto Path Finding Constraints*/
         public static final PathConstraints CONSTRAINTS = new PathConstraints(MAX_SPEED, 4.5, 
-                                                                              Units.degreesToRadians(540), 
-                                                                              Units.degreesToRadians(720));
+                                                                              Units.degreesToRadians(690), 
+                                                                              Units.degreesToRadians(690));
 
         /* Front Left Module - Module 0 */
         public static final class Mod0 {
@@ -201,6 +210,12 @@ public final class Constants {
     public static final class Vision {
         public static final String FRONT_CAMERA_NAME = "FrontCamera";
         public static final String BACK_CAMERA_NAME = "BackCamera";
+        public static final Transform3d FRONT_CAMERA_TRANSFORM = new Transform3d(new Translation3d(0.3019665792, 0, 0.19), new Rotation3d(0, -0.349066, 0)); //FIXME
+        public static final Transform3d BACK_CAMERA_TRANSFORM = new Transform3d(); //FIXME
+        public static final Vector<N3> VISION_STDS = VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(10));
+        public static final double TARGET_X = 0; //FIXME
+        public static final double TARGET_Y_BLUE = 0; //FIXME
+        public static final double TARGET_Y_RED = 0; //FIXME
     }
 
     public static String getMACAddress() {

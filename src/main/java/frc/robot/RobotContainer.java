@@ -43,7 +43,7 @@ public class RobotContainer {
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
     private final LED s_LED = new LED();
-    private final Vision s_Vision = new Vision();
+    private final Vision s_Vision = new Vision(s_Swerve);
 
     /* Commands */
     public final Music c_Music = new Music(s_Swerve);
