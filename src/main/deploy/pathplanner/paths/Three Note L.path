@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.3983141750744656,
-        "y": 6.666195588030274
+        "x": 1.1868064878986901,
+        "y": 6.696440364309301
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.850957085372818,
-        "y": 6.902804382049867
+        "x": 1.6394493981970424,
+        "y": 6.933049158328894
       },
       "isLocked": false,
       "linkedName": null
@@ -67,7 +67,7 @@
       "rotateFast": false
     },
     {
-      "waypointRelativePos": 1,
+      "waypointRelativePos": 0.7,
       "rotationDegrees": 0,
       "rotateFast": true
     }
@@ -77,6 +77,17 @@
       "name": "Shoot",
       "minWaypointRelativePos": 2.25,
       "maxWaypointRelativePos": 3.0,
+      "constraints": {
+        "maxVelocity": 2.5,
+        "maxAcceleration": 4.5,
+        "maxAngularVelocity": 690.0,
+        "maxAngularAcceleration": 690.0
+      }
+    },
+    {
+      "name": "Turn",
+      "minWaypointRelativePos": 0,
+      "maxWaypointRelativePos": 0.7,
       "constraints": {
         "maxVelocity": 1.0,
         "maxAcceleration": 4.5,
