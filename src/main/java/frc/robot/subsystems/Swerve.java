@@ -158,6 +158,17 @@ public class Swerve extends SubsystemBase {
         }, this);
     }
 
+    public Optional<Rotation2d> getRotationTargetOverride(){
+        // Some condition that should decide if we want to override rotation
+        if(Limelight.hasGamePieceTarget()) {
+            // Return an optional containing the rotation override (this should be a field relative rotation)
+            return Optional.of(Limelight.getRobotToGamePieceRotation());
+        } else {
+            // return an empty optional when we don't want to override the path's rotation
+            return Optional.empty();
+        }
+    }
+
     public void updatePoseVision(Optional<EstimatedRobotPose> pose){
         if(pose.isPresent()){
             poseEstimator.addVisionMeasurement(pose.get().estimatedPose.toPose2d(), pose.get().timestampSeconds);
