@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.2219891868355166,
-      "y": 4.092920642984144
+      "x": 1.0812583910897613,
+      "y": 6.966174389488764
     },
-    "rotation": 132.6626941408762
+    "rotation": -131.23596513471904
   },
   "command": {
     "type": "sequential",
@@ -20,7 +20,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Two Note R #1"
+            "pathName": "Five Note L #1"
           }
         },
         {
@@ -32,7 +32,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Two Note R #2"
+            "pathName": "Six Note L #2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "FindNote"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Six Note L #3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Four Note L"
           }
         },
         {

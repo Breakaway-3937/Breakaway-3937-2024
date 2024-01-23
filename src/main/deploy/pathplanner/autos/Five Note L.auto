@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3777394973284895,
-      "y": 6.789643654480423
+      "x": 1.0812583910897613,
+      "y": 6.966174389488764
     },
     "rotation": -131.23596513471904
   },
@@ -20,7 +20,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Five Note L"
+            "pathName": "Five Note L #1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "FindNote"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Five Note L #2"
           }
         },
         {
