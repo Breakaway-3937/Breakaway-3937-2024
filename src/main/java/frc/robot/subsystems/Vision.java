@@ -25,9 +25,9 @@ import frc.robot.Robot;
 public class Vision extends SubsystemBase {
     private final NetworkTable table;
     private final NetworkTableEntry tx, ty, ta, tv;
-    private final PhotonCamera frontCamera, backCamera;
+    private final PhotonCamera frontCamera;//, backCamera;
     private AprilTagFieldLayout atfl;
-    private final PhotonPoseEstimator frontPoseEstimator, backPoseEstimator;
+    private final PhotonPoseEstimator frontPoseEstimator;//, backPoseEstimator;
     private final Swerve s_Swerve;
     private double targetX, targetY;
 
@@ -41,44 +41,45 @@ public class Vision extends SubsystemBase {
     tv = table.getEntry("tv");
 
     frontCamera = new PhotonCamera(Constants.Vision.FRONT_CAMERA_NAME);
-    backCamera = new PhotonCamera(Constants.Vision.BACK_CAMERA_NAME);
+    //backCamera = new PhotonCamera(Constants.Vision.BACK_CAMERA_NAME);
 
     try {
       atfl = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
     } catch (IOException e) {}
 
     frontPoseEstimator = new PhotonPoseEstimator(atfl, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, frontCamera, Constants.Vision.FRONT_CAMERA_TRANSFORM);
-    backPoseEstimator = new PhotonPoseEstimator(atfl, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, backCamera, Constants.Vision.BACK_CAMERA_TRANSFORM);
+    //backPoseEstimator = new PhotonPoseEstimator(atfl, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, backCamera, Constants.Vision.BACK_CAMERA_TRANSFORM);
   }
 
   public double getAprilTagRotationSpeed(){
     if(Robot.getFront()){
       var result = frontCamera.getLatestResult();
       if(result.hasTargets()){
-        return -result.getBestTarget().getYaw() * 0.8 / 30.0;
+        return -result.getBestTarget().getYaw() * 0.8 / 15.0;
       }
       else{
         return getPoseRotationSpeed();
       }
     }
     else{
-      var result = backCamera.getLatestResult();
+      return 0;
+      /*var result = backCamera.getLatestResult();
       if(result.hasTargets()){
-        return -result.getBestTarget().getYaw() * 0.8 / 30.0;
+        return -result.getBestTarget().getYaw() * 0.8 / 15.0;
       }
       else{
         return getPoseRotationSpeed();
-      }
+      }*/
     }
   }
 
   public double getNoteRotationSpeed(){
-    return -getXAngle() * 0.8 / 30.0;
+    return -getXAngle() * 0.8 / 15.0;
   }
 
   public Optional<EstimatedRobotPose> getEstimatedGlobalPose(){
-    if(backCamera.getLatestResult().hasTargets()){
-      return backPoseEstimator.update();
+    if(false){//backCamera.getLatestResult().hasTargets()){
+      return Optional.empty();//backPoseEstimator.update();
     }
     else{
       return frontPoseEstimator.update();
@@ -86,7 +87,7 @@ public class Vision extends SubsystemBase {
   }
 
   private double getPoseRotationSpeed(){
-    return -(s_Swerve.getGyroYaw().getRadians() - Math.atan((targetY - s_Swerve.getPose().getY()) / (targetX - s_Swerve.getPose().getX()))) * 0.8 / 30.0;
+    return -(s_Swerve.getGyroYaw().getRadians() - Math.atan((targetY - s_Swerve.getPose().getY()) / (targetX - s_Swerve.getPose().getX()))) * 0.8 / 15.0;
   }
 
   public boolean hasValidTarget(){

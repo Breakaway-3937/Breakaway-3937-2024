@@ -199,7 +199,7 @@ public final class Constants {
     }
 
     public static final class Vision {
-        public static final String FRONT_CAMERA_NAME = "FrontCamera";
+        public static final String FRONT_CAMERA_NAME = "3937";//"FrontCamera";
         public static final String BACK_CAMERA_NAME = "BackCamera";
         public static final Transform3d FRONT_CAMERA_TRANSFORM = new Transform3d(new Translation3d(0.3019665792, 0, 0.19), new Rotation3d(0, -0.349066, 0)); //FIXME
         public static final Transform3d BACK_CAMERA_TRANSFORM = new Transform3d(); //FIXME
