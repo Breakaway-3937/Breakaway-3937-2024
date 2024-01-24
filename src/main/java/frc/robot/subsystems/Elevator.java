@@ -44,8 +44,16 @@ public class Elevator extends SubsystemBase {
     brakeEntry = Shuffleboard.getTab("Elevator").add("Brake", false).withPosition(1, 0).getEntry();
   }
 
-  public void runBabyShooter(){
+  public void runBabyShooterForward(){
     babyShooter.set(1);
+  }
+
+  public void runBabyShooterReverse(){
+    babyShooter.set(-1);
+  }
+
+  public void stopBabyShooter(){
+    babyShooter.set(0);
   }
 
   public void setBabyWrist(double position){
