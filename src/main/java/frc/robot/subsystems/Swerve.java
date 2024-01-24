@@ -39,6 +39,7 @@ public class Swerve extends SubsystemBase {
     private final ComplexWidget fieldWidget;
     private final Field2d field = new Field2d(); 
     private final SwerveDrivePoseEstimator poseEstimator;
+    private boolean noteTracking = false;
 
     public Swerve() {
         gyro = new Pigeon2(Constants.Swerve.PIGEON_ID, "CANivore");
@@ -65,6 +66,14 @@ public class Swerve extends SubsystemBase {
         fieldWidget = Shuffleboard.getTab("Drive").add("Field", field).withPosition(4, 0).withSize(2, 2);
         fieldWidget.toString();
         configPathPlanner();
+    }
+
+    public boolean getNoteTracking(){
+        return noteTracking;
+    }
+
+    public void setNoteTracking(boolean noteTracking){
+        this.noteTracking = noteTracking;
     }
 
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
@@ -156,17 +165,6 @@ public class Swerve extends SubsystemBase {
             }
             return false;
         }, this);
-    }
-
-    public Optional<Rotation2d> getRotationTargetOverride(){
-        // Some condition that should decide if we want to override rotation
-        if(Limelight.hasGamePieceTarget()) {
-            // Return an optional containing the rotation override (this should be a field relative rotation)
-            return Optional.of(Limelight.getRobotToGamePieceRotation());
-        } else {
-            // return an empty optional when we don't want to override the path's rotation
-            return Optional.empty();
-        }
     }
 
     public void updatePoseVision(Optional<EstimatedRobotPose> pose){

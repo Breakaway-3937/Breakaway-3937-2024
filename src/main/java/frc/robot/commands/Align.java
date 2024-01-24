@@ -44,12 +44,22 @@ public class Align extends Command {
     double strafeVal = MathUtil.applyDeadband(strafeSup.getAsDouble(), Constants.Controllers.STICK_DEADBAND);
 
     /* Drive */
-    s_Swerve.drive(
-        new Translation2d(translationVal, strafeVal).times(Constants.Swerve.MAX_SPEED), 
-        s_Vision.getAprilTagRotationSpeed(), 
-        !robotCentricSup.getAsBoolean(), 
-        true
-    );
+    if(s_Swerve.getNoteTracking()){
+      s_Swerve.drive(
+          new Translation2d(translationVal, strafeVal).times(Constants.Swerve.MAX_SPEED), 
+          s_Vision.getNoteRotationSpeed(), 
+          !robotCentricSup.getAsBoolean(), 
+          true
+      );
+    }
+    else{
+      s_Swerve.drive(
+          new Translation2d(translationVal, strafeVal).times(Constants.Swerve.MAX_SPEED), 
+          s_Vision.getAprilTagRotationSpeed(), 
+          !robotCentricSup.getAsBoolean(), 
+          true
+      );
+    }
   }
 
   // Called once the command ends or is interrupted.

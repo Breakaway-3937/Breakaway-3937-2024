@@ -83,6 +83,8 @@ public class RobotContainer {
         /* Driver Buttons */
         button1.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
         rotationButton.whileTrue(c_Align);
+        button4.onTrue(new InstantCommand(() -> s_Swerve.setNoteTracking(true)));
+        button5.onTrue(new InstantCommand(() -> s_Swerve.setNoteTracking(false)));
     }
 
     /**

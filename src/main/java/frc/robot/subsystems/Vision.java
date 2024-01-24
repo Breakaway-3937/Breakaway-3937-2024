@@ -11,51 +11,67 @@ import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+import org.photonvision.targeting.PhotonPipelineResult;
+
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
 
 public class Vision extends SubsystemBase {
-    private final NetworkTable table;
-    private final NetworkTableEntry tx, ty, ta, tv;
-    private final PhotonCamera frontCamera;//, backCamera;
+    private final PhotonCamera frontCamera, noteCamera;//, backCamera;
     private AprilTagFieldLayout atfl;
     private final PhotonPoseEstimator frontPoseEstimator;//, backPoseEstimator;
     private final Swerve s_Swerve;
     private double targetX, targetY;
+    private boolean blue = false;
 
   /** Creates a new Vision. */
   public Vision(Swerve s_Swerve) {
     this.s_Swerve = s_Swerve;
-    table = NetworkTableInstance.getDefault().getTable("limelight");
-    tx = table.getEntry("tx");
-    ty = table.getEntry("ty");
-    ta = table.getEntry("ta");
-    tv = table.getEntry("tv");
 
     frontCamera = new PhotonCamera(Constants.Vision.FRONT_CAMERA_NAME);
     //backCamera = new PhotonCamera(Constants.Vision.BACK_CAMERA_NAME);
+    noteCamera = new PhotonCamera(Constants.Vision.NOTE_CAMERA_NAME);
 
     try {
       atfl = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
-    } catch (IOException e) {}
+    }
+    catch(IOException e){}
 
     frontPoseEstimator = new PhotonPoseEstimator(atfl, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, frontCamera, Constants.Vision.FRONT_CAMERA_TRANSFORM);
     //backPoseEstimator = new PhotonPoseEstimator(atfl, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, backCamera, Constants.Vision.BACK_CAMERA_TRANSFORM);
+
+    PPHolonomicDriveController.setRotationTargetOverride(this::getRotationTargetOverride);
+  }
+
+  public Optional<Rotation2d> getRotationTargetOverride(){
+    var result = frontCamera.getLatestResult();
+    if(result.hasTargets()){
+        return Optional.of(getAprilTagRotation2d(result));
+    }
+    else{
+        return Optional.empty();
+    }
+  }
+
+  public Rotation2d getAprilTagRotation2d(PhotonPipelineResult result){
+    return new Rotation2d((s_Swerve.getHeading().getDegrees() + result.getBestTarget().getYaw()) * Math.PI / 180.0);
   }
 
   public double getAprilTagRotationSpeed(){
     if(Robot.getFront()){
       var result = frontCamera.getLatestResult();
-      if(result.hasTargets()){
-        return -result.getBestTarget().getYaw() * 0.8 / 15.0;
+      if(result.hasTargets() && blue){
+        return -result.getTargets().get(0).getYaw() * 0.8 / 15.0;
+      }
+      else if(result.hasTargets() && !blue){
+        return -result.getTargets().get(1).getYaw() * 0.8 / 15.0;
       }
       else{
         return getPoseRotationSpeed();
@@ -74,7 +90,13 @@ public class Vision extends SubsystemBase {
   }
 
   public double getNoteRotationSpeed(){
-    return -getXAngle() * 0.8 / 15.0;
+    var result = noteCamera.getLatestResult();
+    if(result.hasTargets()){
+      return -result.getBestTarget().getYaw() * 0.8 / 15.0;
+    }
+    else{
+      return 0;
+    }
   }
 
   public Optional<EstimatedRobotPose> getEstimatedGlobalPose(){
@@ -87,23 +109,7 @@ public class Vision extends SubsystemBase {
   }
 
   private double getPoseRotationSpeed(){
-    return -(s_Swerve.getGyroYaw().getRadians() - Math.atan((targetY - s_Swerve.getPose().getY()) / (targetX - s_Swerve.getPose().getX()))) * 0.8 / 15.0;
-  }
-
-  public boolean hasValidTarget(){
-    return (tv.getInteger(0) == 0) ? false : true;
-  }
-
-  public double getXAngle(){
-    return tx.getDouble(0);
-  }
-
-  public double getYAngle(){
-    return ty.getDouble(0);
-  }
-
-  public double getTargetArea(){
-    return ta.getDouble(0);
+    return -(s_Swerve.getGyroYaw().getDegrees() - Math.toDegrees(Math.atan((targetY - s_Swerve.getPose().getY()) / (targetX - s_Swerve.getPose().getX())))) * 0.8 / 15.0;
   }
 
   @Override
@@ -113,11 +119,13 @@ public class Vision extends SubsystemBase {
     var alliance = DriverStation.getAlliance();
     if(alliance.isPresent()){
       if(alliance.get() == DriverStation.Alliance.Blue){
-        targetX = Constants.Vision.TARGET_X;
+        blue = true;
+        targetX = Constants.Vision.TARGET_X_BLUE;
         targetY = Constants.Vision.TARGET_Y_BLUE;
       }
       else{
-        targetX = Constants.Vision.TARGET_X;
+        blue = false;
+        targetX = Constants.Vision.TARGET_X_RED;
         targetY = Constants.Vision.TARGET_Y_RED;
       }
     }

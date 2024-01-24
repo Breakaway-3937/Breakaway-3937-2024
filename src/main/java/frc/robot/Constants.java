@@ -199,14 +199,16 @@ public final class Constants {
     }
 
     public static final class Vision {
-        public static final String FRONT_CAMERA_NAME = "3937";//"FrontCamera";
+        public static final String FRONT_CAMERA_NAME = "3937";//"FrontCamera"; //FIXME
         public static final String BACK_CAMERA_NAME = "BackCamera";
+        public static final String NOTE_CAMERA_NAME = "LifeCam HD-3000";
         public static final Transform3d FRONT_CAMERA_TRANSFORM = new Transform3d(new Translation3d(0.3019665792, 0, 0.19), new Rotation3d(0, -0.349066, 0)); //FIXME
         public static final Transform3d BACK_CAMERA_TRANSFORM = new Transform3d(); //FIXME
         public static final Vector<N3> VISION_STDS = VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(10));
-        public static final double TARGET_X = 0; //FIXME
-        public static final double TARGET_Y_BLUE = 0; //FIXME
-        public static final double TARGET_Y_RED = 0; //FIXME
+        public static final double TARGET_X_BLUE = -0.04;
+        public static final double TARGET_X_RED = 16.58;
+        public static final double TARGET_Y_BLUE = 4.98;
+        public static final double TARGET_Y_RED = 5.55;
     }
 
     public static String getMACAddress() {
