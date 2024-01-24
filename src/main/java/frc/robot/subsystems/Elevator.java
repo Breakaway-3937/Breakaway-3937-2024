@@ -23,10 +23,10 @@ import frc.robot.Constants;
 
 public class Elevator extends SubsystemBase {
 
-  private final CANSparkMax elevatorMotor, followerElevatorMotor;
-  private RelativeEncoder elevatorEncoder;
-  private SparkPIDController pid;
-  private final GenericEntry elevatorEncoderEntry, brakeEntry;
+  private final CANSparkMax elevatorMotor, followerElevatorMotor, babyWrist, babyShooter;
+  private RelativeEncoder elevatorEncoder, babyWristEncoder;
+  private SparkPIDController ePid, babyPid;
+  private final GenericEntry elevatorEncoderEntry, brakeEntry, babyWristEntry;
   private final DoubleSolenoid brake;
   private boolean brakeBool;
 
@@ -37,12 +37,27 @@ public class Elevator extends SubsystemBase {
     configElevatorMotors();
     brake = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.Shooter.FORWARD_CHANNEL, Constants.Shooter.REVERSE_CHANNEL);
     setBrakeOff();
+    babyWrist = new CANSparkMax(Constants.Elevator.BABY_WRIST_ID, MotorType.kBrushless);
+    babyShooter = new CANSparkMax(Constants.Elevator.BABY_SHOOTER_ID, MotorType.kBrushless);
+    babyWristEntry = Shuffleboard.getTab("Elevator").add("Baby Wrist", getBabyWrist()).withPosition(2,0).getEntry();
     elevatorEncoderEntry = Shuffleboard.getTab("Elevator").add("Elevator", getElevator()).withPosition(0,0).getEntry();
     brakeEntry = Shuffleboard.getTab("Elevator").add("Brake", false).withPosition(1, 0).getEntry();
   }
 
+  public void runBabyShooter(){
+    babyShooter.set(1);
+  }
+
+  public void setBabyWrist(double position){
+    babyPid.setReference(position, ControlType.kSmartMotion);
+  }
+
+  public double getBabyWrist(){
+    return babyWristEncoder.getPosition();
+  }
+
   public void setElevator(double position){
-    pid.setReference(position, ControlType.kSmartMotion);
+    ePid.setReference(position, ControlType.kSmartMotion);
   }
 
   public double getElevator(){
@@ -68,20 +83,38 @@ public class Elevator extends SubsystemBase {
     followerElevatorMotor.restoreFactoryDefaults();
     elevatorMotor.setIdleMode(IdleMode.kBrake);
     followerElevatorMotor.setIdleMode(IdleMode.kBrake);
+    babyWrist.restoreFactoryDefaults();
+    babyShooter.restoreFactoryDefaults();
+    babyWrist.setIdleMode(IdleMode.kBrake);
+    babyShooter.setIdleMode(IdleMode.kBrake);
 
     elevatorMotor.setSmartCurrentLimit(35);
+    followerElevatorMotor.setSmartCurrentLimit(35);
+    babyWrist.setSmartCurrentLimit(35);
+    babyShooter.setSmartCurrentLimit(35);
 
     elevatorEncoder = elevatorMotor.getEncoder();
-    pid = elevatorMotor.getPIDController();
-    pid.setFeedbackDevice(elevatorEncoder);
+    babyWristEncoder = babyWrist.getEncoder();
+    ePid = elevatorMotor.getPIDController();
+    babyPid = babyWrist.getPIDController();
+    ePid.setFeedbackDevice(elevatorEncoder);
+    babyPid.setFeedbackDevice(babyWristEncoder);
     elevatorEncoder.setPosition(0);
-    pid.setOutputRange(-1, 1);
-    pid.setSmartMotionMaxVelocity(0, 0); //FIXME
-    pid.setSmartMotionMaxAccel(0, 0); //FIXME
-    pid.setP(0); //FIXME
-    pid.setI(0);
-    pid.setD(0); //FIXME
-    pid.setFF(0); //FIXME
+    babyWristEncoder.setPosition(0);
+    ePid.setOutputRange(-1, 1);
+    ePid.setSmartMotionMaxVelocity(0, 0); //FIXME
+    ePid.setSmartMotionMaxAccel(0, 0); //FIXME
+    ePid.setP(0); //FIXME
+    ePid.setI(0);
+    ePid.setD(0); //FIXME
+    ePid.setFF(0); //FIXME
+    babyPid.setOutputRange(-1, 1);
+    babyPid.setSmartMotionMaxVelocity(0, 0); //FIXME
+    babyPid.setSmartMotionMaxAccel(0, 0); //FIXME
+    babyPid.setP(0); //FIXME
+    babyPid.setI(0);
+    babyPid.setD(0); //FIXME
+    babyPid.setFF(0); //FIXME
 
     followerElevatorMotor.follow(elevatorMotor);
   }
@@ -93,5 +126,7 @@ public class Elevator extends SubsystemBase {
     Logger.recordOutput("Elevator", getElevator());
     brakeEntry.setBoolean(getBrake());
     Logger.recordOutput("ElevatorBrake", getBrake());
+    babyWristEntry.setDouble(getBabyWrist());
+    Logger.recordOutput("Baby Wrist", getBabyWrist());
   }
 }

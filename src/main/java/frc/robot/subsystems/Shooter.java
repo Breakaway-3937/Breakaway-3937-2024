@@ -30,7 +30,7 @@ public class Shooter extends SubsystemBase {
 
   private final TalonFX shooterMotor, followerShooterMotor;
   private final TalonFXConfiguration shooterMotorConfig = new TalonFXConfiguration();
-  private final CANSparkMax wristMotor;
+  private final CANSparkMax wristMotor, wristFollowerMotor;
   private RelativeEncoder wristEncoder;
   private SparkPIDController pid;
   private final MotionMagicVelocityVoltage request = new MotionMagicVelocityVoltage(0);
@@ -44,6 +44,7 @@ public class Shooter extends SubsystemBase {
     shooterMotor = new TalonFX(Constants.Shooter.SHOOTER_MOTOR_ID);
     followerShooterMotor = new TalonFX(Constants.Shooter.FOLLOWER_SHOOTER_MOTOR_ID);
     wristMotor = new CANSparkMax(Constants.Shooter.WRIST_MOTOR_ID, MotorType.kBrushless);
+    wristFollowerMotor = new CANSparkMax(Constants.Shooter.WRIST_FOLLOWER_MOTOR_ID, MotorType.kBrushless);
     configShooterMotors();
     configWristMotor();
     pneumatic = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.Shooter.FORWARD_CHANNEL, Constants.Shooter.REVERSE_CHANNEL);
@@ -109,9 +110,13 @@ public class Shooter extends SubsystemBase {
 
   private void configWristMotor(){
     wristMotor.restoreFactoryDefaults();
+    wristFollowerMotor.restoreFactoryDefaults();
     wristMotor.setIdleMode(IdleMode.kBrake);
+    wristFollowerMotor.setIdleMode(IdleMode.kBrake);
+    wristFollowerMotor.follow(wristMotor, false);
 
     wristMotor.setSmartCurrentLimit(35);
+    wristFollowerMotor.setSmartCurrentLimit(35);
 
     wristEncoder = wristMotor.getEncoder();
     pid = wristMotor.getPIDController();
