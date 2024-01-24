@@ -71,7 +71,7 @@ public class Vision extends SubsystemBase {
         return -result.getTargets().get(0).getYaw() * 0.8 / 15.0;
       }
       else if(result.hasTargets() && !blue){
-        return -result.getTargets().get(1).getYaw() * 0.8 / 15.0;
+        return -result.getTargets().get(result.getTargets().size() == 1 ? 0 : 1).getYaw() * 0.8 / 15.0;
       }
       else{
         return getPoseRotationSpeed();
