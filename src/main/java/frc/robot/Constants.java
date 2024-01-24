@@ -189,6 +189,7 @@ public final class Constants {
         public static final int SHOOTER_MOTOR_ID = 0; //FIXME
         public static final int FOLLOWER_SHOOTER_MOTOR_ID = 0; //FIXME
         public static final int WRIST_MOTOR_ID = 0; //FIXME
+        public static final int WRIST_FOLLOWER_MOTOR_ID = 0; //FIXME
         public static final int FORWARD_CHANNEL = 0; //FIXME
         public static final int REVERSE_CHANNEL = 0; //FIXME
     }
@@ -196,6 +197,8 @@ public final class Constants {
     public static final class Elevator {
         public static final int ELEVATOR_MOTOR_ID = 0; //FIXME
         public static final int FOLLOWER_ELEVATOR_MOTOR_ID = 0; //FIXME
+        public static final int BABY_WRIST_ID = 0; //FIXME
+        public static final int BABY_SHOOTER_ID = 0; //FIXME
     }
 
     public static final class Vision {
