@@ -50,6 +50,7 @@ public class Vision extends SubsystemBase {
     PPHolonomicDriveController.setRotationTargetOverride(this::getRotationTargetOverride);
   }
 
+  //FIXME add only when wanting to shoot and only for center tag
   public Optional<Rotation2d> getRotationTargetOverride(){
     var result = frontCamera.getLatestResult();
     if(result.hasTargets()){
