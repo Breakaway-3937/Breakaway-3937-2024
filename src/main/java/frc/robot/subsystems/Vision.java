@@ -61,8 +61,8 @@ public class Vision extends SubsystemBase {
     }
   }
 
-  public Rotation2d getAprilTagRotation2d(PhotonPipelineResult result){
-    return new Rotation2d((s_Swerve.getHeading().getDegrees() + result.getBestTarget().getYaw()) * Math.PI / 180.0);
+  public Rotation2d getAprilTagRotation2d(){
+    return PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), new Rotation2d(0)));
   }
 
   public double getAprilTagRotationSpeed(){
@@ -110,7 +110,7 @@ public class Vision extends SubsystemBase {
   }
 
   private double getPoseRotationSpeed(){
-    return -(s_Swerve.getGyroYaw().getDegrees() - Math.toDegrees(Math.atan((targetY - s_Swerve.getPose().getY()) / (targetX - s_Swerve.getPose().getX())))) * 0.8 / 15.0;
+    return -PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), new Rotation2d(0))).toDegrees() * 8.0 / 15.0;
   }
 
   @Override
