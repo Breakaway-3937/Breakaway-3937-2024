@@ -63,7 +63,7 @@ public class Swerve extends SubsystemBase {
         yaw = Shuffleboard.getTab("Drive").add("Yaw", getHeading().getDegrees()).withPosition(0, 1).getEntry();
         poseX = Shuffleboard.getTab("Drive").add("X", 0).withPosition(0, 2).getEntry();
         poseY = Shuffleboard.getTab("Drive").add("Y", 0).withPosition(1, 2).getEntry();
-        fieldWidget = Shuffleboard.getTab("Drive").add("Field", field).withPosition(4, 0).withSize(2, 2);
+        fieldWidget = Shuffleboard.getTab("Drive").add("Field", field).withPosition(4, 0).withSize(4, 3);
         fieldWidget.toString();
         configPathPlanner();
     }
@@ -167,9 +167,14 @@ public class Swerve extends SubsystemBase {
         }, this);
     }
 
-    public void updatePoseVision(Optional<EstimatedRobotPose> pose){
+    public void updatePoseVision(Optional<EstimatedRobotPose> pose, boolean blue){
         if(pose.isPresent()){
-            poseEstimator.addVisionMeasurement(pose.get().estimatedPose.toPose2d(), pose.get().timestampSeconds);
+            if(blue){
+                poseEstimator.addVisionMeasurement(pose.get().estimatedPose.toPose2d(), pose.get().timestampSeconds);
+            }
+            else{
+                poseEstimator.addVisionMeasurement(new Pose2d(new Translation2d(pose.get().estimatedPose.toPose2d().getX(), pose.get().estimatedPose.toPose2d().getY()), Rotation2d.fromRadians(Math.PI - pose.get().estimatedPose.getRotation().getAngle())), pose.get().timestampSeconds);
+            }
         }
     }
 
