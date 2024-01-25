@@ -118,7 +118,7 @@ public class Vision extends SubsystemBase {
       return -PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), new Rotation2d(0))).getDegrees() * 8.0 / 300.0;
     }
     else{
-      return -PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), new Rotation2d(180))).getDegrees() * 8.0 / 300.0;
+      return -PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromDegrees(180))).getDegrees() * 8.0 / 300.0;
     }
   }
 
