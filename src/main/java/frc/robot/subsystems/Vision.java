@@ -10,23 +10,25 @@ import java.util.Optional;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.PhotonUtils;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
-import org.photonvision.targeting.PhotonPipelineResult;
 
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
 
 public class Vision extends SubsystemBase {
-    private final PhotonCamera frontCamera, noteCamera;//, backCamera;
+    private final PhotonCamera frontCamera, backCamera;//, noteCamera;
     private AprilTagFieldLayout atfl;
-    private final PhotonPoseEstimator frontPoseEstimator;//, backPoseEstimator;
+    private final PhotonPoseEstimator frontPoseEstimator, backPoseEstimator;
     private final Swerve s_Swerve;
     private double targetX, targetY;
     private boolean blue = false;
@@ -36,8 +38,8 @@ public class Vision extends SubsystemBase {
     this.s_Swerve = s_Swerve;
 
     frontCamera = new PhotonCamera(Constants.Vision.FRONT_CAMERA_NAME);
-    //backCamera = new PhotonCamera(Constants.Vision.BACK_CAMERA_NAME);
-    noteCamera = new PhotonCamera(Constants.Vision.NOTE_CAMERA_NAME);
+    backCamera = new PhotonCamera(Constants.Vision.BACK_CAMERA_NAME);
+    //noteCamera = new PhotonCamera(Constants.Vision.NOTE_CAMERA_NAME);
 
     try {
       atfl = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
@@ -45,16 +47,15 @@ public class Vision extends SubsystemBase {
     catch(IOException e){}
 
     frontPoseEstimator = new PhotonPoseEstimator(atfl, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, frontCamera, Constants.Vision.FRONT_CAMERA_TRANSFORM);
-    //backPoseEstimator = new PhotonPoseEstimator(atfl, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, backCamera, Constants.Vision.BACK_CAMERA_TRANSFORM);
+    backPoseEstimator = new PhotonPoseEstimator(atfl, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, backCamera, Constants.Vision.BACK_CAMERA_TRANSFORM);
 
     PPHolonomicDriveController.setRotationTargetOverride(this::getRotationTargetOverride);
   }
 
-  //FIXME add only when wanting to shoot and only for center tag
   public Optional<Rotation2d> getRotationTargetOverride(){
     var result = frontCamera.getLatestResult();
-    if(result.hasTargets()){
-        return Optional.of(getAprilTagRotation2d(result));
+    if(result.hasTargets() && true){ //FIXME will be if intake is full
+        return Optional.of(getAprilTagRotation2d());
     }
     else{
         return Optional.empty();
@@ -69,40 +70,43 @@ public class Vision extends SubsystemBase {
     if(Robot.getFront()){
       var result = frontCamera.getLatestResult();
       if(result.hasTargets() && blue){
-        return -result.getTargets().get(0).getYaw() * 0.8 / 15.0;
+        return -result.getTargets().get(0).getYaw() * 0.8 / 10.0;
       }
       else if(result.hasTargets() && !blue){
-        return -result.getTargets().get(result.getTargets().size() == 1 ? 0 : 1).getYaw() * 0.8 / 15.0;
+        return -result.getTargets().get(result.getTargets().size() == 1 ? 0 : 1).getYaw() * 0.8 / 10.0;
       }
       else{
         return getPoseRotationSpeed();
       }
     }
     else{
-      return 0;
-      /*var result = backCamera.getLatestResult();
-      if(result.hasTargets()){
-        return -result.getBestTarget().getYaw() * 0.8 / 15.0;
+      var result = backCamera.getLatestResult();
+      if(result.hasTargets() && blue){
+        return -result.getTargets().get(0).getYaw() * 0.8 / 10.0;
+      }
+      else if(result.hasTargets() && !blue){
+        return -result.getTargets().get(result.getTargets().size() == 1 ? 0 : 1).getYaw() * 0.8 / 10.0;
       }
       else{
         return getPoseRotationSpeed();
-      }*/
+      }
     }
   }
 
   public double getNoteRotationSpeed(){
-    var result = noteCamera.getLatestResult();
+    /*var result = noteCamera.getLatestResult();
     if(result.hasTargets()){
-      return -result.getBestTarget().getYaw() * 0.8 / 15.0;
+      return -result.getBestTarget().getYaw() * 0.8 / 10.0;
     }
     else{
       return 0;
-    }
+    }*/
+    return 0;
   }
 
   public Optional<EstimatedRobotPose> getEstimatedGlobalPose(){
-    if(false){//backCamera.getLatestResult().hasTargets()){
-      return Optional.empty();//backPoseEstimator.update();
+    if(backCamera.getLatestResult().hasTargets()){
+      return backPoseEstimator.update();
     }
     else{
       return frontPoseEstimator.update();
@@ -110,13 +114,18 @@ public class Vision extends SubsystemBase {
   }
 
   private double getPoseRotationSpeed(){
-    return -PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), new Rotation2d(0))).toDegrees() * 8.0 / 15.0;
+    if(blue){
+      return -PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), new Rotation2d(0))).getDegrees() * 8.0 / 300.0;
+    }
+    else{
+      return -PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), new Rotation2d(180))).getDegrees() * 8.0 / 300.0;
+    }
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    s_Swerve.updatePoseVision(getEstimatedGlobalPose());
+    s_Swerve.updatePoseVision(getEstimatedGlobalPose(), blue);
     var alliance = DriverStation.getAlliance();
     if(alliance.isPresent()){
       if(alliance.get() == DriverStation.Alliance.Blue){
