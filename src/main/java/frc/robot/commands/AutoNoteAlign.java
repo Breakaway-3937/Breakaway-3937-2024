@@ -29,14 +29,15 @@ public class AutoNoteAlign extends Command {
   @Override
   public void execute() {
 
-    double translationXValue;
+    double translationXValue = 0;
     double translationYValue = 0;
-    if(true){
+    /*if(true){
       //Tank full
       translationXValue = 0;
-    }
+    }*/
 
     s_Swerve.drive(new Translation2d(translationXValue, translationYValue), s_Vision.getNoteRotationSpeed(), true, false);
+    
   }
 
   // Called once the command ends or is interrupted.

@@ -57,6 +57,7 @@ public class RobotContainer {
     public final Music c_Music = new Music(s_Swerve);
     private final Align c_Align = new Align(s_Swerve, s_Vision, () -> translationController.getRawAxis(translationAxis), () -> translationController.getRawAxis(strafeAxis), () -> robotRelative);
 
+
     private final SendableChooser<Command> autoChooser;
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -85,6 +86,7 @@ public class RobotContainer {
         rotationButton.whileTrue(c_Align);
         button4.onTrue(new InstantCommand(() -> s_Swerve.setNoteTracking(true)));
         button5.onTrue(new InstantCommand(() -> s_Swerve.setNoteTracking(false)));
+        button6.whileTrue(new AutoNoteAlign(s_Swerve, s_Vision));
     }
 
     /**
