@@ -17,6 +17,7 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -26,19 +27,20 @@ import frc.robot.Constants;
 import frc.robot.Robot;
 
 public class Vision extends SubsystemBase {
-    private final PhotonCamera frontCamera, backCamera;//, noteCamera;
+    private final PhotonCamera frontCamera;//, backCamera;//, noteCamera;
     private AprilTagFieldLayout atfl;
-    private final PhotonPoseEstimator frontPoseEstimator, backPoseEstimator;
+    private final PhotonPoseEstimator frontPoseEstimator;//, backPoseEstimator;
     private final Swerve s_Swerve;
     private double targetX, targetY;
     private boolean blue = false;
+    private PIDController pid = new PIDController(0.3, 0, 0);
 
   /** Creates a new Vision. */
   public Vision(Swerve s_Swerve) {
     this.s_Swerve = s_Swerve;
 
     frontCamera = new PhotonCamera(Constants.Vision.FRONT_CAMERA_NAME);
-    backCamera = new PhotonCamera(Constants.Vision.BACK_CAMERA_NAME);
+    //backCamera = new PhotonCamera(Constants.Vision.BACK_CAMERA_NAME);
     //noteCamera = new PhotonCamera(Constants.Vision.NOTE_CAMERA_NAME);
 
     try {
@@ -47,7 +49,7 @@ public class Vision extends SubsystemBase {
     catch(IOException e){}
 
     frontPoseEstimator = new PhotonPoseEstimator(atfl, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, frontCamera, Constants.Vision.FRONT_CAMERA_TRANSFORM);
-    backPoseEstimator = new PhotonPoseEstimator(atfl, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, backCamera, Constants.Vision.BACK_CAMERA_TRANSFORM);
+    //backPoseEstimator = new PhotonPoseEstimator(atfl, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, backCamera, Constants.Vision.BACK_CAMERA_TRANSFORM);
 
     PPHolonomicDriveController.setRotationTargetOverride(this::getRotationTargetOverride);
   }
@@ -63,7 +65,7 @@ public class Vision extends SubsystemBase {
   }
 
   public Rotation2d getAprilTagRotation2d(){
-    return PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), new Rotation2d(0)));
+    return PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromDegrees(0)));
   }
 
   public double getAprilTagRotationSpeed(){
@@ -80,7 +82,7 @@ public class Vision extends SubsystemBase {
       }
     }
     else{
-      var result = backCamera.getLatestResult();
+      /*var result = backCamera.getLatestResult();
       if(result.hasTargets() && blue){
         return -result.getTargets().get(0).getYaw() * 0.8 / 10.0;
       }
@@ -89,7 +91,8 @@ public class Vision extends SubsystemBase {
       }
       else{
         return getPoseRotationSpeed();
-      }
+      }*/
+      return 0;
     }
   }
 
@@ -105,8 +108,9 @@ public class Vision extends SubsystemBase {
   }
 
   public Optional<EstimatedRobotPose> getEstimatedGlobalPose(){
-    if(backCamera.getLatestResult().hasTargets()){
-      return backPoseEstimator.update();
+    if(false)/*if(backCamera.getLatestResult().hasTargets())*/{
+      //return backPoseEstimator.update();
+      return Optional.empty();
     }
     else{
       return frontPoseEstimator.update();
@@ -114,12 +118,7 @@ public class Vision extends SubsystemBase {
   }
 
   private double getPoseRotationSpeed(){
-    if(blue){
-      return -PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), new Rotation2d(0))).getDegrees() * 8.0 / 300.0;
-    }
-    else{
-      return -PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromDegrees(180))).getDegrees() * 8.0 / 300.0;
-    }
+    return -pid.calculate(-PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromRadians(0))).getRadians()) * Constants.Swerve.MAX_ANGULAR_VELOCITY;
   }
 
   @Override

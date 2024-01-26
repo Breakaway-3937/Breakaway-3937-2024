@@ -185,7 +185,7 @@ public class Swerve extends SubsystemBase {
         field.setRobotPose(getPose());
         poseX.setDouble(getPose().getX());
         poseY.setDouble(getPose().getY());
-        
+       
         mod0Cancoder.setDouble(mSwerveMods[0].getCANcoder().getDegrees());
         mod1Cancoder.setDouble(mSwerveMods[1].getCANcoder().getDegrees());
         mod2Cancoder.setDouble(mSwerveMods[2].getCANcoder().getDegrees());
