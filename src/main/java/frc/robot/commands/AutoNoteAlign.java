@@ -15,8 +15,8 @@ public class AutoNoteAlign extends Command {
   private Swerve s_Swerve;
   private Vision s_Vision;
   private Timer time;
-  private boolean done;
-  private double lastRotationSpeed;
+  private boolean done = false;
+  private double lastRotationSpeed = 0, translationXValue = 1, translationYValue = 0;
 
   /** Creates a new AutoNoteAlign. */
   public AutoNoteAlign(Swerve s_Swerve, Vision s_Vision) {
@@ -31,14 +31,20 @@ public class AutoNoteAlign extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    lastRotationSpeed = 0;
+    translationXValue = 0;
+    translationYValue = 0;
+    time.reset();
+    done = false;
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
 
-    double translationXValue = 1;
-    double translationYValue = 0;
+    translationXValue = 1;
+    translationYValue = 0;
 
     if(s_Vision.getNoteTargets() == true){
       s_Swerve.drive(new Translation2d(translationXValue, translationYValue), s_Vision.getNoteRotationSpeed(), false, false);
@@ -58,7 +64,7 @@ public class AutoNoteAlign extends Command {
     }
   }
 
-  // Called once the command ends or is interrupted.
+  // Called once the command ends or is interrupted.m
   @Override
   public void end(boolean interrupted) {}
 
