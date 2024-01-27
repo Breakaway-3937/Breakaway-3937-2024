@@ -12,18 +12,18 @@ import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Vision;
 
 public class AutoNoteAlign extends Command {
-  private Swerve s_Swerve;
-  private Vision s_Vision;
-  private Timer time;
+  private final Swerve s_Swerve;
+  private final Vision s_Vision;
+  private final Timer timer;
   private boolean done = false;
-  private double lastRotationSpeed = 0, translationXValue = 1, translationYValue = 0;
+  private double lastRotationSpeed = 0, translationXValue = 1;
 
   /** Creates a new AutoNoteAlign. */
   public AutoNoteAlign(Swerve s_Swerve, Vision s_Vision) {
     this.s_Swerve = s_Swerve;
     this.s_Vision = s_Vision;
-    time = new Timer();
-    time.reset();
+    timer = new Timer();
+    timer.reset();
     done = false;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(s_Swerve, s_Vision);
@@ -34,31 +34,25 @@ public class AutoNoteAlign extends Command {
   public void initialize() {
     lastRotationSpeed = 0;
     translationXValue = 0;
-    translationYValue = 0;
-    time.reset();
+    timer.reset();
     done = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
     translationXValue = 1;
-    translationYValue = 0;
 
-    if(s_Vision.getNoteTargets() == true){
-      s_Swerve.drive(new Translation2d(translationXValue, translationYValue), s_Vision.getNoteRotationSpeed(), false, false);
-      System.out.println("SEE TARGET SEE TARGET SEE TARGET SEE TARGET SEE TARGET SEE TARGET SEE TARGET SEE TARGET SEE TARGET SEE TARGET SEE TARGET SEE TARGET SEE TARGET SEE TARGET SEE TARGET SEE TARGET SEE TARGET SEE TARGET SEE TARGET ");
+    if(s_Vision.getNoteTargets()){
+      s_Swerve.drive(new Translation2d(translationXValue, 0), s_Vision.getNoteRotationSpeed(), false, false);
     }
     else{
       lastRotationSpeed = s_Vision.getNoteRotationSpeed();
-      time.start();
-      if(time.get() < 3){
-        s_Swerve.drive(new Translation2d(translationXValue, translationYValue), lastRotationSpeed, false, false);
-        System.out.println("TIMER TIMER TIMER TIMER TIMER TIMER TIMER TIMER TIMER TIMER TIMER TIMER TIMER TIMER TIMER TIMER TIMER TIMER TIMER TIMER TIMER TIMER TIMER TIMER TIMER TIMER TIMER TIMER TIMER TIMER TIMER TIMER TIMER TIMER ");
+      timer.start();
+      if(timer.get() < 3){
+        s_Swerve.drive(new Translation2d(translationXValue, 0), lastRotationSpeed, false, false);
       }
       else{
-        System.out.println("END END END END END END END END END END END END END END END END END END END END END END END END ");
         done = true;
       }
     }

@@ -72,10 +72,10 @@ public class Vision extends SubsystemBase {
     if(Robot.getFront()){
       var result = frontCamera.getLatestResult();
       if(result.hasTargets() && blue){
-        return -result.getTargets().get(0).getYaw() * 0.8 / 10.0;
+        return -pid.calculate(result.getTargets().get(0).getYaw());
       }
       else if(result.hasTargets() && !blue){
-        return -result.getTargets().get(result.getTargets().size() == 1 ? 0 : 1).getYaw() * 0.8 / 10.0;
+        return -pid.calculate(result.getTargets().get(result.getTargets().size() == 1 ? 0 : 1).getYaw());
       }
       else{
         return getPoseRotationSpeed();
@@ -99,12 +99,11 @@ public class Vision extends SubsystemBase {
   public double getNoteRotationSpeed(){
     var result = noteCamera.getLatestResult();
     if(result.hasTargets()){
-      return -result.getBestTarget().getYaw() * 0.8 / 10.0;
+      return -pid.calculate(result.getBestTarget().getYaw());
     }
     else{
       return 0;
     }
-    //return 0;
   }
 
   public boolean getNoteTargets(){
