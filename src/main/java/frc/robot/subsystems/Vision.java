@@ -27,7 +27,7 @@ import frc.robot.Constants;
 import frc.robot.Robot;
 
 public class Vision extends SubsystemBase {
-    private final PhotonCamera frontCamera;//, backCamera;//, noteCamera;
+    private final PhotonCamera frontCamera/*, backCamera;*/, noteCamera;
     private AprilTagFieldLayout atfl;
     private final PhotonPoseEstimator frontPoseEstimator;//, backPoseEstimator;
     private final Swerve s_Swerve;
@@ -41,7 +41,7 @@ public class Vision extends SubsystemBase {
 
     frontCamera = new PhotonCamera(Constants.Vision.FRONT_CAMERA_NAME);
     //backCamera = new PhotonCamera(Constants.Vision.BACK_CAMERA_NAME);
-    //noteCamera = new PhotonCamera(Constants.Vision.NOTE_CAMERA_NAME);
+    noteCamera = new PhotonCamera(Constants.Vision.NOTE_CAMERA_NAME);
 
     try {
       atfl = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
@@ -97,14 +97,18 @@ public class Vision extends SubsystemBase {
   }
 
   public double getNoteRotationSpeed(){
-    /*var result = noteCamera.getLatestResult();
+    var result = noteCamera.getLatestResult();
     if(result.hasTargets()){
       return -result.getBestTarget().getYaw() * 0.8 / 10.0;
     }
     else{
       return 0;
-    }*/
-    return 0;
+    }
+    //return 0;
+  }
+
+  public boolean getNoteTargets(){
+    return noteCamera.getLatestResult().hasTargets();
   }
 
   public Optional<EstimatedRobotPose> getEstimatedGlobalPose(){
@@ -120,6 +124,7 @@ public class Vision extends SubsystemBase {
   private double getPoseRotationSpeed(){
     return -pid.calculate(-PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromRadians(0))).getRadians()) * Constants.Swerve.MAX_ANGULAR_VELOCITY;
   }
+
 
   @Override
   public void periodic() {

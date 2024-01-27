@@ -3,6 +3,7 @@ package frc.robot;
 import org.littletonrobotics.junction.Logger;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
@@ -66,12 +67,14 @@ public class RobotContainer {
         CommandScheduler.getInstance().registerSubsystem(s_LED);
         CommandScheduler.getInstance().registerSubsystem(s_Vision);
 
+        NamedCommands.registerCommand("note", new AutoNoteAlign(s_Swerve, s_Vision));
         s_Swerve.setDefaultCommand(new TeleopSwerve(s_Swerve, () -> translationController.getRawAxis(translationAxis), () -> translationController.getRawAxis(strafeAxis), () -> rotationController.getRawAxis(rotationAxis), () -> robotRelative));
         autoChooser = AutoBuilder.buildAutoChooser("DO NOTHING");
         Shuffleboard.getTab("Auto").add("Auto", autoChooser).withPosition(0, 0);
         Shuffleboard.selectTab("Auto");
         // Configure the button bindings
         configureButtonBindings();
+
     }
 
     /**
@@ -86,7 +89,6 @@ public class RobotContainer {
         rotationButton.whileTrue(c_Align);
         button4.onTrue(new InstantCommand(() -> s_Swerve.setNoteTracking(true)));
         button5.onTrue(new InstantCommand(() -> s_Swerve.setNoteTracking(false)));
-        button6.whileTrue(new AutoNoteAlign(s_Swerve, s_Vision));
     }
 
     /**
