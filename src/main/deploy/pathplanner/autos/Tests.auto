@@ -18,9 +18,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "sequential",
           "data": {
-            "name": "note"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "note"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "New Path"
           }
         }
       ]
