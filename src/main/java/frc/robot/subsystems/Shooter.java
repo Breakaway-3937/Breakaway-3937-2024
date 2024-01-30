@@ -25,7 +25,7 @@ import frc.robot.Constants;
 
 public class Shooter extends SubsystemBase {
 
-  private final TalonFX shooterMotor, followerShooterMotor;
+  //private final TalonFX shooterMotor, followerShooterMotor;
   private final TalonFXConfiguration shooterMotorConfig = new TalonFXConfiguration();
   private final CANSparkMax wristMotor, wristFollowerMotor;
   private RelativeEncoder wristEncoder;
@@ -37,8 +37,8 @@ public class Shooter extends SubsystemBase {
 
   /** Creates a new Shooter. */
   public Shooter() {
-    shooterMotor = new TalonFX(Constants.Shooter.SHOOTER_MOTOR_ID);
-    followerShooterMotor = new TalonFX(Constants.Shooter.FOLLOWER_SHOOTER_MOTOR_ID);
+    //shooterMotor = new TalonFX(Constants.Shooter.SHOOTER_MOTOR_ID);
+    //followerShooterMotor = new TalonFX(Constants.Shooter.FOLLOWER_SHOOTER_MOTOR_ID);
     wristMotor = new CANSparkMax(Constants.Shooter.WRIST_MOTOR_ID, MotorType.kBrushless);
     wristFollowerMotor = new CANSparkMax(Constants.Shooter.WRIST_FOLLOWER_MOTOR_ID, MotorType.kBrushless);
     configShooterMotors();
@@ -49,11 +49,11 @@ public class Shooter extends SubsystemBase {
 
   public void runShooter(double speed){
     this.speed = speed;
-    shooterMotor.setControl(request.withVelocity(speed));
+    //shooterMotor.setControl(request.withVelocity(speed));
   }
 
   public void stopShooter(){
-    shooterMotor.stopMotor();
+    //shooterMotor.stopMotor();
   }
 
   public boolean atSpeed(){
@@ -66,7 +66,8 @@ public class Shooter extends SubsystemBase {
   }
   
   public double getShooterVelocity(){
-    return shooterMotor.getVelocity().getValueAsDouble();
+    return 0;
+    //return shooterMotor.getVelocity().getValueAsDouble();
   }
 
   public void setWrist(double position){
@@ -78,8 +79,8 @@ public class Shooter extends SubsystemBase {
   }
 
   private void configShooterMotors(){
-    shooterMotor.getConfigurator().apply(new TalonFXConfiguration());
-    followerShooterMotor.getConfigurator().apply(new TalonFXConfiguration());
+    //shooterMotor.getConfigurator().apply(new TalonFXConfiguration());
+    //followerShooterMotor.getConfigurator().apply(new TalonFXConfiguration());
 
     shooterMotorConfig.Slot0.kP = 0; //FIXME
     shooterMotorConfig.Slot0.kI = 0;
@@ -95,10 +96,10 @@ public class Shooter extends SubsystemBase {
 
     shooterMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
-    shooterMotor.getConfigurator().apply(shooterMotorConfig);
-    followerShooterMotor.getConfigurator().apply(shooterMotorConfig);
+    //shooterMotor.getConfigurator().apply(shooterMotorConfig);
+    //followerShooterMotor.getConfigurator().apply(shooterMotorConfig);
 
-    followerShooterMotor.setControl(followerRequest);
+    //followerShooterMotor.setControl(followerRequest);
   }
 
   private void configWristMotor(){

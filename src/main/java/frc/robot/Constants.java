@@ -185,8 +185,8 @@ public final class Constants {
         public static final int BACK_INTAKE_MOTOR_ID = 16;
         public static final int LOADER_MOTOR_ID = 5;
         public static final int INTAKE_SENSOR_ID = 0; //FIXME
-        public static final int SHOOTER_SENSOR_ID = 0; //FIXME
-        public static final int BABY_SHOOTER_SENSOR_ID = 0; //FIXME
+        public static final int SHOOTER_SENSOR_ID = 1; //FIXME
+        public static final int BABY_SHOOTER_SENSOR_ID = 2; //FIXME
     }
 
     public static final class Shooter {

@@ -29,11 +29,8 @@ public class Intake extends SubsystemBase {
     loaderMotor = new CANSparkMax(Constants.Intake.LOADER_MOTOR_ID, MotorType.kBrushless);
     configIntakeMotors();
     intake = new AnalogInput(Constants.Intake.INTAKE_SENSOR_ID);
-    intake.resetAccumulator();
     shooter = new AnalogInput(Constants.Intake.SHOOTER_SENSOR_ID);
-    shooter.resetAccumulator();
     babyShooter = new AnalogInput(Constants.Intake.BABY_SHOOTER_SENSOR_ID);
-    babyShooter.resetAccumulator();
     intakeSensor = Shuffleboard.getTab("Intake").add("Intake Sensor", 0).withPosition(0, 0).getEntry();
     shooterSensor = Shuffleboard.getTab("Intake").add("Shooter Sensor", 0).withPosition(1, 0).getEntry();
     babyShooterSensor = Shuffleboard.getTab("Intake").add("Baby Shooter Sensor", 0).withPosition(2, 0).getEntry();
