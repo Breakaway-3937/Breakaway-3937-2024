@@ -30,11 +30,9 @@ public class Intake extends SubsystemBase {
     configIntakeMotors();
     intake = new AnalogInput(Constants.Intake.INTAKE_SENSOR_ID);
     intake.resetAccumulator();
-    staging = new AnalogInput(Constants.Intake.SHOOTER_SENSOR_ID);
-    staging.resetAccumulator();
-    shooter = new AnalogInput(Constants.Intake.BABY_SHOOTER_SENSOR_ID);
+    shooter = new AnalogInput(Constants.Intake.SHOOTER_SENSOR_ID);
     shooter.resetAccumulator();
-    babyShooter = new AnalogInput(Constants.Intake.SHOOTER_SENSOR_ID);
+    babyShooter = new AnalogInput(Constants.Intake.BABY_SHOOTER_SENSOR_ID);
     babyShooter.resetAccumulator();
     intakeSensor = Shuffleboard.getTab("Intake").add("Intake Sensor", 0).withPosition(0, 0).getEntry();
     shooterSensor = Shuffleboard.getTab("Intake").add("Staging Sensor", 0).withPosition(1, 0).getEntry();
@@ -71,33 +69,6 @@ public class Intake extends SubsystemBase {
   public void stop(){
     frontIntakeMotor.stopMotor();
     loaderMotor.stopMotor();
-  }
-
-  public boolean getIntakeSensor(){
-    if(intake.getValue() > 4000){
-      return true;
-    }
-    else{
-      return false;
-    }
-  }
-
-  public boolean getShooterSensor(){
-    if(shooter.getValue() > 4000){
-      return true;
-    }
-    else{
-      return false;
-    }
-  }
-
-  public boolean getBabyShooterSensor(){
-    if(babyShooter.getValue() > 4000){
-      return true;
-    }
-    else{
-      return false;
-    }
   }
 
   public boolean getIntakeSensor(){
