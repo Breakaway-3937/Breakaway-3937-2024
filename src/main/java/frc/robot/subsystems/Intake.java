@@ -18,7 +18,7 @@ import frc.robot.Constants;
 
 public class Intake extends SubsystemBase {
 
-  private final CANSparkMax frontIntakeMotor, backIntakeMotor;
+  private final CANSparkMax frontIntakeMotor, backIntakeMotor, loaderMotor;
   private final AnalogInput intake, shooter, babyShooter;
   private final GenericEntry intakeSensor, shooterSensor, babyShooterSensor;
 
@@ -26,10 +26,13 @@ public class Intake extends SubsystemBase {
   public Intake() {
     frontIntakeMotor = new CANSparkMax(Constants.Intake.FRONT_INTAKE_MOTOR_ID, MotorType.kBrushless);
     backIntakeMotor = new CANSparkMax(Constants.Intake.BACK_INTAKE_MOTOR_ID, MotorType.kBrushless);
+    loaderMotor = new CANSparkMax(Constants.Intake.LOADER_MOTOR_ID, MotorType.kBrushless);
     configIntakeMotors();
     intake = new AnalogInput(Constants.Intake.INTAKE_SENSOR_ID);
     intake.resetAccumulator();
-    shooter = new AnalogInput(Constants.Intake.STAGING_SENSOR_ID);
+    staging = new AnalogInput(Constants.Intake.SHOOTER_SENSOR_ID);
+    staging.resetAccumulator();
+    shooter = new AnalogInput(Constants.Intake.BABY_SHOOTER_SENSOR_ID);
     shooter.resetAccumulator();
     babyShooter = new AnalogInput(Constants.Intake.SHOOTER_SENSOR_ID);
     babyShooter.resetAccumulator();
@@ -45,22 +48,56 @@ public class Intake extends SubsystemBase {
     backIntakeMotor.restoreFactoryDefaults();
     backIntakeMotor.setIdleMode(IdleMode.kBrake);
 
+    loaderMotor.restoreFactoryDefaults();
+    loaderMotor.setIdleMode(IdleMode.kBrake);
+
     frontIntakeMotor.setSmartCurrentLimit(35);
     backIntakeMotor.setSmartCurrentLimit(35);
+    loaderMotor.setSmartCurrentLimit(35);
 
-    backIntakeMotor.follow(frontIntakeMotor);
+    backIntakeMotor.follow(frontIntakeMotor, true);
   }
 
   public void intake(){
     frontIntakeMotor.set(1);
+    loaderMotor.set(1);
   }
 
   public void spit(){
     frontIntakeMotor.set(-1);
+    loaderMotor.set(-1);
   }
 
   public void stop(){
     frontIntakeMotor.stopMotor();
+    loaderMotor.stopMotor();
+  }
+
+  public boolean getIntakeSensor(){
+    if(intake.getValue() > 4000){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+
+  public boolean getShooterSensor(){
+    if(shooter.getValue() > 4000){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+
+  public boolean getBabyShooterSensor(){
+    if(babyShooter.getValue() > 4000){
+      return true;
+    }
+    else{
+      return false;
+    }
   }
 
   public boolean getIntakeSensor(){

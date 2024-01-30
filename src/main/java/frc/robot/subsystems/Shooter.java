@@ -31,7 +31,7 @@ public class Shooter extends SubsystemBase {
   private RelativeEncoder wristEncoder;
   private SparkPIDController pid;
   private final MotionMagicVelocityVoltage request = new MotionMagicVelocityVoltage(0);
-  private final Follower followerRequest = new Follower(Constants.Shooter.SHOOTER_MOTOR_ID, false);
+  private final Follower followerRequest = new Follower(Constants.Shooter.SHOOTER_MOTOR_ID, true);
   private final GenericEntry shooterEncoderEntry, wristEncoderEntry;
 
   /** Creates a new Shooter. */
@@ -91,7 +91,7 @@ public class Shooter extends SubsystemBase {
     wristFollowerMotor.restoreFactoryDefaults();
     wristMotor.setIdleMode(IdleMode.kBrake);
     wristFollowerMotor.setIdleMode(IdleMode.kBrake);
-    wristFollowerMotor.follow(wristMotor, false);
+    wristFollowerMotor.follow(wristMotor);
 
     wristMotor.setSmartCurrentLimit(35);
     wristFollowerMotor.setSmartCurrentLimit(35);
