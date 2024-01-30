@@ -26,7 +26,7 @@ import frc.lib.util.SwerveModuleConstants;
 public final class Constants {
     public static final boolean ROBOT_RELATIVE = false;
     public static final boolean OPEN_LOOP = true;
-    public static final int CANDLE_ID = 15;
+    public static final int CANDLE_ID = 12;
     public static final String PRACTICE_MAC = "00:80:2F:25:DE:54";
     public static final boolean PRACTICE_BOT = getMACAddress().equals(PRACTICE_MAC);
     public static final boolean DEBUG = true;
@@ -68,9 +68,9 @@ public final class Constants {
         public static final COTSTalonFXSwerveConstants CHOSEN_MODULE = COTSTalonFXSwerveConstants.SDS.MK4.Falcon500(COTSTalonFXSwerveConstants.SDS.MK4.driveRatios.L2);
 
         /* Drivetrain Constants */
-        public static final double DRIVE_BASE_RADIUS = 0.4318; //FIXME 0.3804
-        public static final double TRACK_WIDTH = 0.45; //FIXME 0.57
-        public static final double WHEEL_BASE = 0.645; //FIXME 0.57
+        public static final double DRIVE_BASE_RADIUS = 0.3804;
+        public static final double TRACK_WIDTH = 0.57;
+        public static final double WHEEL_BASE = 0.57;
         public static final double WHEEL_DIAMETER = Units.inchesToMeters(3.9);
         public static final double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI;
 
@@ -181,19 +181,19 @@ public final class Constants {
     }
 
     public static final class Intake {
-        public static final int FRONT_INTAKE_MOTOR_ID = 0; //FIXME
-        public static final int BACK_INTAKE_MOTOR_ID = 0; //FIXME
-        public static final int LOADER_MOTOR_ID = 0; //FIXME
+        public static final int FRONT_INTAKE_MOTOR_ID = 17;
+        public static final int BACK_INTAKE_MOTOR_ID = 16;
+        public static final int LOADER_MOTOR_ID = 5;
         public static final int INTAKE_SENSOR_ID = 0; //FIXME
         public static final int SHOOTER_SENSOR_ID = 0; //FIXME
         public static final int BABY_SHOOTER_SENSOR_ID = 0; //FIXME
     }
 
     public static final class Shooter {
-        public static final int SHOOTER_MOTOR_ID = 0; //FIXME
-        public static final int FOLLOWER_SHOOTER_MOTOR_ID = 0; //FIXME
-        public static final int WRIST_MOTOR_ID = 0; //FIXME
-        public static final int WRIST_FOLLOWER_MOTOR_ID = 0; //FIXME
+        public static final int SHOOTER_MOTOR_ID = 3;
+        public static final int FOLLOWER_SHOOTER_MOTOR_ID = 4;
+        public static final int WRIST_MOTOR_ID = 6;
+        public static final int WRIST_FOLLOWER_MOTOR_ID = 7;
     }
 
     public static final class Elevator {
