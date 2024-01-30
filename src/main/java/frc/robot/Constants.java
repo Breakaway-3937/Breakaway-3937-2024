@@ -183,6 +183,9 @@ public final class Constants {
     public static final class Intake {
         public static final int FRONT_INTAKE_MOTOR_ID = 0; //FIXME
         public static final int BACK_INTAKE_MOTOR_ID = 0; //FIXME
+        public static final int INTAKE_SENSOR_ID = 0; //FIXME
+        public static final int STAGING_SENSOR_ID = 0; //FIXME
+        public static final int SHOOTER_SENSOR_ID = 0; //FIXME
     }
 
     public static final class Shooter {
@@ -190,8 +193,6 @@ public final class Constants {
         public static final int FOLLOWER_SHOOTER_MOTOR_ID = 0; //FIXME
         public static final int WRIST_MOTOR_ID = 0; //FIXME
         public static final int WRIST_FOLLOWER_MOTOR_ID = 0; //FIXME
-        public static final int FORWARD_CHANNEL = 0; //FIXME
-        public static final int REVERSE_CHANNEL = 0; //FIXME
     }
 
     public static final class Elevator {
@@ -199,6 +200,8 @@ public final class Constants {
         public static final int FOLLOWER_ELEVATOR_MOTOR_ID = 0; //FIXME
         public static final int BABY_WRIST_ID = 0; //FIXME
         public static final int BABY_SHOOTER_ID = 0; //FIXME
+        public static final int FORWARD_CHANNEL = 0; //FIXME
+        public static final int REVERSE_CHANNEL = 0; //FIXME
     }
 
     public static final class Vision {

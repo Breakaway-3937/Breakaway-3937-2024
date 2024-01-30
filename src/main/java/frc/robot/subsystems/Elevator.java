@@ -35,7 +35,7 @@ public class Elevator extends SubsystemBase {
     elevatorMotor = new CANSparkMax(Constants.Elevator.ELEVATOR_MOTOR_ID, MotorType.kBrushless);
     followerElevatorMotor = new CANSparkMax(Constants.Elevator.FOLLOWER_ELEVATOR_MOTOR_ID, MotorType.kBrushless);
     configElevatorMotors();
-    brake = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.Shooter.FORWARD_CHANNEL, Constants.Shooter.REVERSE_CHANNEL);
+    brake = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.Elevator.FORWARD_CHANNEL, Constants.Elevator.REVERSE_CHANNEL);
     setBrakeOff();
     babyWrist = new CANSparkMax(Constants.Elevator.BABY_WRIST_ID, MotorType.kBrushless);
     babyShooter = new CANSparkMax(Constants.Elevator.BABY_SHOOTER_ID, MotorType.kBrushless);
