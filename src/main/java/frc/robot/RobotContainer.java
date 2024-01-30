@@ -52,10 +52,14 @@ public class RobotContainer {
     private final Swerve s_Swerve = new Swerve();
     private final LED s_LED = new LED();
     private final Vision s_Vision = new Vision(s_Swerve);
+    private final Shooter s_Shooter = new Shooter();
+    private final Intake s_Intake = new Intake();
+
 
     /* Commands */
     public final Music c_Music = new Music(s_Swerve);
     private final Align c_Align = new Align(s_Swerve, s_Vision, () -> translationController.getRawAxis(translationAxis), () -> translationController.getRawAxis(strafeAxis), () -> robotRelative);
+    private final RunNote c_RunNote = new RunNote(s_Intake, s_Shooter, xboxController);
 
 
     private final SendableChooser<Command> autoChooser;
@@ -64,6 +68,7 @@ public class RobotContainer {
     public RobotContainer() {
         NamedCommands.registerCommand("note", new AutoNoteAlign(s_Swerve, s_Vision));
         s_Swerve.setDefaultCommand(new TeleopSwerve(s_Swerve, () -> translationController.getRawAxis(translationAxis), () -> translationController.getRawAxis(strafeAxis), () -> rotationController.getRawAxis(rotationAxis), () -> robotRelative));
+        s_Shooter.setDefaultCommand(c_RunNote);
         autoChooser = AutoBuilder.buildAutoChooser("DO NOTHING");
         Shuffleboard.getTab("Auto").add("Auto", autoChooser).withPosition(0, 0);
         Shuffleboard.selectTab("Auto");
