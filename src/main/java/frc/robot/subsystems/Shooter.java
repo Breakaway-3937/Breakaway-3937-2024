@@ -33,6 +33,7 @@ public class Shooter extends SubsystemBase {
   private final MotionMagicVelocityVoltage request = new MotionMagicVelocityVoltage(0);
   private final Follower followerRequest = new Follower(Constants.Shooter.SHOOTER_MOTOR_ID, true);
   private final GenericEntry shooterEncoderEntry, wristEncoderEntry;
+  private double speed = 0;
 
   /** Creates a new Shooter. */
   public Shooter() {
@@ -47,7 +48,21 @@ public class Shooter extends SubsystemBase {
   }
 
   public void runShooter(double speed){
+    this.speed = speed;
     shooterMotor.setControl(request.withVelocity(speed));
+  }
+
+  public void stopShooter(){
+    shooterMotor.stopMotor();
+  }
+
+  public boolean atSpeed(){
+    if(speed <= getShooterVelocity() + 100 && speed >= getShooterVelocity() - 100){
+      return true;
+    }
+    else{
+      return false;
+    }
   }
   
   public double getShooterVelocity(){
