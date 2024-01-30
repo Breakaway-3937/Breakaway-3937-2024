@@ -35,8 +35,8 @@ public class Intake extends SubsystemBase {
     babyShooter = new AnalogInput(Constants.Intake.BABY_SHOOTER_SENSOR_ID);
     babyShooter.resetAccumulator();
     intakeSensor = Shuffleboard.getTab("Intake").add("Intake Sensor", 0).withPosition(0, 0).getEntry();
-    shooterSensor = Shuffleboard.getTab("Intake").add("Staging Sensor", 0).withPosition(1, 0).getEntry();
-    babyShooterSensor = Shuffleboard.getTab("Intake").add("Shooter Sensor", 0).withPosition(2, 0).getEntry();
+    shooterSensor = Shuffleboard.getTab("Intake").add("Shooter Sensor", 0).withPosition(1, 0).getEntry();
+    babyShooterSensor = Shuffleboard.getTab("Intake").add("Baby Shooter Sensor", 0).withPosition(2, 0).getEntry();
   }
 
   private void configIntakeMotors(){
@@ -105,7 +105,7 @@ public class Intake extends SubsystemBase {
     shooterSensor.setDouble(shooter.getValue());
     babyShooterSensor.setDouble(babyShooter.getValue());
     Logger.recordOutput("Intake", intake.getValue());
-    Logger.recordOutput("Staging", shooter.getValue());
-    Logger.recordOutput("Shooter", babyShooter.getValue());
+    Logger.recordOutput("Shooter Sensor", shooter.getValue());
+    Logger.recordOutput("Baby Shooter", babyShooter.getValue());
   }
 }
