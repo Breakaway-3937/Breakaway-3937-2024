@@ -127,7 +127,7 @@ public class Vision extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    if(frontCamera.isConnected() /*|| backCamera.isConnected()*/){
+    if((Robot.getFront() && frontCamera.isConnected()) /*|| (!Robot.getFront() && backCamera.isConnected())*/){
       s_Swerve.updatePoseVision(getEstimatedGlobalPose(), blue);
     }
     var alliance = DriverStation.getAlliance();
