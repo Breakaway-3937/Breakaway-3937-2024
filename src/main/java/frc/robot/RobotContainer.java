@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -63,10 +62,6 @@ public class RobotContainer {
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
-        CommandScheduler.getInstance().registerSubsystem(s_Swerve);
-        CommandScheduler.getInstance().registerSubsystem(s_LED);
-        CommandScheduler.getInstance().registerSubsystem(s_Vision);
-
         NamedCommands.registerCommand("note", new AutoNoteAlign(s_Swerve, s_Vision));
         s_Swerve.setDefaultCommand(new TeleopSwerve(s_Swerve, () -> translationController.getRawAxis(translationAxis), () -> translationController.getRawAxis(strafeAxis), () -> rotationController.getRawAxis(rotationAxis), () -> robotRelative));
         autoChooser = AutoBuilder.buildAutoChooser("DO NOTHING");
@@ -74,7 +69,6 @@ public class RobotContainer {
         Shuffleboard.selectTab("Auto");
         // Configure the button bindings
         configureButtonBindings();
-
     }
 
     /**

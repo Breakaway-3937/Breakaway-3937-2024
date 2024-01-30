@@ -78,7 +78,7 @@ public class Vision extends SubsystemBase {
         return -result.getTargets().get(result.getTargets().size() == 1 ? 0 : 1).getYaw() * 0.8 / 15.0;
       }
       else{
-        return 0;//getPoseRotationSpeed();
+        return getPoseRotationSpeed();
       }
     }
     else{
@@ -124,11 +124,12 @@ public class Vision extends SubsystemBase {
     return -posePid.calculate(-PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromRadians(0))).getRadians()) * Constants.Swerve.MAX_ANGULAR_VELOCITY;
   }
 
-
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    s_Swerve.updatePoseVision(getEstimatedGlobalPose(), blue);
+    if(frontCamera.isConnected() /*|| backCamera.isConnected()*/){
+      s_Swerve.updatePoseVision(getEstimatedGlobalPose(), blue);
+    }
     var alliance = DriverStation.getAlliance();
     if(alliance.isPresent()){
       if(alliance.get() == DriverStation.Alliance.Blue){
