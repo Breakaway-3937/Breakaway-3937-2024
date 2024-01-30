@@ -102,6 +102,8 @@ public class Robot extends LoggedRobot {
     if(DriverStation.isFMSAttached() && DriverStation.isTeleop()){
       teleop = true;
     }
+
+    Logger.recordOutput("Front", getFront());
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
