@@ -14,12 +14,23 @@ import frc.robot.Constants;
 public class Intake extends SubsystemBase {
 
   private final CANSparkMax frontIntakeMotor, backIntakeMotor;
+  private final AnalogInput intake, staging, shooter;
+  private final GenericEntry intakeSensor, stagingSensor, shooterSensor;
 
   /** Creates a new Intake. */
   public Intake() {
     frontIntakeMotor = new CANSparkMax(Constants.Intake.FRONT_INTAKE_MOTOR_ID, MotorType.kBrushless);
     backIntakeMotor = new CANSparkMax(Constants.Intake.BACK_INTAKE_MOTOR_ID, MotorType.kBrushless);
     configIntakeMotors();
+    intake = new AnalogInput(Constants.Intake.INTAKE_SENSOR_ID);
+    intake.resetAccumulator();
+    staging = new AnalogInput(Constants.Intake.STAGING_SENSOR_ID);
+    staging.resetAccumulator();
+    shooter = new AnalogInput(Constants.Intake.SHOOTER_SENSOR_ID);
+    shooter.resetAccumulator();
+    intakeSensor = Shuffleboard.getTab("Intake").add("Intake Sensor", 0).withPosition(0, 0).getEntry();
+    stagingSensor = Shuffleboard.getTab("Intake").add("Staging Sensor", 0).withPosition(1, 0).getEntry();
+    shooterSensor = Shuffleboard.getTab("Intake").add("Shooter Sensor", 0).withPosition(2, 0).getEntry();
   }
 
   private void configIntakeMotors(){
@@ -50,5 +61,11 @@ public class Intake extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    intakeSensor.setDouble(intake.getValue());
+    stagingSensor.setDouble(staging.getValue());
+    shooterSensor.setDouble(shooter.getValue());
+    Logger.getInstance().recordOutput("Intake", intake.getValue());
+    Logger.getInstance().recordOutput("Staging", staging.getValue());
+    Logger.getInstance().recordOutput("Shooter", shooter.getValue());
   }
 }
