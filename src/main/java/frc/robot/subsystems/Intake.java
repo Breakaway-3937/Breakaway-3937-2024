@@ -19,8 +19,8 @@ import frc.robot.Constants;
 public class Intake extends SubsystemBase {
 
   private final CANSparkMax frontIntakeMotor, backIntakeMotor;
-  private final AnalogInput intake, staging, shooter;
-  private final GenericEntry intakeSensor, stagingSensor, shooterSensor;
+  private final AnalogInput intake, shooter, babyShooter;
+  private final GenericEntry intakeSensor, shooterSensor, babyShooterSensor;
 
   /** Creates a new Intake. */
   public Intake() {
@@ -29,13 +29,13 @@ public class Intake extends SubsystemBase {
     configIntakeMotors();
     intake = new AnalogInput(Constants.Intake.INTAKE_SENSOR_ID);
     intake.resetAccumulator();
-    staging = new AnalogInput(Constants.Intake.STAGING_SENSOR_ID);
-    staging.resetAccumulator();
-    shooter = new AnalogInput(Constants.Intake.SHOOTER_SENSOR_ID);
+    shooter = new AnalogInput(Constants.Intake.STAGING_SENSOR_ID);
     shooter.resetAccumulator();
+    babyShooter = new AnalogInput(Constants.Intake.SHOOTER_SENSOR_ID);
+    babyShooter.resetAccumulator();
     intakeSensor = Shuffleboard.getTab("Intake").add("Intake Sensor", 0).withPosition(0, 0).getEntry();
-    stagingSensor = Shuffleboard.getTab("Intake").add("Staging Sensor", 0).withPosition(1, 0).getEntry();
-    shooterSensor = Shuffleboard.getTab("Intake").add("Shooter Sensor", 0).withPosition(2, 0).getEntry();
+    shooterSensor = Shuffleboard.getTab("Intake").add("Staging Sensor", 0).withPosition(1, 0).getEntry();
+    babyShooterSensor = Shuffleboard.getTab("Intake").add("Shooter Sensor", 0).withPosition(2, 0).getEntry();
   }
 
   private void configIntakeMotors(){
@@ -63,14 +63,41 @@ public class Intake extends SubsystemBase {
     frontIntakeMotor.stopMotor();
   }
 
+  public boolean getIntakeSensor(){
+    if(intake.getValue() > 4000){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+
+  public boolean getShooterSensor(){
+    if(shooter.getValue() > 4000){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+
+  public boolean getBabyShooterSensor(){
+    if(babyShooter.getValue() > 4000){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     intakeSensor.setDouble(intake.getValue());
-    stagingSensor.setDouble(staging.getValue());
     shooterSensor.setDouble(shooter.getValue());
+    babyShooterSensor.setDouble(babyShooter.getValue());
     Logger.recordOutput("Intake", intake.getValue());
-    Logger.recordOutput("Staging", staging.getValue());
-    Logger.recordOutput("Shooter", shooter.getValue());
+    Logger.recordOutput("Staging", shooter.getValue());
+    Logger.recordOutput("Shooter", babyShooter.getValue());
   }
 }
