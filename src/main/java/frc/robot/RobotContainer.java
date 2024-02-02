@@ -41,8 +41,8 @@ public class RobotContainer {
     private final JoystickButton rotationButton = new JoystickButton(rotationController, Constants.Controllers.ROTATION_BUTTON);
     private final JoystickButton button1 = new JoystickButton(buttons, 1);
     private final JoystickButton button2 = new JoystickButton(buttons, 2);
-    private final JoystickButton button3 = new JoystickButton(buttons,3);
-    private final JoystickButton button4 = new JoystickButton(buttons,4);
+    private final JoystickButton button3 = new JoystickButton(buttons, 3);
+    private final JoystickButton button4 = new JoystickButton(buttons, 4);
     private final JoystickButton button5 = new JoystickButton(buttons, 5);
     private final JoystickButton button6 = new JoystickButton(buttons, 6);
     private final JoystickButton button7 = new JoystickButton(buttons, 7);
@@ -51,14 +51,14 @@ public class RobotContainer {
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
     private final LED s_LED = new LED();
-    private final Vision s_Vision = new Vision();//s_Swerve);
+    private final Vision s_Vision = new Vision(s_Swerve);
     private final Shooter s_Shooter = new Shooter();
     private final Intake s_Intake = new Intake();
 
 
     /* Commands */
-    //public final Music c_Music = new Music(s_Swerve);
-    //private final Align c_Align = new Align(s_Swerve, s_Vision, () -> translationController.getRawAxis(translationAxis), () -> translationController.getRawAxis(strafeAxis), () -> robotRelative);
+    public final Music c_Music = new Music(s_Swerve);
+    private final Align c_Align = new Align(s_Swerve, s_Vision, () -> translationController.getRawAxis(translationAxis), () -> translationController.getRawAxis(strafeAxis), () -> robotRelative);
     private final RunNote c_RunNote = new RunNote(s_Intake, s_Shooter, xboxController);
 
 
@@ -66,14 +66,14 @@ public class RobotContainer {
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
-        //NamedCommands.registerCommand("note", new AutoNoteAlign(s_Swerve, s_Vision));
-        //NamedCommands.registerCommand("FindNote", new InstantCommand());
-        //NamedCommands.registerCommand("Shoot", new InstantCommand());
+        NamedCommands.registerCommand("note", new AutoNoteAlign(s_Swerve, s_Vision));
+        NamedCommands.registerCommand("FindNote", new InstantCommand());
+        NamedCommands.registerCommand("Shoot", new InstantCommand());
         s_Swerve.setDefaultCommand(new TeleopSwerve(s_Swerve, () -> translationController.getRawAxis(translationAxis), () -> translationController.getRawAxis(strafeAxis), () -> rotationController.getRawAxis(rotationAxis), () -> robotRelative));
         s_Shooter.setDefaultCommand(c_RunNote);
         autoChooser = AutoBuilder.buildAutoChooser();
-        //Shuffleboard.getTab("Auto").add("Auto", autoChooser).withPosition(0, 0);
-        //Shuffleboard.selectTab("Auto");
+        Shuffleboard.getTab("Auto").add("Auto", autoChooser).withPosition(0, 0);
+        Shuffleboard.selectTab("Auto");
         // Configure the button bindings
         configureButtonBindings();
     }
@@ -87,7 +87,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         button1.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
-        //rotationButton.whileTrue(c_Align);
+        rotationButton.whileTrue(c_Align);
         button4.onTrue(new InstantCommand(() -> s_Swerve.setNoteTracking(true)));
         button5.onTrue(new InstantCommand(() -> s_Swerve.setNoteTracking(false)));
     }
@@ -100,6 +100,5 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         Logger.recordOutput("Auto", autoChooser.getSelected().toString());
         return autoChooser.getSelected();
-        //return null;
     }
 }

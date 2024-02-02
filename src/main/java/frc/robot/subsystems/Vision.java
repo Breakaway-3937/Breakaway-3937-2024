@@ -27,20 +27,20 @@ import frc.robot.Constants;
 import frc.robot.Robot;
 
 public class Vision extends SubsystemBase {
-    private final PhotonCamera frontCamera/*, backCamera;*/, noteCamera;
+    private final PhotonCamera frontCamera, backCamera, noteCamera;
     private AprilTagFieldLayout atfl;
-    private final PhotonPoseEstimator frontPoseEstimator;//, backPoseEstimator;
-    //private final Swerve s_Swerve;
+    private final PhotonPoseEstimator frontPoseEstimator, backPoseEstimator;
+    private final Swerve s_Swerve;
     private double targetX, targetY;
     private boolean blue = false;
     private PIDController posePid = new PIDController(0.3, 0, 0);
 
   /** Creates a new Vision. */
-  public Vision(/*Swerve s_Swerve*/) {
-    //this.s_Swerve = s_Swerve;
+  public Vision(Swerve s_Swerve) {
+    this.s_Swerve = s_Swerve;
 
     frontCamera = new PhotonCamera(Constants.Vision.FRONT_CAMERA_NAME);
-    //backCamera = new PhotonCamera(Constants.Vision.BACK_CAMERA_NAME);
+    backCamera = new PhotonCamera(Constants.Vision.BACK_CAMERA_NAME);
     noteCamera = new PhotonCamera(Constants.Vision.NOTE_CAMERA_NAME);
 
     try {
@@ -49,9 +49,11 @@ public class Vision extends SubsystemBase {
     catch(IOException e){}
 
     frontPoseEstimator = new PhotonPoseEstimator(atfl, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, frontCamera, Constants.Vision.FRONT_CAMERA_TRANSFORM);
-    //backPoseEstimator = new PhotonPoseEstimator(atfl, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, backCamera, Constants.Vision.BACK_CAMERA_TRANSFORM);
+    backPoseEstimator = new PhotonPoseEstimator(atfl, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, backCamera, Constants.Vision.BACK_CAMERA_TRANSFORM);
+    frontPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
+    backPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
 
-    //PPHolonomicDriveController.setRotationTargetOverride(this::getRotationTargetOverride);
+    PPHolonomicDriveController.setRotationTargetOverride(this::getRotationTargetOverride);
   }
 
   public Optional<Rotation2d> getRotationTargetOverride(){
@@ -65,7 +67,7 @@ public class Vision extends SubsystemBase {
   }
 
   public Rotation2d getAprilTagRotation2d(){
-    return Rotation2d.fromDegrees(0);//PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromDegrees(0)));
+    return PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromDegrees(0)));
   }
 
   public double getAprilTagRotationSpeed(){
@@ -111,9 +113,8 @@ public class Vision extends SubsystemBase {
   }
 
   public Optional<EstimatedRobotPose> getEstimatedGlobalPose(){
-    if(false)/*if(backCamera.getLatestResult().hasTargets())*/{
-      //return backPoseEstimator.update();
-      return Optional.empty();
+    if(backCamera.getLatestResult().hasTargets()){
+      return backPoseEstimator.update();
     }
     else{
       return frontPoseEstimator.update();
@@ -121,15 +122,13 @@ public class Vision extends SubsystemBase {
   }
 
   private double getPoseRotationSpeed(){
-    return 0;//-posePid.calculate(-PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromRadians(0))).getRadians()) * Constants.Swerve.MAX_ANGULAR_VELOCITY;
+    return -posePid.calculate(-PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromRadians(0))).getRadians()) * Constants.Swerve.MAX_ANGULAR_VELOCITY;
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    if((Robot.getFront() && frontCamera.isConnected()) /*|| (!Robot.getFront() && backCamera.isConnected())*/){
-      //s_Swerve.updatePoseVision(getEstimatedGlobalPose(), blue);
-    }
+    s_Swerve.updatePoseVision(getEstimatedGlobalPose(), blue);
     var alliance = DriverStation.getAlliance();
     if(alliance.isPresent()){
       if(alliance.get() == DriverStation.Alliance.Blue){
