@@ -6,6 +6,9 @@ package frc.robot.subsystems;
 
 import org.littletonrobotics.junction.Logger;
 
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -18,7 +21,8 @@ import frc.robot.Constants;
 
 public class Intake extends SubsystemBase {
 
-  private final CANSparkMax frontIntakeMotor, backIntakeMotor, loaderMotor;
+  private final CANSparkMax frontIntakeMotor, backIntakeMotor;
+  private final TalonFX loaderMotor;
   private final AnalogInput intake, shooter, babyShooter;
   private final GenericEntry intakeSensor, shooterSensor, babyShooterSensor;
 
@@ -26,7 +30,8 @@ public class Intake extends SubsystemBase {
   public Intake() {
     frontIntakeMotor = new CANSparkMax(Constants.Intake.FRONT_INTAKE_MOTOR_ID, MotorType.kBrushless);
     backIntakeMotor = new CANSparkMax(Constants.Intake.BACK_INTAKE_MOTOR_ID, MotorType.kBrushless);
-    loaderMotor = new CANSparkMax(Constants.Intake.LOADER_MOTOR_ID, MotorType.kBrushless);
+    loaderMotor = new TalonFX(Constants.Intake.LOADER_MOTOR_ID);
+    loaderMotor.getConfigurator().apply(new TalonFXConfiguration());
     configIntakeMotors();
     intake = new AnalogInput(Constants.Intake.INTAKE_SENSOR_ID);
     shooter = new AnalogInput(Constants.Intake.SHOOTER_SENSOR_ID);
@@ -39,28 +44,25 @@ public class Intake extends SubsystemBase {
   private void configIntakeMotors(){
     frontIntakeMotor.restoreFactoryDefaults();
     frontIntakeMotor.setIdleMode(IdleMode.kBrake);
+    frontIntakeMotor.setInverted(true);
 
     backIntakeMotor.restoreFactoryDefaults();
     backIntakeMotor.setIdleMode(IdleMode.kBrake);
 
-    loaderMotor.restoreFactoryDefaults();
-    loaderMotor.setIdleMode(IdleMode.kBrake);
-
     frontIntakeMotor.setSmartCurrentLimit(35);
     backIntakeMotor.setSmartCurrentLimit(35);
-    loaderMotor.setSmartCurrentLimit(35);
 
     backIntakeMotor.follow(frontIntakeMotor, true);
   }
 
   public void intake(){
     frontIntakeMotor.set(1);
-    loaderMotor.set(1);
+    loaderMotor.setControl(new DutyCycleOut(1));
   }
 
   public void spit(){
     frontIntakeMotor.set(-1);
-    loaderMotor.set(-1);
+    loaderMotor.setControl(new DutyCycleOut(-1));
   }
 
   public void stop(){
