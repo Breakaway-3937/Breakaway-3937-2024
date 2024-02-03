@@ -112,10 +112,10 @@ public class Elevator extends SubsystemBase {
     ePid.setOutputRange(-1, 1);
     ePid.setSmartMotionMaxVelocity(0, 0); //FIXME
     ePid.setSmartMotionMaxAccel(0, 0); //FIXME
-    ePid.setP(0); //FIXME
+    ePid.setP(1e-12); //FIXME
     ePid.setI(0);
     ePid.setD(0); //FIXME
-    ePid.setFF(0); //FIXME
+    ePid.setFF(0.001); //FIXME
     babyPid.setOutputRange(-1, 1);
     babyPid.setSmartMotionMaxVelocity(0, 0); //FIXME
     babyPid.setSmartMotionMaxAccel(0, 0); //FIXME

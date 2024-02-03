@@ -122,10 +122,10 @@ public class Shooter extends SubsystemBase {
     pid.setOutputRange(-1, 1);
     pid.setSmartMotionMaxVelocity(0, 0); //FIXME
     pid.setSmartMotionMaxAccel(0, 0); //FIXME
-    pid.setP(0); //FIXME
+    pid.setP(5e-9); //FIXME
     pid.setI(0);
     pid.setD(0); //FIXME
-    pid.setFF(0); //FIXME
+    pid.setFF(0.0005); //FIXME
   }
 
   @Override
