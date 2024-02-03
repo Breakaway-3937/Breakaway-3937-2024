@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -30,7 +31,7 @@ public class Shooter extends SubsystemBase {
   private final CANSparkMax wristMotor, wristFollowerMotor;
   private RelativeEncoder wristEncoder;
   private SparkPIDController pid;
-  private final MotionMagicVelocityVoltage request = new MotionMagicVelocityVoltage(0);
+  private final MotionMagicVelocityVoltage request = new MotionMagicVelocityVoltage(0).withSlot(0);
   private final Follower followerRequest = new Follower(Constants.Shooter.SHOOTER_MOTOR_ID, true);
   private final GenericEntry shooterEncoderEntry, wristEncoderEntry;
   private double speed = 0;
@@ -52,6 +53,10 @@ public class Shooter extends SubsystemBase {
     shooterMotor.setControl(request.withVelocity(speed));
   }
 
+  public void test(){
+    shooterMotor.setControl(new DutyCycleOut(.9));
+  }
+
   public void stopShooter(){
     shooterMotor.stopMotor();
   }
@@ -66,7 +71,6 @@ public class Shooter extends SubsystemBase {
   }
   
   public double getShooterVelocity(){
-    return 0;
     return shooterMotor.getVelocity().getValueAsDouble();
   }
 
@@ -82,7 +86,7 @@ public class Shooter extends SubsystemBase {
     shooterMotor.getConfigurator().apply(new TalonFXConfiguration());
     followerShooterMotor.getConfigurator().apply(new TalonFXConfiguration());
 
-    shooterMotorConfig.Slot0.kP = 0; //FIXME
+    shooterMotorConfig.Slot0.kP = 0.11; //FIXME
     shooterMotorConfig.Slot0.kI = 0;
     shooterMotorConfig.Slot0.kD = 0; //FIXME
 
@@ -91,8 +95,7 @@ public class Shooter extends SubsystemBase {
     shooterMotorConfig.CurrentLimits.SupplyCurrentThreshold = 50;
     shooterMotorConfig.CurrentLimits.SupplyTimeThreshold = 0.1;
 
-    shooterMotorConfig.MotionMagic.MotionMagicCruiseVelocity = 0; //FIXME
-    shooterMotorConfig.MotionMagic.MotionMagicAcceleration = 0; //FIXME
+    shooterMotorConfig.MotionMagic.MotionMagicAcceleration = 100; //FIXME
 
     shooterMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
