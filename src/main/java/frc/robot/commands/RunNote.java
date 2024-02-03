@@ -33,10 +33,10 @@ public class RunNote extends Command {
     if(xboxController.getLeftTriggerAxis() <= 0.3 && !xboxController.getRawButton(5) && xboxController.getRightTriggerAxis() <= 0.3){
       s_Intake.stop();
     }
-    else if(xboxController.getLeftTriggerAxis() > 0.3){
+    else if(xboxController.getLeftTriggerAxis() > 0.3 && !s_Intake.getShooterSensor()){
       s_Intake.intake();
     }
-    else if(xboxController.getRawButton(5) && !s_Intake.getShooterSensor()){
+    else if(xboxController.getRawButton(5)){
       s_Intake.spit();
     }
     else if(s_Intake.getShooterSensor()){
