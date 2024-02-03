@@ -54,7 +54,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public void test(){
-    shooterMotor.setControl(new DutyCycleOut(.9));
+    shooterMotor.setControl(new DutyCycleOut(.8));
   }
 
   public void stopShooter(){
@@ -86,23 +86,27 @@ public class Shooter extends SubsystemBase {
     shooterMotor.getConfigurator().apply(new TalonFXConfiguration());
     followerShooterMotor.getConfigurator().apply(new TalonFXConfiguration());
 
-    shooterMotorConfig.Slot0.kP = 0.11; //FIXME
-    shooterMotorConfig.Slot0.kI = 0;
-    shooterMotorConfig.Slot0.kD = 0; //FIXME
+    shooterMotorConfig.Slot0.kS = 0.4; // Add 0.25 V output to overcome static friction
+    shooterMotorConfig.Slot0.kV = 0.24; // A velocity target of 1 rps results in 0.12 V output
+    shooterMotorConfig.Slot0.kA = 0.1; // An acceleration of 1 rps/s requires 0.01 V output
+    shooterMotorConfig.Slot0.kP = 0.2; // An error of 1 rps results in 0.11 V output
+    shooterMotorConfig.Slot0.kI = 0; // no output for integrated error
+    shooterMotorConfig.Slot0.kD = 0; // no output for error derivative
 
-    shooterMotorConfig.CurrentLimits.SupplyCurrentLimit = 35;
-    shooterMotorConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
-    shooterMotorConfig.CurrentLimits.SupplyCurrentThreshold = 50;
-    shooterMotorConfig.CurrentLimits.SupplyTimeThreshold = 0.1;
+    //shooterMotorConfig.CurrentLimits.SupplyCurrentLimit = 35;
+    //shooterMotorConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+    //shooterMotorConfig.CurrentLimits.SupplyCurrentThreshold = 50;
+    //shooterMotorConfig.CurrentLimits.SupplyTimeThreshold = 0.1;
 
     shooterMotorConfig.MotionMagic.MotionMagicAcceleration = 100; //FIXME
 
-    shooterMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    shooterMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
     shooterMotor.getConfigurator().apply(shooterMotorConfig);
     followerShooterMotor.getConfigurator().apply(shooterMotorConfig);
 
-    followerShooterMotor.setControl(followerRequest);
+    //followerShooterMotor.setControl(followerRequest.withOpposeMasterDirection(true));
+    
   }
 
   private void configWristMotor(){
