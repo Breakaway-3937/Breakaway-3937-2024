@@ -8,18 +8,21 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Shooter;
 
 public class RunElevator extends Command {
   private final Elevator s_Elevator;
   private final Intake s_Intake;
+  private final Shooter s_Shooter;
   private final XboxController xboxController;
   /** Creates a new RunElevator. */
-  public RunElevator(Elevator s_Elevator, Intake s_Intake, XboxController xboxController) {
+  public RunElevator(Elevator s_Elevator, Intake s_Intake, Shooter s_Shooter, XboxController xboxController) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.s_Elevator = s_Elevator;
     this.s_Intake = s_Intake;
+    this.s_Shooter = s_Shooter;
     this.xboxController = xboxController;
-    addRequirements(s_Elevator, s_Intake);
+    addRequirements(s_Elevator, s_Intake, s_Shooter);
   }
 
   // Called when the command is initially scheduled.
@@ -57,9 +60,13 @@ public class RunElevator extends Command {
     }
 
     //Spit for Hand off
-    if(xboxController.getRawButton(0)){ //FIXME button and setpoints
-      s_Elevator.setElevator(0);
-      s_Elevator.setBabyWrist(0);
+    if(xboxController.getRawButton(0)){ //FIXME button and speed
+      s_Elevator.runBabyShooterReverse();
+      s_Shooter.runShooter(0);
+      if(s_Intake.getBabyShooterSensor() == true && s_Intake.getShooterSensor() == false){
+        s_Elevator.stopBabyShooter();
+        s_Shooter.stopShooter();
+      }
     }
   }
 
