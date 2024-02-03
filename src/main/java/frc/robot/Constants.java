@@ -206,7 +206,7 @@ public final class Constants {
     }
 
     public static final class Vision {
-        public static final String FRONT_CAMERA_NAME = "3937";
+        public static final String FRONT_CAMERA_NAME = "Front Camera";
         public static final String BACK_CAMERA_NAME = "Global_Shutter_Camera";
         public static final String NOTE_CAMERA_NAME = "Microsoft_LifeCam_HD-3000";
         public static final Transform3d FRONT_CAMERA_TRANSFORM = new Transform3d(new Translation3d(0.3019665792, 0, 0.19), new Rotation3d(0, -0.349066, 0)); //FIXME
