@@ -93,10 +93,10 @@ public class Shooter extends SubsystemBase {
     shooterMotorConfig.Slot0.kI = 0; // no output for integrated error
     shooterMotorConfig.Slot0.kD = 0; // no output for error derivative
 
-    //shooterMotorConfig.CurrentLimits.SupplyCurrentLimit = 35;
-    //shooterMotorConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
-    //shooterMotorConfig.CurrentLimits.SupplyCurrentThreshold = 50;
-    //shooterMotorConfig.CurrentLimits.SupplyTimeThreshold = 0.1;
+    shooterMotorConfig.CurrentLimits.SupplyCurrentLimit = 35;
+    shooterMotorConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+    shooterMotorConfig.CurrentLimits.SupplyCurrentThreshold = 50;
+    shooterMotorConfig.CurrentLimits.SupplyTimeThreshold = 0.1;
 
     shooterMotorConfig.MotionMagic.MotionMagicAcceleration = 100; //FIXME
 
@@ -105,8 +105,7 @@ public class Shooter extends SubsystemBase {
     shooterMotor.getConfigurator().apply(shooterMotorConfig);
     followerShooterMotor.getConfigurator().apply(shooterMotorConfig);
 
-    //followerShooterMotor.setControl(followerRequest.withOpposeMasterDirection(true));
-    
+    followerShooterMotor.setControl(followerRequest.withOpposeMasterDirection(true));
   }
 
   private void configWristMotor(){

@@ -12,10 +12,8 @@ import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
@@ -197,8 +195,8 @@ public final class Constants {
     }
 
     public static final class Elevator {
-        public static final int ELEVATOR_MOTOR_ID = 0; //FIXME
-        public static final int FOLLOWER_ELEVATOR_MOTOR_ID = 0; //FIXME
+        public static final int ELEVATOR_MOTOR_ID = 15;
+        public static final int FOLLOWER_ELEVATOR_MOTOR_ID = 14;
         public static final int BABY_WRIST_ID = 0; //FIXME
         public static final int BABY_SHOOTER_ID = 0; //FIXME
         public static final int FORWARD_CHANNEL = 0; //FIXME
@@ -208,10 +206,10 @@ public final class Constants {
     public static final class Vision {
         public static final String FRONT_CAMERA_NAME = "Front Camera";
         public static final String BACK_CAMERA_NAME = "Global_Shutter_Camera";
-        public static final String NOTE_CAMERA_NAME = "Microsoft_LifeCam_HD-3000";
-        public static final Transform3d FRONT_CAMERA_TRANSFORM = new Transform3d(new Translation3d(0.3019665792, 0, 0.19), new Rotation3d(0, -0.349066, 0)); //FIXME
+        public static final String NOTE_CAMERA_NAME = ""; //FIXME
+        public static final Transform3d FRONT_CAMERA_TRANSFORM = new Transform3d(); //FIXME
         public static final Transform3d BACK_CAMERA_TRANSFORM = new Transform3d(); //FIXME
-        public static final Vector<N3> VISION_STDS = VecBuilder.fill(0.1, 0.1, Math.toRadians(40));
+        public static final Vector<N3> VISION_STDS = VecBuilder.fill(0.1, 0.1, Math.toRadians(30));
         public static final double TARGET_X_BLUE = -0.04;
         public static final double TARGET_X_RED = 16.58;
         public static final double TARGET_Y_BLUE = 4.98;

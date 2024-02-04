@@ -7,65 +7,98 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 
 public class RunElevator extends Command {
   private final Elevator s_Elevator;
-  private final Intake s_Intake;
-  private final Shooter s_Shooter;
   private final XboxController xboxController;
+  //FIXME get all setpoints
+  private final double wristHandoff = 0;
+  private final double wristProtect = 0;
+  private final double wristAmp = 0;
+  private final double wristTrap = 0;
+  private final double wristSource = 0;
+  private final double elevatorHandoff = 0;
+  private final double elevatorProtect = 0;
+  private final double elevatorAmp = 0;
+  private final double elevatorTrap = 0;
+  private final double elevatorSource = 0;
+  private double elevatorNext = 0;
+  private double wristNext = 0;
+  private boolean amp, trap, source, protect;
+
   /** Creates a new RunElevator. */
-  public RunElevator(Elevator s_Elevator, Intake s_Intake, Shooter s_Shooter, XboxController xboxController) {
+  public RunElevator(Elevator s_Elevator, XboxController xboxController) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.s_Elevator = s_Elevator;
-    this.s_Intake = s_Intake;
-    this.s_Shooter = s_Shooter;
     this.xboxController = xboxController;
-    addRequirements(s_Elevator, s_Intake, s_Shooter);
+    addRequirements(s_Elevator);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    s_Elevator.setElevator(0); //FIXME setpoint
-    s_Elevator.setBabyWrist(0); //FIXME setpoint
+    elevatorNext = elevatorProtect;
+    wristNext = wristProtect;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     //Protect
-    if(xboxController.getRawButton(0)){ //FIXME button and setpoints
-      s_Elevator.setElevator(0);
-      s_Elevator.setBabyWrist(0);
+    if(xboxController.getRawButton(3)){
+      elevatorNext = elevatorProtect;
+      wristNext = wristProtect;
+      amp = false;
+      trap = false;
+      source = false;
+      protect = true;
     }
-
+    //Oh Crap!
+    else if(xboxController.getRawButton(2)){
+      elevatorNext = elevatorProtect;
+      wristNext = wristProtect;
+      amp = false;
+      trap = false;
+      source = false;
+      protect = false;
+    }
     //Amp
-    if(xboxController.getRawButton(0)){ //FIXME button and setpoints
-      s_Elevator.setElevator(0);
-      s_Elevator.setBabyWrist(0);
+    else if(xboxController.getRawButton(1)){
+      elevatorNext = elevatorAmp;
+      wristNext = wristAmp;
+      amp = true;
+      trap = false;
+      source = false;
+      protect = false;
     }
-
     //Trap
-    if(xboxController.getRawButton(0)){ //FIXME button and setpoints
-      s_Elevator.setElevator(0);
-      s_Elevator.setBabyWrist(0);
+    else if(xboxController.getRawButton(4)){
+      elevatorNext = elevatorTrap;
+      wristNext = wristTrap;
+      amp = false;
+      trap = true;
+      source = false;
+      protect = false;
     }
-
-    //Hand off
-    if(xboxController.getRawButton(0)){ //FIXME button and setpoints
-      s_Elevator.setElevator(0);
-      s_Elevator.setBabyWrist(0);
+    //Source
+    else if(xboxController.getRawButton(7)){
+      elevatorNext = elevatorSource;
+      wristNext = wristSource;
+      amp = false;
+      trap = false;
+      source = true;
+      protect = false;
     }
-
-    //Spit for Hand off
-    if(xboxController.getRawButton(0)){ //FIXME button and speed
-      s_Elevator.runBabyShooterReverse();
-      s_Shooter.runShooter(0);
-      if(s_Intake.getBabyShooterSensor() == true && s_Intake.getShooterSensor() == false){
-        s_Elevator.stopBabyShooter();
-        s_Shooter.stopShooter();
+    
+    if(Shooter.isSafe()){
+      if(protect){
+        s_Elevator.setElevator(elevatorNext);
+        s_Elevator.setBabyWrist(wristNext);
+      }
+      else if(trap){
+        s_Elevator.setElevator(elevatorHandoff);
+        s_Elevator.setBabyWrist(wristHandoff);
       }
     }
   }

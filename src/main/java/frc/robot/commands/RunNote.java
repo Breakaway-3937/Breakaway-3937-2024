@@ -30,24 +30,31 @@ public class RunNote extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    //No Buttons
     if(xboxController.getLeftTriggerAxis() <= 0.3 && !xboxController.getRawButton(5) && xboxController.getRightTriggerAxis() <= 0.3){
       s_Intake.stop();
     }
+    //Intake
     else if(xboxController.getLeftTriggerAxis() > 0.3 && !s_Intake.getShooterSensor()){
       s_Intake.intake();
     }
+    //Spit
     else if(xboxController.getRawButton(5)){
       s_Intake.spit();
     }
+    //Sensor Detects, Stop Intake
     else if(s_Intake.getShooterSensor()){
       s_Intake.stop();
     }
+    //Run Shooter
     if(xboxController.getRawButton(6)){
       s_Shooter.runShooter(100);
     }
+    //Stop Shooter
     else{
       s_Shooter.stopShooter();
     }
+    //Fire Shooter
     if(s_Shooter.atSpeed() && xboxController.getRightTriggerAxis() > 0.3){
       s_Intake.intake();
     }
