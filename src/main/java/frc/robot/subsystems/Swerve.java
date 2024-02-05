@@ -29,7 +29,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Swerve extends SubsystemBase {
@@ -150,10 +149,6 @@ public class Swerve extends SubsystemBase {
 
     public ChassisSpeeds getSpeed(){
         return Constants.Swerve.SWERVE_KINEMATICS.toChassisSpeeds(getModuleStates());
-    }
-
-    public Command autoPathfind(Pose2d target){
-        return AutoBuilder.pathfindToPose(target, Constants.Swerve.CONSTRAINTS);
     }
 
     public void configPathPlanner(){
