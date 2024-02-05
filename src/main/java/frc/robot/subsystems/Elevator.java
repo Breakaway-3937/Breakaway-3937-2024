@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.CANSparkMax;
@@ -34,35 +35,49 @@ public class Elevator extends SubsystemBase {
   private final GenericEntry elevatorEncoderEntry, brakeEntry, babyWristEntry;
   private final DoubleSolenoid brake;
   private boolean brakeBool;
+  private double ePosition, babyPosition, climb = 0;
 
   /** Creates a new Elevator. */
   public Elevator() {
     babyShooter = new TalonFX(Constants.Elevator.BABY_SHOOTER_ID);
     elevatorMotor = new CANSparkMax(Constants.Elevator.ELEVATOR_MOTOR_ID, MotorType.kBrushless);
     followerElevatorMotor = new CANSparkMax(Constants.Elevator.FOLLOWER_ELEVATOR_MOTOR_ID, MotorType.kBrushless);
-    configElevatorMotors();
+    babyWrist = new CANSparkMax(Constants.Elevator.BABY_WRIST_ID, MotorType.kBrushless);
+    configMotors();
     brake = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.Elevator.FORWARD_CHANNEL, Constants.Elevator.REVERSE_CHANNEL);
     setBrakeOff();
-    babyWrist = new CANSparkMax(Constants.Elevator.BABY_WRIST_ID, MotorType.kBrushless);
     babyWristEntry = Shuffleboard.getTab("Elevator").add("Baby Wrist", getBabyWrist()).withPosition(2,0).getEntry();
     elevatorEncoderEntry = Shuffleboard.getTab("Elevator").add("Elevator", getElevator()).withPosition(0,0).getEntry();
     brakeEntry = Shuffleboard.getTab("Elevator").add("Brake", false).withPosition(1, 0).getEntry();
   }
 
+  public void setLowClimb(){
+    climb = 0; //FIXME setpoint
+  }
+
+  public void setHighClimb(){
+    climb = 0; //FIXME setpoint
+  }
+
+  public void extendClimb(){
+    setElevator(climb);
+  }
+
   public void runBabyShooterForward(){
-    babyShooter.set(1);
+    babyShooter.setControl(new DutyCycleOut(1));
   }
 
   public void runBabyShooterReverse(){
-    babyShooter.set(-1);
+    babyShooter.setControl(new DutyCycleOut(-1));
   }
 
   public void stopBabyShooter(){
-    babyShooter.set(0);
+    babyShooter.stopMotor();
   }
 
   public void setBabyWrist(double position){
     babyPid.setReference(position, ControlType.kSmartMotion);
+    babyPosition = position;
   }
 
   public double getBabyWrist(){
@@ -71,10 +86,20 @@ public class Elevator extends SubsystemBase {
 
   public void setElevator(double position){
     ePid.setReference(position, ControlType.kSmartMotion);
+    ePosition = position;
   }
 
   public double getElevator(){
     return elevatorEncoder.getPosition();
+  }
+
+  public boolean isAtPosition(){
+    if(getElevator() <= ePosition + 0.5 && getElevator() >= ePosition - 0.5 && getBabyWrist() <= babyPosition + 0.5 && getElevator() >= babyPosition - 0.5){
+      return true;
+    }
+    else{
+      return false;
+    }
   }
 
   public void setBrakeOn(){
@@ -91,7 +116,7 @@ public class Elevator extends SubsystemBase {
     return brakeBool;
   }
 
-  private void configElevatorMotors(){
+  private void configMotors(){
     elevatorMotor.restoreFactoryDefaults();
     followerElevatorMotor.restoreFactoryDefaults();
     elevatorMotor.setIdleMode(IdleMode.kBrake);
@@ -126,14 +151,11 @@ public class Elevator extends SubsystemBase {
     babyPid.setI(0);
     babyPid.setD(0); //FIXME
     babyPid.setFF(0); //FIXME
-    babyShooterConfig.Slot0.kP = 0.11;
-    babyShooterConfig.Slot0.kI = 0;
-    babyShooterConfig.Slot0.kD = 0; //FIXME
+
     babyShooterConfig.CurrentLimits.SupplyCurrentLimit = 35;
     babyShooterConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
     babyShooterConfig.CurrentLimits.SupplyCurrentThreshold = 50;
     babyShooterConfig.CurrentLimits.SupplyTimeThreshold = 0.1;
-    babyShooterConfig.MotionMagic.MotionMagicAcceleration = 100;
     babyShooterConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
     followerElevatorMotor.follow(elevatorMotor);
