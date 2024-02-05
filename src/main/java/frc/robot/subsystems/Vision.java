@@ -57,8 +57,7 @@ public class Vision extends SubsystemBase {
   }
 
   public Optional<Rotation2d> getRotationTargetOverride(){
-    var result = frontCamera.getLatestResult();
-    if(result.hasTargets() && true){ //FIXME will be if intake is full
+    if(Robot.robotContainer.s_Intake.botFull()){
         return Optional.of(getAprilTagRotation2d());
     }
     else{
@@ -74,17 +73,17 @@ public class Vision extends SubsystemBase {
     if(Robot.getFront()){
       var result = frontCamera.getLatestResult();
       if(result.hasTargets() && blue){
-        return -result.getTargets().get(0).getYaw() * 0.8 / 15.0;
+        return -result.getTargets().get(0).getYaw() * 0.8 / 10.0;
       }
       else if(result.hasTargets() && !blue){
-        return -result.getTargets().get(result.getTargets().size() == 1 ? 0 : 1).getYaw() * 0.8 / 15.0;
+        return -result.getTargets().get(result.getTargets().size() == 1 ? 0 : 1).getYaw() * 0.8 / 10.0;
       }
       else{
         return getPoseRotationSpeed();
       }
     }
     else{
-      /*var result = backCamera.getLatestResult();
+      var result = backCamera.getLatestResult();
       if(result.hasTargets() && blue){
         return -result.getTargets().get(0).getYaw() * 0.8 / 10.0;
       }
@@ -93,8 +92,7 @@ public class Vision extends SubsystemBase {
       }
       else{
         return getPoseRotationSpeed();
-      }*/
-      return 0;
+      }
     }
   }
 
@@ -123,6 +121,15 @@ public class Vision extends SubsystemBase {
 
   private double getPoseRotationSpeed(){
     return -posePid.calculate(-PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromRadians(0))).getRadians()) * Constants.Swerve.MAX_ANGULAR_VELOCITY;
+  }
+
+  public boolean isDead(){
+    if(!frontCamera.isConnected() && !backCamera.isConnected()){
+      return true;
+    }
+    else{
+      return false;
+    }
   }
 
   @Override
