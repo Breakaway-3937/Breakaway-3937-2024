@@ -30,7 +30,7 @@ public class Robot extends LoggedRobot {
 
   private Command autonomousCommand;
 
-  private RobotContainer robotContainer;
+  public static RobotContainer robotContainer;
 
   private boolean flag, teleop;
 
@@ -42,10 +42,6 @@ public class Robot extends LoggedRobot {
 
   public static boolean getFront(){
     return front;
-  }
-
-  public static void setFront(boolean newFront){
-    front = newFront;
   }
 
   /**
@@ -101,6 +97,13 @@ public class Robot extends LoggedRobot {
 
     if(DriverStation.isFMSAttached() && DriverStation.isTeleop()){
       teleop = true;
+    }
+
+    if(Math.abs(robotContainer.s_Swerve.getHeading().getDegrees() % 360) < 90){
+      front = false;
+    }
+    else{
+      front = true;
     }
 
     Logger.recordOutput("Front", getFront());
