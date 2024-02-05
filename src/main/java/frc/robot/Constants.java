@@ -7,7 +7,6 @@ import java.util.Enumeration;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
-import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
@@ -42,7 +41,7 @@ public final class Constants {
         public static final int XBOX_CONTROLLER_RB_BUTTON = 6;
         public static final int XBOX_CONTROLLER_BACK_BUTTON = 7;
         public static final int XBOX_CONTROLLER_START_BUTTON = 8;
-        public static final int XBOX_CONTROLLER_LEFT_SIICK_BUTTON = 9;
+        public static final int XBOX_CONTROLLER_LEFT_STICK_BUTTON = 9;
         public static final int XBOX_CONTROLLER_RIGHT_STICK_BUTTON = 10;
         public static final int UP = 0;
         public static final int RIGHT = 90;
@@ -126,11 +125,6 @@ public final class Constants {
         /* Neutral Modes */
         public static final NeutralModeValue ANGLE_NEUTRAL_MODE = NeutralModeValue.Brake;
         public static final NeutralModeValue DRIVE_NEUTRAL_MODE = NeutralModeValue.Brake;
-
-        /* Auto Path Finding Constraints*/
-        public static final PathConstraints CONSTRAINTS = new PathConstraints(MAX_SPEED, 4.5, 
-                                                                              Units.degreesToRadians(690), 
-                                                                              Units.degreesToRadians(690));
 
         /* Front Left Module - Module 0 */
         public static final class Mod0 {
