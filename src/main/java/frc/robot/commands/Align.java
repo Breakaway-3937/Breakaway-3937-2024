@@ -11,6 +11,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Vision;
 
@@ -20,6 +21,7 @@ public class Align extends Command {
   private final DoubleSupplier translationSup;
   private final DoubleSupplier strafeSup;
   private final BooleanSupplier robotCentricSup;
+  private boolean flag;
 
   /** Creates a new Align. */
   public Align(Swerve s_Swerve, Vision s_Vision, DoubleSupplier translationSup, DoubleSupplier strafeSup, BooleanSupplier robotCentricSup) {
@@ -34,7 +36,9 @@ public class Align extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    flag = false;
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -60,11 +64,23 @@ public class Align extends Command {
           true
       );
     }
+
+    if(s_Swerve.getSpeed().omegaRadiansPerSecond < 0.1 && !flag){
+      Robot.robotContainer.s_LED.reset();
+      Robot.robotContainer.s_LED.green();
+      flag = true;
+    }
+    if(s_Swerve.getSpeed().omegaRadiansPerSecond >= 0.1){
+      flag = false;
+      Robot.robotContainer.s_LED.resetColors();
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    Robot.robotContainer.s_LED.resetColors();
+  }
 
   // Returns true when the command should end.
   @Override
