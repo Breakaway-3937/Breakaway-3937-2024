@@ -208,6 +208,24 @@ public final class Constants {
         public static final double TARGET_X_RED = 16.58;
         public static final double TARGET_Y_BLUE = 4.98;
         public static final double TARGET_Y_RED = 5.55;
+
+        //FIXME get values and add offsets
+        public static final double AMP_TARGET_X_BLUE = 0;
+        public static final double AMP_TARGET_X_RED = 0;
+        public static final double AMP_TARGET_Y_BLUE = 0;
+        public static final double AMP_TARGET_Y_RED = 0;
+        public static final double TRAP_CENTER_TARGET_X_BLUE = 0;
+        public static final double TRAP_CENTER_TARGET_X_RED = 0;
+        public static final double TRAP_CENTER_TARGET_Y_BLUE = 0;
+        public static final double TRAP_CENTER_TARGET_Y_RED = 0;
+        public static final double TRAP_LEFT_TARGET_X_BLUE = 0;
+        public static final double TRAP_LEFT_TARGET_X_RED = 0;
+        public static final double TRAP_LEFT_TARGET_Y_BLUE = 0;
+        public static final double TRAP_LEFT_TARGET_Y_RED = 0;
+        public static final double TRAP_RIGHT_TARGET_X_BLUE = 0;
+        public static final double TRAP_RIGHT_TARGET_X_RED = 0;
+        public static final double TRAP_RIGHT_TARGET_Y_BLUE = 0;
+        public static final double TRAP_RIGHT_TARGET_Y_RED = 0;
     }
 
     public static String getMACAddress() {
