@@ -25,7 +25,7 @@ public class RunElevator extends Command {
   private final double elevatorTrap = 0;
   private final double elevatorSource = 0;
   private boolean amp, trap, source, protect, ohCrap, climb;
-  public static boolean deadShooter, trapStage1, trapStage2, startStage1, startStage2, reverse, trapScored, retracting;
+  public static boolean deadShooter, trapStage1, trapStage2, startStage1, startStage2, reverse, trapScored, retracting, climbing;
 
   /** Creates a new RunElevator. */
   public RunElevator(Elevator s_Elevator, XboxController xboxController) {
@@ -52,6 +52,7 @@ public class RunElevator extends Command {
     climb = false;
     trapScored = false;
     retracting = false;
+    climbing = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -72,6 +73,7 @@ public class RunElevator extends Command {
       reverse = false;
       climb = true;
       retracting = false;
+      climbing = true;
     }
     //Retract Climb
     else if(xboxController.getPOV() == Constants.Controllers.DOWN){
@@ -88,6 +90,7 @@ public class RunElevator extends Command {
       reverse = false;
       climb = false;
       retracting = true;
+      climbing = false;
     }
     //Protect
     else if(xboxController.getRawButton(3)){
@@ -104,6 +107,7 @@ public class RunElevator extends Command {
       reverse = false;
       climb = false;
       retracting = false;
+      climbing = false;
     }
     //Oh Crap!
     else if(xboxController.getRawButton(2)){
@@ -120,6 +124,7 @@ public class RunElevator extends Command {
       reverse = false;
       climb = false;
       retracting = false;
+      climbing = false;
     }
     //Amp
     else if(xboxController.getRawButton(1)){
@@ -136,6 +141,7 @@ public class RunElevator extends Command {
       reverse = false;
       climb = false;
       retracting = false;
+      climbing = false;
     }
     //Trap
     else if(xboxController.getRawButton(4)){
@@ -150,6 +156,7 @@ public class RunElevator extends Command {
       reverse = false;
       climb = false;
       retracting = false;
+      climbing = false;
     }
     //Source
     else if(xboxController.getRawButton(7)){
@@ -166,6 +173,8 @@ public class RunElevator extends Command {
       reverse = false;
       climb = false;
       retracting = false;
+      climbing = false;
+      Robot.robotContainer.s_LED.reset();
       Robot.robotContainer.s_LED.resetColors();
       Robot.robotContainer.s_LED.orange();
     }
