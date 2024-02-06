@@ -63,7 +63,7 @@ public class RobotContainer {
     /** The container for the robot. Contains subsystems, IO devices, and commands. */
     public RobotContainer() {
         //FIXME named commands
-        NamedCommands.registerCommand("FindNote", new InstantCommand());
+        NamedCommands.registerCommand("FindNote", new AutoNoteAlign(s_Swerve, s_Vision));
         NamedCommands.registerCommand("Shoot", new InstantCommand());
         s_Swerve.setDefaultCommand(new TeleopSwerve(s_Swerve, () -> translationController.getRawAxis(translationAxis), () -> translationController.getRawAxis(strafeAxis), () -> rotationController.getRawAxis(rotationAxis), () -> robotRelative));
         s_Shooter.setDefaultCommand(c_RunNote);
