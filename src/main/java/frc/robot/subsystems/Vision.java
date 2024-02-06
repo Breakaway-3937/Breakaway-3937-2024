@@ -33,7 +33,7 @@ public class Vision extends SubsystemBase {
     private final Swerve s_Swerve;
     private double targetX, targetY;
     private boolean blue = false;
-    private PIDController posePid = new PIDController(0.3, 0, 0);
+    private final PIDController posePid = new PIDController(0.3, 0, 0);
 
   /** Creates a new Vision. */
   public Vision(Swerve s_Swerve) {
@@ -58,17 +58,13 @@ public class Vision extends SubsystemBase {
 
   public Optional<Rotation2d> getRotationTargetOverride(){
     if(Robot.robotContainer.s_Intake.botFull()){
-        return Optional.of(getAprilTagRotation2d());
+        return Optional.of(PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromDegrees(0))));
     }
     else{
         return Optional.empty();
     }
   }
-
-  public Rotation2d getAprilTagRotation2d(){
-    return PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromDegrees(0)));
-  }
-
+  
   public double getAprilTagRotationSpeed(){
     if(Robot.getFront()){
       var result = frontCamera.getLatestResult();
@@ -120,7 +116,7 @@ public class Vision extends SubsystemBase {
   }
 
   private double getPoseRotationSpeed(){
-    return -posePid.calculate(-PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromRadians(0))).getRadians()) * Constants.Swerve.MAX_ANGULAR_VELOCITY;
+    return posePid.calculate(PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromRadians(0))).getRadians()) * Constants.Swerve.MAX_ANGULAR_VELOCITY;
   }
 
   public boolean isDead(){
