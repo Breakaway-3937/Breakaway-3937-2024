@@ -99,7 +99,7 @@ public class Robot extends LoggedRobot {
       teleop = true;
     }
 
-    if(Math.abs(robotContainer.s_Swerve.getHeading().getDegrees() % 360) < 90){
+    if(Math.abs(robotContainer.s_Swerve.getHeading().getDegrees() % 360) < 90 || Math.abs(robotContainer.s_Swerve.getHeading().getDegrees() % 360) > 270){
       front = false;
     }
     else{
