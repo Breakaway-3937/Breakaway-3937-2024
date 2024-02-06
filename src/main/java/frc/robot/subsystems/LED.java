@@ -100,7 +100,41 @@ public class LED extends SubsystemBase {
                 funeralTimer.reset();
                 funeralFlag = false;
             }
-            if(!Robot.robotContainer.s_Intake.botFull()){
+            if(orange){
+                if(!flag){
+                    timer1.reset();
+                    timer1.start();
+                    flag = true;
+                    flag1 = false;
+                    flag2 = false;
+                }
+                else if(timer1.get() > 1){
+                    flag1 = true;
+                }
+                if(!flag1){
+                    if(timer.get() > 0.1 && !flag2){
+                        candle.setLEDs(255, 165, 0, 0, 0, 0);
+                        timer.reset();
+                        flag2 = true;
+                    }
+                    else if(timer.get() > 0.1 && flag2){
+                        candle.setLEDs(0, 0, 0, 0, 0, 0);
+                        timer.reset();
+                        flag2 = false;
+                    }
+                }
+                else{
+                    for(double i = 0.5; i > 0; i -= 0.025){
+                        candle.setLEDs(255, 165, 0, 0, 0, 0);
+                        candle.configBrightnessScalar(i);
+                    }
+                    for(double i = 0; i < 0.5; i += 0.025){
+                        candle.setLEDs(255, 165, 0, 0, 0, 0);
+                        candle.configBrightnessScalar(i);
+                    }
+                }
+            }
+            else if(!Robot.robotContainer.s_Intake.botFull()){
                 candle.setLEDs(0, 0, 254, 0, 0, 0);
             }
             else if(green){
@@ -171,7 +205,9 @@ public class LED extends SubsystemBase {
                     }
                 }
             }
-            else if(orange){
+        }
+        else if(!Robot.robotContainer.s_Vision.isDead()){
+            if(orange){
                 if(!flag){
                     timer1.reset();
                     timer1.start();
@@ -184,30 +220,28 @@ public class LED extends SubsystemBase {
                 }
                 if(!flag1){
                     if(timer.get() > 0.1 && !flag2){
-                        candle.setLEDs(255, 165, 0, 0, 0, 0);
+                        candle.setLEDs(255, 165, 0);
                         timer.reset();
                         flag2 = true;
                     }
                     else if(timer.get() > 0.1 && flag2){
-                        candle.setLEDs(0, 0, 0, 0, 0, 0);
+                        candle.setLEDs(0, 0, 0);
                         timer.reset();
                         flag2 = false;
                     }
                 }
                 else{
                     for(double i = 0.5; i > 0; i -= 0.025){
-                        candle.setLEDs(255, 165, 0, 0, 0, 0);
+                        candle.setLEDs(255, 165, 0);
                         candle.configBrightnessScalar(i);
                     }
                     for(double i = 0; i < 0.5; i += 0.025){
-                        candle.setLEDs(255, 165, 0, 0, 0, 0);
+                        candle.setLEDs(255, 165, 0);
                         candle.configBrightnessScalar(i);
                     }
                 }
             }
-        }
-        else if(!Robot.robotContainer.s_Vision.isDead()){
-            if(!Robot.robotContainer.s_Intake.botFull()){
+            else if(!Robot.robotContainer.s_Intake.botFull()){
                 candle.setLEDs(0, 0, 254);
             }
             else if(green){
@@ -274,40 +308,6 @@ public class LED extends SubsystemBase {
                     }
                     for(double i = 0; i < 0.5; i += 0.025){
                         candle.setLEDs(255, 0, 0);
-                        candle.configBrightnessScalar(i);
-                    }
-                }
-            }
-            else if(orange){
-                if(!flag){
-                    timer1.reset();
-                    timer1.start();
-                    flag = true;
-                    flag1 = false;
-                    flag2 = false;
-                }
-                else if(timer1.get() > 1){
-                    flag1 = true;
-                }
-                if(!flag1){
-                    if(timer.get() > 0.1 && !flag2){
-                        candle.setLEDs(255, 165, 0);
-                        timer.reset();
-                        flag2 = true;
-                    }
-                    else if(timer.get() > 0.1 && flag2){
-                        candle.setLEDs(0, 0, 0);
-                        timer.reset();
-                        flag2 = false;
-                    }
-                }
-                else{
-                    for(double i = 0.5; i > 0; i -= 0.025){
-                        candle.setLEDs(255, 165, 0);
-                        candle.configBrightnessScalar(i);
-                    }
-                    for(double i = 0; i < 0.5; i += 0.025){
-                        candle.setLEDs(255, 165, 0);
                         candle.configBrightnessScalar(i);
                     }
                 }
