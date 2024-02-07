@@ -9,6 +9,7 @@ import org.littletonrobotics.junction.Logger;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -23,6 +24,7 @@ public class Intake extends SubsystemBase {
 
   private final CANSparkMax frontIntakeMotor, backIntakeMotor;
   private final TalonFX loaderMotor;
+  private final TalonFXConfiguration loaderMotorConfig = new TalonFXConfiguration();
   private final AnalogInput intake, shooter, babyShooter;
   private final GenericEntry intakeSensor, shooterSensor, babyShooterSensor;
 
@@ -31,8 +33,7 @@ public class Intake extends SubsystemBase {
     frontIntakeMotor = new CANSparkMax(Constants.Intake.FRONT_INTAKE_MOTOR_ID, MotorType.kBrushless);
     backIntakeMotor = new CANSparkMax(Constants.Intake.BACK_INTAKE_MOTOR_ID, MotorType.kBrushless);
     loaderMotor = new TalonFX(Constants.Intake.LOADER_MOTOR_ID);
-    loaderMotor.getConfigurator().apply(new TalonFXConfiguration());
-    configIntakeMotors();
+    configMotors();
     intake = new AnalogInput(Constants.Intake.INTAKE_SENSOR_ID);
     shooter = new AnalogInput(Constants.Intake.SHOOTER_SENSOR_ID);
     babyShooter = new AnalogInput(Constants.Intake.BABY_SHOOTER_SENSOR_ID);
@@ -41,7 +42,7 @@ public class Intake extends SubsystemBase {
     babyShooterSensor = Shuffleboard.getTab("Intake").add("Baby Shooter Sensor", 0).withPosition(2, 0).getEntry();
   }
 
-  private void configIntakeMotors(){
+  private void configMotors(){
     frontIntakeMotor.restoreFactoryDefaults();
     frontIntakeMotor.setIdleMode(IdleMode.kBrake);
     frontIntakeMotor.setInverted(true);
@@ -53,6 +54,14 @@ public class Intake extends SubsystemBase {
     backIntakeMotor.setSmartCurrentLimit(35);
 
     backIntakeMotor.follow(frontIntakeMotor, true);
+
+    loaderMotor.getConfigurator().apply(new TalonFXConfiguration());
+    loaderMotorConfig.CurrentLimits.SupplyCurrentLimit = 35;
+    loaderMotorConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+    loaderMotorConfig.CurrentLimits.SupplyCurrentThreshold = 50;
+    loaderMotorConfig.CurrentLimits.SupplyTimeThreshold = 0.1;
+    loaderMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    loaderMotor.getConfigurator().apply(loaderMotorConfig);
   }
 
   public void intake(){
@@ -90,6 +99,15 @@ public class Intake extends SubsystemBase {
 
   public boolean getBabyShooterSensor(){
     if(babyShooter.getValue() > 4000){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+
+  public boolean botFull(){
+    if(getIntakeSensor() || getShooterSensor() || getBabyShooterSensor()){
       return true;
     }
     else{

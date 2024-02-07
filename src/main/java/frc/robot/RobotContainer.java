@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 
@@ -28,7 +28,6 @@ public class RobotContainer {
     private final Joystick translationController = new Joystick(Constants.Controllers.TRANSLATION_CONTROLLER.getPort());
     private final Joystick rotationController = new Joystick(Constants.Controllers.ROTATION_CONTROLLER.getPort());
     public final XboxController xboxController = new XboxController(Constants.Controllers.XBOX_CONTROLLER.getPort());
-    public final Joystick buttons = new Joystick(Constants.Controllers.BUTTONS.getPort());
 
     /* Drive Controls */
     private final int translationAxis = Constants.Controllers.TRANSLATION_AXIS;
@@ -39,38 +38,36 @@ public class RobotContainer {
     /* Driver Buttons */
     private final JoystickButton translationButton = new JoystickButton(translationController, Constants.Controllers.TRANSLATION_BUTTON);
     private final JoystickButton rotationButton = new JoystickButton(rotationController, Constants.Controllers.ROTATION_BUTTON);
-    private final JoystickButton button1 = new JoystickButton(buttons, 1);
-    private final JoystickButton button2 = new JoystickButton(buttons, 2);
-    private final JoystickButton button3 = new JoystickButton(buttons, 3);
-    private final JoystickButton button4 = new JoystickButton(buttons, 4);
-    private final JoystickButton button5 = new JoystickButton(buttons, 5);
-    private final JoystickButton button6 = new JoystickButton(buttons, 6);
-    private final JoystickButton button7 = new JoystickButton(buttons, 7);
-    private final JoystickButton button8 = new JoystickButton(buttons, 8);
+    private final JoystickButton leftStick = new JoystickButton(xboxController, Constants.Controllers.XBOX_CONTROLLER_LEFT_STICK_BUTTON);
+    private final JoystickButton rightStick = new JoystickButton(xboxController, Constants.Controllers.XBOX_CONTROLLER_RIGHT_STICK_BUTTON);
+    private final POVButton left = new POVButton(xboxController, Constants.Controllers.LEFT);
+    private final POVButton right = new POVButton(xboxController, Constants.Controllers.RIGHT);
 
     /* Subsystems */
-    private final Swerve s_Swerve = new Swerve();
-    private final LED s_LED = new LED();
-    //private final Vision s_Vision = new Vision(s_Swerve);
-    private final Shooter s_Shooter = new Shooter();
-    private final Intake s_Intake = new Intake();
-
+    public final Swerve s_Swerve = new Swerve();
+    public final LED s_LED = new LED();
+    //public final Vision s_Vision = new Vision(s_Swerve);
+    public final Shooter s_Shooter = new Shooter();
+    public final Intake s_Intake = new Intake();
+    public final Elevator s_Elevator = new Elevator();
 
     /* Commands */
     public final Music c_Music = new Music(s_Swerve);
     //private final Align c_Align = new Align(s_Swerve, s_Vision, () -> translationController.getRawAxis(translationAxis), () -> translationController.getRawAxis(strafeAxis), () -> robotRelative);
     private final RunNote c_RunNote = new RunNote(s_Intake, s_Shooter, xboxController);
+    private final RunElevator c_RunElevator = new RunElevator(s_Elevator, xboxController);
 
 
     //private final SendableChooser<Command> autoChooser;
 
-    /** The container for the robot. Contains subsystems, OI devices, and commands. */
+    /** The container for the robot. Contains subsystems, IO devices, and commands. */
     public RobotContainer() {
-        //NamedCommands.registerCommand("note", new AutoNoteAlign(s_Swerve, s_Vision));
-        NamedCommands.registerCommand("FindNote", new InstantCommand());
+        //FIXME named commands
+        //NamedCommands.registerCommand("FindNote", new AutoNoteAlign(s_Swerve, s_Vision));
         NamedCommands.registerCommand("Shoot", new InstantCommand());
         s_Swerve.setDefaultCommand(new TeleopSwerve(s_Swerve, () -> translationController.getRawAxis(translationAxis), () -> translationController.getRawAxis(strafeAxis), () -> rotationController.getRawAxis(rotationAxis), () -> robotRelative));
         s_Shooter.setDefaultCommand(c_RunNote);
+        s_Elevator.setDefaultCommand(c_RunElevator);
         //autoChooser = AutoBuilder.buildAutoChooser();
         //Shuffleboard.getTab("Auto").add("Auto", autoChooser).withPosition(0, 0);
         Shuffleboard.selectTab("Auto");
@@ -86,10 +83,12 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         /* Driver Buttons */
-        button1.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
+        translationButton.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
         //rotationButton.whileTrue(c_Align);
-        button4.onTrue(new InstantCommand(() -> s_Swerve.setNoteTracking(true)));
-        button5.onTrue(new InstantCommand(() -> s_Swerve.setNoteTracking(false)));
+        leftStick.onTrue(new InstantCommand(() -> s_Elevator.setLowClimb()));
+        rightStick.onTrue(new InstantCommand(() -> s_Elevator.setHighClimb()));
+        right.onTrue(new InstantCommand(() -> s_Shooter.setSubShooting()));
+        left.onTrue(new InstantCommand(() -> s_Shooter.setPodiumShooting()));
     }
 
     /**

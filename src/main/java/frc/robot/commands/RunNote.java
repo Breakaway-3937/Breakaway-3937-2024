@@ -10,11 +10,11 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 
 public class RunNote extends Command {
-  /** Creates a new RunNote. */
   private final Intake s_Intake;
   private final Shooter s_Shooter;
   private final XboxController xboxController;
 
+  /** Creates a new RunNote. */
   public RunNote(Intake s_Intake, Shooter s_Shooter, XboxController xboxController) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.s_Intake = s_Intake;
@@ -30,26 +30,55 @@ public class RunNote extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(xboxController.getLeftTriggerAxis() <= 0.3 && !xboxController.getRawButton(5) && xboxController.getRightTriggerAxis() <= 0.3){
-      s_Intake.stop();
-    }
-    else if(xboxController.getLeftTriggerAxis() > 0.3 && !s_Intake.getShooterSensor()){
+    if(RunElevator.trapStage1){
       s_Intake.intake();
+      s_Shooter.setShooter(10);
     }
-    else if(xboxController.getRawButton(5)){
-      s_Intake.spit();
-    }
-    else if(s_Intake.getShooterSensor()){
+    else if(RunElevator.trapStage2){
       s_Intake.stop();
-    }
-    if(xboxController.getRawButton(6)){
-      s_Shooter.runShooter(10);
-    }
-    else{
       s_Shooter.stopShooter();
     }
-    if(s_Shooter.atSpeed() && xboxController.getRightTriggerAxis() > 0.3){
+    else if(RunElevator.startStage1){
       s_Intake.intake();
+      s_Shooter.setShooter(10);
+    }
+    else if(RunElevator.startStage2){
+      s_Intake.stop();
+      s_Shooter.stopShooter();
+    }
+    else if(RunElevator.reverse){
+      s_Intake.spit();
+      s_Shooter.setShooter(-10);
+    }
+    else{
+      //No Buttons
+      if(xboxController.getLeftTriggerAxis() <= 0.3 && !xboxController.getRawButton(5) && xboxController.getRightTriggerAxis() <= 0.3){
+        s_Intake.stop();
+      }
+      //Intake
+      else if(xboxController.getLeftTriggerAxis() > 0.3 && !s_Intake.getShooterSensor()){
+        s_Intake.intake();
+      }
+      //Spit
+      else if(xboxController.getRawButton(5)){
+        s_Intake.spit();
+      }
+      //Sensor Detects, Stop Intake
+      else if(s_Intake.getShooterSensor()){
+        s_Intake.stop();
+      }
+      //Run Shooter
+      if(xboxController.getRawButton(6)){
+        s_Shooter.setShooter(100);
+      }
+      //Stop Shooter
+      else{
+        s_Shooter.stopShooter();
+      }
+      //Fire Shooter
+      if(s_Shooter.atSpeed() && xboxController.getRightTriggerAxis() > 0.3){
+        s_Intake.intake();
+      }
     }
   }
 

@@ -3,15 +3,12 @@ package frc.robot;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
-import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
@@ -41,7 +38,7 @@ public final class Constants {
         public static final int XBOX_CONTROLLER_RB_BUTTON = 6;
         public static final int XBOX_CONTROLLER_BACK_BUTTON = 7;
         public static final int XBOX_CONTROLLER_START_BUTTON = 8;
-        public static final int XBOX_CONTROLLER_LEFT_SIICK_BUTTON = 9;
+        public static final int XBOX_CONTROLLER_LEFT_STICK_BUTTON = 9;
         public static final int XBOX_CONTROLLER_RIGHT_STICK_BUTTON = 10;
         public static final int UP = 0;
         public static final int RIGHT = 90;
@@ -126,11 +123,6 @@ public final class Constants {
         public static final NeutralModeValue ANGLE_NEUTRAL_MODE = NeutralModeValue.Brake;
         public static final NeutralModeValue DRIVE_NEUTRAL_MODE = NeutralModeValue.Brake;
 
-        /* Auto Path Finding Constraints*/
-        public static final PathConstraints CONSTRAINTS = new PathConstraints(MAX_SPEED, 4.5, 
-                                                                              Units.degreesToRadians(690), 
-                                                                              Units.degreesToRadians(690));
-
         /* Front Left Module - Module 0 */
         public static final class Mod0 {
             public static final int DRIVE_MOTOR_ID = 9;
@@ -194,8 +186,8 @@ public final class Constants {
     }
 
     public static final class Elevator {
-        public static final int ELEVATOR_MOTOR_ID = 0; //FIXME
-        public static final int FOLLOWER_ELEVATOR_MOTOR_ID = 0; //FIXME
+        public static final int ELEVATOR_MOTOR_ID = 15;
+        public static final int FOLLOWER_ELEVATOR_MOTOR_ID = 14;
         public static final int BABY_WRIST_ID = 0; //FIXME
         public static final int BABY_SHOOTER_ID = 0; //FIXME
         public static final int FORWARD_CHANNEL = 0; //FIXME
@@ -205,13 +197,31 @@ public final class Constants {
     public static final class Vision {
         public static final String FRONT_CAMERA_NAME = "Front Camera";
         public static final String BACK_CAMERA_NAME = "Global_Shutter_Camera";
-        public static final String NOTE_CAMERA_NAME = "Microsoft_LifeCam_HD-3000";
-        public static final Transform3d FRONT_CAMERA_TRANSFORM = new Transform3d(new Translation3d(0.3019665792, 0, 0.19), new Rotation3d(0, -0.349066, 0)); //FIXME
+        public static final String NOTE_CAMERA_NAME = ""; //FIXME
+        public static final Transform3d FRONT_CAMERA_TRANSFORM = new Transform3d(); //FIXME
         public static final Transform3d BACK_CAMERA_TRANSFORM = new Transform3d(); //FIXME
-        public static final Vector<N3> VISION_STDS = VecBuilder.fill(0.1, 0.1, Math.toRadians(40));
+        public static final Vector<N3> VISION_STDS = VecBuilder.fill(0.1, 0.1, Math.toRadians(30));
         public static final double TARGET_X_BLUE = -0.04;
         public static final double TARGET_X_RED = 16.58;
         public static final double TARGET_Y_BLUE = 4.98;
         public static final double TARGET_Y_RED = 5.55;
+
+        //FIXME get values and add offsets
+        public static final double AMP_TARGET_X_BLUE = 0;
+        public static final double AMP_TARGET_X_RED = 0;
+        public static final double AMP_TARGET_Y_BLUE = 0;
+        public static final double AMP_TARGET_Y_RED = 0;
+        public static final double TRAP_CENTER_TARGET_X_BLUE = 0;
+        public static final double TRAP_CENTER_TARGET_X_RED = 0;
+        public static final double TRAP_CENTER_TARGET_Y_BLUE = 0;
+        public static final double TRAP_CENTER_TARGET_Y_RED = 0;
+        public static final double TRAP_LEFT_TARGET_X_BLUE = 0;
+        public static final double TRAP_LEFT_TARGET_X_RED = 0;
+        public static final double TRAP_LEFT_TARGET_Y_BLUE = 0;
+        public static final double TRAP_LEFT_TARGET_Y_RED = 0;
+        public static final double TRAP_RIGHT_TARGET_X_BLUE = 0;
+        public static final double TRAP_RIGHT_TARGET_X_RED = 0;
+        public static final double TRAP_RIGHT_TARGET_Y_BLUE = 0;
+        public static final double TRAP_RIGHT_TARGET_Y_RED = 0;
     }
 }

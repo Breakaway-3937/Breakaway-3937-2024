@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Robot;
+import frc.robot.commands.RunElevator;
 
 import com.ctre.phoenix.led.*;
 import com.ctre.phoenix.led.CANdle.LEDStripType;
@@ -16,11 +18,9 @@ import com.ctre.phoenix.led.CANdle.VBatOutputMode;
 
 public class LED extends SubsystemBase {
     private final CANdle candle;
-    private final Timer timer, timer1, autoTimer;
-    private boolean green, red, white, flag, flag2, flag3, flag4, flag5, autoFlag = false; 
-    private int r, g, b, num, counter; 
-    private int i = 8;
-    private int count = 1;
+    private final Timer timer, timer1, autoTimer, funeralTimer;
+    private boolean green, orange, flag, flag1, flag2, autoFlag, funeralFlag = false; 
+    private final CANdleConfiguration config = new CANdleConfiguration();
 
 
     public LED() {
@@ -28,280 +28,288 @@ public class LED extends SubsystemBase {
         timer = new Timer();
         timer1 = new Timer();
         autoTimer = new Timer();
+        funeralTimer = new Timer();
+        timer.reset();
         timer.start();
-        CANdleConfiguration configAll = new CANdleConfiguration();
-        configAll.statusLedOffWhenActive = false;
-        configAll.disableWhenLOS = false;
-        configAll.stripType = LEDStripType.GRB;
-        configAll.brightnessScalar = 0.5;
-        configAll.vBatOutputMode = VBatOutputMode.Modulated;
-        candle.configAllSettings(configAll, 100);
+        timer1.reset();
+        autoTimer.reset();
+        funeralTimer.reset();
+        funeralTimer.start();
+        candle.configAllSettings(new CANdleConfiguration());
+        config.statusLedOffWhenActive = true;
+        config.disableWhenLOS = false;
+        config.stripType = LEDStripType.GRB;
+        config.brightnessScalar = 0.5;
+        config.vBatOutputMode = VBatOutputMode.Modulated;
+        candle.configAllSettings(config);
         candle.setLEDs(0, 0, 0);
     }
 
     public void green(){
-        red = false;
-        white = false;
         green = true;
+        orange = false;
     }
 
-    public void red(){
-        red = true;
-        white = false;
+    public void orange(){
         green = false;
+        orange = true;
     }
 
-    public void white(){
-        red = false;
-        white = true;
-        green = false;
+    public void reset(){
+        flag = false;
+        candle.configBrightnessScalar(0.5);
     }
 
-    public void yellow(){
-        red = false;
-        white = false;
+    public void resetColors(){
         green = false;
-        candle.setLEDs(255, 255, 0);
-    }
-
-    public void blue(){
-        red = false;
-        white = false;
-        green = false;
-        candle.setLEDs(0, 0, 254);
-    }
-    
-    public void setOthersFalse(String color){
-        if(color.equals("green")){
-            flag4 = false;
-            flag5 = false;
-        }
-        else if(color.equals("red")){
-            flag3 = false;
-            flag5 = false;
-        }
-        else if(color.equals("white")){
-            flag4 = false;
-            flag3 = false;
-        }
-        else if(color.equals("blue")){
-            flag4 = false;
-            flag3 = false;
-            flag5 = false;
-        }
-        else if(color.equals("all")){
-            flag4 = false;
-            flag3 = false;
-            flag5 = false;
-        }
+        orange = false;
     }
 
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
-        if(DriverStation.isDisabled()){
+        if(DriverStation.isDisabled() && !Robot.robotContainer.s_Vision.isDead()){
+            //FIXME make pattern
             autoFlag = false;
-            counter = 0;
-            if(i > 16){
-                count = 8;
-            }
-            if(i < 16){
-                count = i - 8;
-            }
-            if(i >= 49){
-                if(timer.get() > 0.01){
-                    candle.setLEDs(0, 0, 0, 0, i - 2, 1);
-                    candle.setLEDs(0, 0, 0, 0, i + 49 - 2, 1);
-                    timer.reset();
-                    i++;
-                    if(i == 60){
-                        i = 8;
-                        if(num == 6){
-                            num = 0;
-                        }
-                        else{
-                            num++;
-                        }
-                    }
-                }
-            }
-            else if(i < 49){
-                if(timer.get() > 0.01 && !flag){
-                    candle.setLEDs(r, g, b, 0, i, count);
-                    candle.setLEDs(r, g, b, 0, i + 49, count);
-                    timer.reset();
-                    flag = true;
-                }
-                else if(timer.get() > 0.01 && flag){
-                    candle.setLEDs(0, 0, 0, 0, i - 2, 1);
-                    candle.setLEDs(0, 0, 0, 0, i + 49 - 2, 1);
-                    timer.reset();
-                    flag = false;
-                    i++;
-                }
-            }
-            switch(num){
-                case 0:
-                r = 255;
-                g = 0;
-                b = 0;
-                break;
-
-                case 1:
-                r = 0;
-                g = 0;
-                b = 255;
-                break;
-
-                case 2:
-                r = 0;
-                g = 255;
-                b = 0;
-                break;
-
-                case 3:
-                r = 255;
-                g = 226;
-                b = 2;
-                break;
-
-                case 4:
-                r = 255;
-                g = 0;
-                b = 255;
-                break;
-
-                case 5:
-                r = 0;
-                g = 244;
-                b = 255;
-                break;
-
-                case 6:
-                r = 220;
-                g = 88;
-                b = 42;
-                break;
-            }
         }
         else if(DriverStation.isAutonomousEnabled()){
+            //FIXME get values
             if(!autoFlag){
                 candle.setLEDs(0, 0, 0);
+                autoTimer.reset();
                 autoTimer.start();
                 autoFlag = true;
             }
-            counter = (int) autoTimer.get();
-            if(counter > 14){
-                counter++;
-            }
-            candle.setLEDs(0, 0, 254, 0, 8, counter * 3);
-            candle.setLEDs(0, 0, 254, 0, 57, counter * 3);
+            candle.setLEDs(0, 0, 0, 0, 0, 0);
         }
-        else if(green){
-            setOthersFalse("green");
-            if(!flag3){
-                timer1.reset();
-                timer1.start();
-                flag2 = false;
-                flag3 = true;
+        else if(RunElevator.trapScored){
+            //FIXME make pattern
+        }
+        else if(RunElevator.retracting && Robot.robotContainer.s_Elevator.isAtPosition()){
+            candle.setLEDs(0, 255, 0);
+        }
+        else if(Robot.robotContainer.s_Vision.isDead()){
+            //FIXME get values for whole else if structure
+            if(funeralTimer.get() > 0.2 && !funeralFlag){
+                candle.setLEDs(12, 237, 54, 0, 0, 0);
+                funeralTimer.reset();
+                funeralFlag = true;
             }
-            else if(timer1.get() > 1){
-                flag2 = true;
+            else if(funeralTimer.get() > 0.2 && funeralFlag){
+                candle.setLEDs(179, 83, 97, 0, 0, 0);
+                funeralTimer.reset();
+                funeralFlag = false;
             }
-            if(!flag2){
-                if(timer.get() > 0.1 && !flag){
-                    candle.setLEDs(0, 255, 0);
-                    timer.reset();
+            if(orange){
+                if(!flag){
+                    timer1.reset();
+                    timer1.start();
                     flag = true;
+                    flag1 = false;
+                    flag2 = false;
                 }
-                else if(timer.get() > 0.1 && flag){
-                    candle.setLEDs(0, 0, 0);
-                    timer.reset();
-                    flag = false;
+                else if(timer1.get() > 1){
+                    flag1 = true;
+                }
+                if(!flag1){
+                    if(timer.get() > 0.1 && !flag2){
+                        candle.setLEDs(255, 165, 0, 0, 0, 0);
+                        timer.reset();
+                        flag2 = true;
+                    }
+                    else if(timer.get() > 0.1 && flag2){
+                        candle.setLEDs(0, 0, 0, 0, 0, 0);
+                        timer.reset();
+                        flag2 = false;
+                    }
+                }
+                else{
+                    for(double i = 0.5; i > 0; i -= 0.025){
+                        candle.setLEDs(255, 165, 0, 0, 0, 0);
+                        candle.configBrightnessScalar(i);
+                    }
+                    for(double i = 0; i < 0.5; i += 0.025){
+                        candle.setLEDs(255, 165, 0, 0, 0, 0);
+                        candle.configBrightnessScalar(i);
+                    }
                 }
             }
-            else{
-                if(timer.get() > 0.2 && !flag){
-                    candle.setLEDs(0, 255, 0);
-                    timer.reset();
+            else if(!Robot.robotContainer.s_Intake.botFull()){
+                candle.setLEDs(0, 0, 254, 0, 0, 0);
+            }
+            else if(green){
+                if(!flag){
+                    timer1.reset();
+                    timer1.start();
                     flag = true;
+                    flag1 = false;
+                    flag2 = false;
                 }
-                else if(timer.get() > 0.2 && flag){
-                    candle.setLEDs(0, 0, 0);
-                    timer.reset();
-                    flag = false;
+                else if(timer1.get() > 1){
+                    flag1 = true;
+                }
+                if(!flag1){
+                    if(timer.get() > 0.1 && !flag2){
+                        candle.setLEDs(0, 255, 0, 0, 0, 0);
+                        timer.reset();
+                        flag2 = true;
+                    }
+                    else if(timer.get() > 0.1 && flag2){
+                        candle.setLEDs(0, 0, 0, 0, 0, 0);
+                        timer.reset();
+                        flag2 = false;
+                    }
+                }
+                else{
+                    for(double i = 0.5; i > 0; i -= 0.025){
+                        candle.setLEDs(0, 255, 0, 0, 0, 0);
+                        candle.configBrightnessScalar(i);
+                    }
+                    for(double i = 0; i < 0.5; i += 0.025){
+                        candle.setLEDs(0, 255, 0, 0, 0, 0);
+                        candle.configBrightnessScalar(i);
+                    }
+                }
+            }
+            else if(Robot.robotContainer.s_Intake.botFull()){
+                if(!flag){
+                    timer1.reset();
+                    timer1.start();
+                    flag = true;
+                    flag1 = false;
+                    flag2 = false;
+                }
+                else if(timer1.get() > 1){
+                    flag1 = true;
+                }
+                if(!flag1){
+                    if(timer.get() > 0.1 && !flag2){
+                        candle.setLEDs(0, 0, 254, 0, 0, 0);
+                        timer.reset();
+                        flag2 = true;
+                    }
+                    else if(timer.get() > 0.1 && flag2){
+                        candle.setLEDs(0, 0, 0, 0, 0, 0);
+                        timer.reset();
+                        flag2 = false;
+                    }
+                }
+                else{
+                    for(double i = 0.5; i > 0; i -= 0.025){
+                        candle.setLEDs(255, 0, 0, 0, 0, 0);
+                        candle.configBrightnessScalar(i);
+                    }
+                    for(double i = 0; i < 0.5; i += 0.025){
+                        candle.setLEDs(255, 0, 0, 0, 0, 0);
+                        candle.configBrightnessScalar(i);
+                    }
                 }
             }
         }
-        else if(red){
-            setOthersFalse("red");
-            if(!flag4){
-                timer1.reset();
-                timer1.start();
-                flag2 = false;
-                flag4 = true;
-            }
-            else if(timer1.get() > 1){
-                flag2 = true;
-            }
-            if(!flag2){
-                if(timer.get() > 0.1 && !flag){
-                    candle.setLEDs(255, 0, 0);
-                    timer.reset();
+        else if(!Robot.robotContainer.s_Vision.isDead()){
+            if(orange){
+                if(!flag){
+                    timer1.reset();
+                    timer1.start();
                     flag = true;
+                    flag1 = false;
+                    flag2 = false;
                 }
-                else if(timer.get() > 0.1 && flag){
-                    candle.setLEDs(0, 0, 0);
-                    timer.reset();
-                    flag = false;
+                else if(timer1.get() > 1){
+                    flag1 = true;
+                }
+                if(!flag1){
+                    if(timer.get() > 0.1 && !flag2){
+                        candle.setLEDs(255, 165, 0);
+                        timer.reset();
+                        flag2 = true;
+                    }
+                    else if(timer.get() > 0.1 && flag2){
+                        candle.setLEDs(0, 0, 0);
+                        timer.reset();
+                        flag2 = false;
+                    }
+                }
+                else{
+                    for(double i = 0.5; i > 0; i -= 0.025){
+                        candle.setLEDs(255, 165, 0);
+                        candle.configBrightnessScalar(i);
+                    }
+                    for(double i = 0; i < 0.5; i += 0.025){
+                        candle.setLEDs(255, 165, 0);
+                        candle.configBrightnessScalar(i);
+                    }
                 }
             }
-            else{
-                if(timer.get() > 0.2 && !flag){
-                    candle.setLEDs(255, 0, 0);
-                    timer.reset();
+            else if(!Robot.robotContainer.s_Intake.botFull()){
+                candle.setLEDs(0, 0, 254);
+            }
+            else if(green){
+                if(!flag){
+                    timer1.reset();
+                    timer1.start();
                     flag = true;
+                    flag1 = false;
+                    flag2 = false;
                 }
-                else if(timer.get() > 0.2 && flag){
-                    candle.setLEDs(0, 0, 0);
-                    timer.reset();
-                    flag = false;
+                else if(timer1.get() > 1){
+                    flag1 = true;
+                }
+                if(!flag1){
+                    if(timer.get() > 0.1 && !flag2){
+                        candle.setLEDs(0, 255, 0);
+                        timer.reset();
+                        flag2 = true;
+                    }
+                    else if(timer.get() > 0.1 && flag2){
+                        candle.setLEDs(0, 0, 0);
+                        timer.reset();
+                        flag2 = false;
+                    }
+                }
+                else{
+                    for(double i = 0.5; i > 0; i -= 0.025){
+                        candle.setLEDs(0, 255, 0);
+                        candle.configBrightnessScalar(i);
+                    }
+                    for(double i = 0; i < 0.5; i += 0.025){
+                        candle.setLEDs(0, 255, 0);
+                        candle.configBrightnessScalar(i);
+                    }
                 }
             }
-        }
-        else if(white){
-            setOthersFalse("white");
-            if(!flag5){
-                timer1.reset();
-                timer1.start();
-                flag2 = false;
-                flag5 = true;
-            }
-            else if(timer1.get() > 1){
-                flag2 = true;
-            }
-            if(!flag2){
-                if(timer.get() > 0.1 && !flag){
-                    candle.setLEDs(200, 180, 180);
-                    timer.reset();
+            else if(Robot.robotContainer.s_Intake.botFull()){
+                if(!flag){
+                    timer1.reset();
+                    timer1.start();
                     flag = true;
+                    flag1 = false;
+                    flag2 = false;
                 }
-                else if(timer.get() > 0.1 && flag){
-                    candle.setLEDs(0, 0, 0);
-                    timer.reset();
-                    flag = false;
+                else if(timer1.get() > 1){
+                    flag1 = true;
                 }
-            }
-            else{
-                if(timer.get() > 0.2 && !flag){
-                    candle.setLEDs(200, 180, 180);
-                    timer.reset();
-                    flag = true;
+                if(!flag1){
+                    if(timer.get() > 0.1 && !flag2){
+                        candle.setLEDs(0, 0, 254);
+                        timer.reset();
+                        flag2 = true;
+                    }
+                    else if(timer.get() > 0.1 && flag2){
+                        candle.setLEDs(0, 0, 0);
+                        timer.reset();
+                        flag2 = false;
+                    }
                 }
-                else if(timer.get() > 0.2 && flag){
-                    candle.setLEDs(0, 0, 0);
-                    timer.reset();
-                    flag = false;
+                else{
+                    for(double i = 0.5; i > 0; i -= 0.025){
+                        candle.setLEDs(255, 0, 0);
+                        candle.configBrightnessScalar(i);
+                    }
+                    for(double i = 0; i < 0.5; i += 0.025){
+                        candle.setLEDs(255, 0, 0);
+                        candle.configBrightnessScalar(i);
+                    }
                 }
             }
         }

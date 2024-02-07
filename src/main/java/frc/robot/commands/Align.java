@@ -8,9 +8,13 @@ import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Vision;
 
@@ -20,6 +24,10 @@ public class Align extends Command {
   private final DoubleSupplier translationSup;
   private final DoubleSupplier strafeSup;
   private final BooleanSupplier robotCentricSup;
+  private boolean flag;
+  private final PIDController posePid = new PIDController(0.3, 0, 0);
+  private double translationVal, strafeVal, rotationVal;
+
 
   /** Creates a new Align. */
   public Align(Swerve s_Swerve, Vision s_Vision, DoubleSupplier translationSup, DoubleSupplier strafeSup, BooleanSupplier robotCentricSup) {
@@ -34,37 +42,120 @@ public class Align extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    flag = false;
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    /* Get Values, Deadband*/
-    double translationVal = MathUtil.applyDeadband(translationSup.getAsDouble(), Constants.Controllers.STICK_DEADBAND);
-    double strafeVal = MathUtil.applyDeadband(strafeSup.getAsDouble(), Constants.Controllers.STICK_DEADBAND);
-
-    /* Drive */
-    if(s_Swerve.getNoteTracking()){
+    if(RunElevator.startStage1){
+      var alliance = DriverStation.getAlliance();
+      if(alliance.isPresent()){
+        if(alliance.get() == DriverStation.Alliance.Blue){
+          translationVal = Constants.Vision.AMP_TARGET_X_BLUE - s_Swerve.getPose().getX();
+          strafeVal = Constants.Vision.AMP_TARGET_Y_BLUE - s_Swerve.getPose().getY();
+          rotationVal = -posePid.calculate(Rotation2d.fromDegrees(270).getRadians() - s_Swerve.getGyroYaw().getRadians()) * Constants.Swerve.MAX_ANGULAR_VELOCITY;
+        }
+        else{
+          translationVal = Constants.Vision.AMP_TARGET_X_RED - s_Swerve.getPose().getX();
+          strafeVal = Constants.Vision.AMP_TARGET_Y_RED - s_Swerve.getPose().getY();
+          rotationVal = -posePid.calculate(Rotation2d.fromDegrees(90).getRadians() - s_Swerve.getGyroYaw().getRadians()) * Constants.Swerve.MAX_ANGULAR_VELOCITY;
+        }
+      }
       s_Swerve.drive(
-          new Translation2d(translationVal, strafeVal).times(Constants.Swerve.MAX_SPEED), 
-          s_Vision.getNoteRotationSpeed(), 
+          new Translation2d(translationVal, strafeVal), 
+          rotationVal, 
           !robotCentricSup.getAsBoolean(), 
-          true
+          false
       );
     }
-    else{
+    else if(RunElevator.climbing){
+      var alliance = DriverStation.getAlliance();
+      if(alliance.isPresent()){
+        if(alliance.get() == DriverStation.Alliance.Blue){
+          if(Math.abs(Robot.robotContainer.s_Swerve.getHeading().getDegrees() % 360) > 90 || Math.abs(Robot.robotContainer.s_Swerve.getHeading().getDegrees() % 360) < 270){
+            translationVal = Constants.Vision.TRAP_CENTER_TARGET_X_BLUE - s_Swerve.getPose().getX();
+            strafeVal = Constants.Vision.TRAP_CENTER_TARGET_Y_BLUE - s_Swerve.getPose().getY();
+            rotationVal = -posePid.calculate(Rotation2d.fromDegrees(0).getRadians() - s_Swerve.getGyroYaw().getRadians()) * Constants.Swerve.MAX_ANGULAR_VELOCITY;
+          }
+          else if(Math.abs(Robot.robotContainer.s_Swerve.getHeading().getDegrees() % 360) > 300){
+            translationVal = Constants.Vision.TRAP_LEFT_TARGET_X_BLUE - s_Swerve.getPose().getX();
+            strafeVal = Constants.Vision.TRAP_LEFT_TARGET_Y_BLUE - s_Swerve.getPose().getY();
+            rotationVal = -posePid.calculate(Rotation2d.fromDegrees(120).getRadians() - s_Swerve.getGyroYaw().getRadians()) * Constants.Swerve.MAX_ANGULAR_VELOCITY;
+          }
+          else if(Math.abs(Robot.robotContainer.s_Swerve.getHeading().getDegrees() % 360) < 60){
+            translationVal = Constants.Vision.TRAP_RIGHT_TARGET_X_BLUE - s_Swerve.getPose().getX();
+            strafeVal = Constants.Vision.TRAP_RIGHT_TARGET_Y_BLUE - s_Swerve.getPose().getY();
+            rotationVal = -posePid.calculate(Rotation2d.fromDegrees(240).getRadians() - s_Swerve.getGyroYaw().getRadians()) * Constants.Swerve.MAX_ANGULAR_VELOCITY;
+          }
+        }
+        else{
+          if(Math.abs(Robot.robotContainer.s_Swerve.getHeading().getDegrees() % 360) > 90 || Math.abs(Robot.robotContainer.s_Swerve.getHeading().getDegrees() % 360) < 270){
+            translationVal = Constants.Vision.TRAP_CENTER_TARGET_X_RED - s_Swerve.getPose().getX();
+            strafeVal = Constants.Vision.TRAP_CENTER_TARGET_Y_RED - s_Swerve.getPose().getY();
+            rotationVal = -posePid.calculate(Rotation2d.fromDegrees(0).getRadians() - s_Swerve.getGyroYaw().getRadians()) * Constants.Swerve.MAX_ANGULAR_VELOCITY;
+          }
+          else if(Math.abs(Robot.robotContainer.s_Swerve.getHeading().getDegrees() % 360) > 300){
+            translationVal = Constants.Vision.TRAP_LEFT_TARGET_X_RED - s_Swerve.getPose().getX();
+            strafeVal = Constants.Vision.TRAP_LEFT_TARGET_Y_RED - s_Swerve.getPose().getY();
+            rotationVal = -posePid.calculate(Rotation2d.fromDegrees(120).getRadians() - s_Swerve.getGyroYaw().getRadians()) * Constants.Swerve.MAX_ANGULAR_VELOCITY;
+          }
+          else if(Math.abs(Robot.robotContainer.s_Swerve.getHeading().getDegrees() % 360) < 60){
+            translationVal = Constants.Vision.TRAP_RIGHT_TARGET_X_RED - s_Swerve.getPose().getX();
+            strafeVal = Constants.Vision.TRAP_RIGHT_TARGET_Y_RED - s_Swerve.getPose().getY();
+            rotationVal = -posePid.calculate(Rotation2d.fromDegrees(240).getRadians() - s_Swerve.getGyroYaw().getRadians()) * Constants.Swerve.MAX_ANGULAR_VELOCITY;
+          }
+        }
+      }
       s_Swerve.drive(
-          new Translation2d(translationVal, strafeVal).times(Constants.Swerve.MAX_SPEED), 
-          s_Vision.getAprilTagRotationSpeed(), 
+          new Translation2d(translationVal, strafeVal), 
+          rotationVal, 
           !robotCentricSup.getAsBoolean(), 
-          true
+          false
       );
+    }
+    else if(!RunElevator.deadShooter){
+      /* Get Values, Deadband*/
+      translationVal = MathUtil.applyDeadband(translationSup.getAsDouble(), Constants.Controllers.STICK_DEADBAND);
+      strafeVal = MathUtil.applyDeadband(strafeSup.getAsDouble(), Constants.Controllers.STICK_DEADBAND);
+
+      /* Drive */
+      if(s_Swerve.getNoteTracking()){
+        s_Swerve.drive(
+            new Translation2d(translationVal, strafeVal).times(Constants.Swerve.MAX_SPEED), 
+            s_Vision.getNoteRotationSpeed(), 
+            robotCentricSup.getAsBoolean(), 
+            true
+        );
+      }
+      else{
+        s_Swerve.drive(
+            new Translation2d(translationVal, strafeVal).times(Constants.Swerve.MAX_SPEED), 
+            s_Vision.getAprilTagRotationSpeed(), 
+            !robotCentricSup.getAsBoolean(), 
+            true
+        );
+      }
+
+      if(s_Swerve.getSpeed().omegaRadiansPerSecond < 0.1 && !flag){
+        Robot.robotContainer.s_LED.reset();
+        Robot.robotContainer.s_LED.resetColors();
+        Robot.robotContainer.s_LED.green();
+        flag = true;
+      }
+      if(s_Swerve.getSpeed().omegaRadiansPerSecond >= 0.1){
+        flag = false;
+        Robot.robotContainer.s_LED.resetColors();
+      }
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    Robot.robotContainer.s_LED.resetColors();
+  }
 
   // Returns true when the command should end.
   @Override

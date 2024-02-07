@@ -7,7 +7,6 @@ package frc.robot.subsystems;
 import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -48,13 +47,21 @@ public class Shooter extends SubsystemBase {
     wristEncoderEntry = Shuffleboard.getTab("Shooter").add("Wrist", getWrist()).withPosition(1, 0).getEntry();
   }
 
-  public void runShooter(double speed){
-    this.speed = speed;
+  public void setSubShooting(){
+    speed = 0; //FIXME setpoint
+  }
+
+  public void setPodiumShooting(){
+    speed = 0; //FIXME setpoint
+  }
+
+  public void runShooter(){
     shooterMotor.setControl(request.withVelocity(speed));
   }
 
-  public void test(){
-    shooterMotor.setControl(new DutyCycleOut(.8));
+  public void setShooter(double speed){
+    this.speed = speed;
+    shooterMotor.setControl(request.withVelocity(speed));
   }
 
   public void stopShooter(){
@@ -62,7 +69,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public boolean atSpeed(){
-    if(speed <= getShooterVelocity() + 100 && speed >= getShooterVelocity() - 100){
+    if(speed <= getShooterVelocity() + 1.67 && speed >= getShooterVelocity() - 1.67){
       return true;
     }
     else{
@@ -82,6 +89,15 @@ public class Shooter extends SubsystemBase {
     return wristEncoder.getPosition();
   }
 
+  public boolean isSafe(){
+    if(getWrist() > 0 && getWrist() < 0){ //FIXME get setpoints
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+
   private void configShooterMotors(){
     shooterMotor.getConfigurator().apply(new TalonFXConfiguration());
     followerShooterMotor.getConfigurator().apply(new TalonFXConfiguration());
@@ -93,10 +109,10 @@ public class Shooter extends SubsystemBase {
     shooterMotorConfig.Slot0.kI = 0; // no output for integrated error
     shooterMotorConfig.Slot0.kD = 0; // no output for error derivative
 
-    //shooterMotorConfig.CurrentLimits.SupplyCurrentLimit = 35;
-    //shooterMotorConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
-    //shooterMotorConfig.CurrentLimits.SupplyCurrentThreshold = 50;
-    //shooterMotorConfig.CurrentLimits.SupplyTimeThreshold = 0.1;
+    shooterMotorConfig.CurrentLimits.SupplyCurrentLimit = 35;
+    shooterMotorConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+    shooterMotorConfig.CurrentLimits.SupplyCurrentThreshold = 50;
+    shooterMotorConfig.CurrentLimits.SupplyTimeThreshold = 0.1;
 
     shooterMotorConfig.MotionMagic.MotionMagicAcceleration = 100; //FIXME
 
@@ -105,8 +121,7 @@ public class Shooter extends SubsystemBase {
     shooterMotor.getConfigurator().apply(shooterMotorConfig);
     followerShooterMotor.getConfigurator().apply(shooterMotorConfig);
 
-    //followerShooterMotor.setControl(followerRequest.withOpposeMasterDirection(true));
-    
+    followerShooterMotor.setControl(followerRequest);
   }
 
   private void configWristMotor(){

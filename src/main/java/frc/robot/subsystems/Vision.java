@@ -33,7 +33,7 @@ public class Vision extends SubsystemBase {
     private final Swerve s_Swerve;
     private double targetX, targetY;
     private boolean blue = false;
-    private PIDController posePid = new PIDController(0.3, 0, 0);
+    private final PIDController posePid = new PIDController(0.3, 0, 0);
 
   /** Creates a new Vision. */
   public Vision(Swerve s_Swerve) {
@@ -57,34 +57,17 @@ public class Vision extends SubsystemBase {
   }
 
   public Optional<Rotation2d> getRotationTargetOverride(){
-    var result = frontCamera.getLatestResult();
-    if(result.hasTargets() && true){ //FIXME will be if intake is full
-        return Optional.of(getAprilTagRotation2d());
+    if(Robot.robotContainer.s_Intake.botFull()){
+        return Optional.of(PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromDegrees(0))));
     }
     else{
         return Optional.empty();
     }
   }
-
-  public Rotation2d getAprilTagRotation2d(){
-    return PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromDegrees(0)));
-  }
-
+  
   public double getAprilTagRotationSpeed(){
     if(Robot.getFront()){
       var result = frontCamera.getLatestResult();
-      if(result.hasTargets() && blue){
-        return -result.getTargets().get(0).getYaw() * 0.8 / 15.0;
-      }
-      else if(result.hasTargets() && !blue){
-        return -result.getTargets().get(result.getTargets().size() == 1 ? 0 : 1).getYaw() * 0.8 / 15.0;
-      }
-      else{
-        return getPoseRotationSpeed();
-      }
-    }
-    else{
-      /*var result = backCamera.getLatestResult();
       if(result.hasTargets() && blue){
         return -result.getTargets().get(0).getYaw() * 0.8 / 10.0;
       }
@@ -93,8 +76,19 @@ public class Vision extends SubsystemBase {
       }
       else{
         return getPoseRotationSpeed();
-      }*/
-      return 0;
+      }
+    }
+    else{
+      var result = backCamera.getLatestResult();
+      if(result.hasTargets() && blue){
+        return -result.getTargets().get(0).getYaw() * 0.8 / 10.0;
+      }
+      else if(result.hasTargets() && !blue){
+        return -result.getTargets().get(result.getTargets().size() == 1 ? 0 : 1).getYaw() * 0.8 / 10.0;
+      }
+      else{
+        return getPoseRotationSpeed();
+      }
     }
   }
 
@@ -122,7 +116,16 @@ public class Vision extends SubsystemBase {
   }
 
   private double getPoseRotationSpeed(){
-    return -posePid.calculate(-PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromRadians(0))).getRadians()) * Constants.Swerve.MAX_ANGULAR_VELOCITY;
+    return posePid.calculate(PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromRadians(0))).getRadians()) * Constants.Swerve.MAX_ANGULAR_VELOCITY;
+  }
+
+  public boolean isDead(){
+    if(!frontCamera.isConnected() && !backCamera.isConnected()){
+      return true;
+    }
+    else{
+      return false;
+    }
   }
 
   @Override

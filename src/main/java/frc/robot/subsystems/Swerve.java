@@ -2,7 +2,7 @@ package frc.robot.subsystems;
 
 import frc.robot.SwerveModule;
 import frc.robot.Constants;
-
+import frc.robot.Robot;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -29,7 +29,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Swerve extends SubsystemBase {
@@ -152,10 +151,6 @@ public class Swerve extends SubsystemBase {
         return Constants.Swerve.SWERVE_KINEMATICS.toChassisSpeeds(getModuleStates());
     }
 
-    public Command autoPathfind(Pose2d target){
-        return AutoBuilder.pathfindToPose(target, Constants.Swerve.CONSTRAINTS);
-    }
-
     public void configPathPlanner(){
         AutoBuilder.configureHolonomic(this::getPose, this::setPose, this::getSpeed, (speeds) -> setModuleStates(Constants.Swerve.SWERVE_KINEMATICS.toSwerveModuleStates(speeds)), new HolonomicPathFollowerConfig(new PIDConstants(5.0, 0.0, 0.0), new PIDConstants(5.0, 0.0, 0.0), Constants.Swerve.MAX_SPEED, Constants.Swerve.DRIVE_BASE_RADIUS, new ReplanningConfig()), () -> 
         {
@@ -181,6 +176,13 @@ public class Swerve extends SubsystemBase {
     @Override
     public void periodic(){
         poseEstimator.update(getGyroYaw(), getModulePositions());
+
+        if(Robot.robotContainer.s_Intake.botFull()){
+            setNoteTracking(false);
+        }
+        else{
+            setNoteTracking(true);
+        }
 
         field.setRobotPose(getPose());
         poseX.setDouble(getPose().getX());
