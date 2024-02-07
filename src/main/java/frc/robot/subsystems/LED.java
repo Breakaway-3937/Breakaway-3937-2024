@@ -68,7 +68,7 @@ public class LED extends SubsystemBase {
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
-        if(DriverStation.isDisabled() && !Robot.robotContainer.s_Vision.isDead()){
+        if(DriverStation.isDisabled() && false/*!Robot.robotContainer.s_Vision.isDead()*/){
             //FIXME make pattern
             autoFlag = false;
         }
@@ -88,7 +88,7 @@ public class LED extends SubsystemBase {
         else if(RunElevator.retracting && Robot.robotContainer.s_Elevator.isAtPosition()){
             candle.setLEDs(0, 255, 0);
         }
-        else if(Robot.robotContainer.s_Vision.isDead()){
+        else if(false/*Robot.robotContainer.s_Vision.isDead()*/){
             //FIXME get values for whole else if structure
             if(funeralTimer.get() > 0.2 && !funeralFlag){
                 candle.setLEDs(12, 237, 54, 0, 0, 0);
@@ -206,7 +206,7 @@ public class LED extends SubsystemBase {
                 }
             }
         }
-        else if(!Robot.robotContainer.s_Vision.isDead()){
+        else if(false /*!Robot.robotContainer.s_Vision.isDead()*/){
             if(orange){
                 if(!flag){
                     timer1.reset();
