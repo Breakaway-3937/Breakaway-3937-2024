@@ -70,7 +70,7 @@ public class RobotContainer {
         s_Elevator.setDefaultCommand(c_RunElevator);
         //autoChooser = AutoBuilder.buildAutoChooser();
         //Shuffleboard.getTab("Auto").add("Auto", autoChooser).withPosition(0, 0);
-        Shuffleboard.selectTab("Auto");
+        //Shuffleboard.selectTab("Auto");
         // Configure the button bindings
         configureButtonBindings();
     }
