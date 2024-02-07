@@ -1,9 +1,5 @@
 package frc.robot;
 
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.util.Enumeration;
-
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
@@ -17,6 +13,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.RobotController;
 import frc.lib.util.COTSTalonFXSwerveConstants;
 import frc.lib.util.SwerveModuleConstants;
 
@@ -24,8 +21,8 @@ public final class Constants {
     public static final boolean ROBOT_RELATIVE = false;
     public static final boolean OPEN_LOOP = true;
     public static final int CANDLE_ID = 12;
-    public static final String PRACTICE_MAC = "00:80:2F:25:DE:54";
-    public static final boolean PRACTICE_BOT = getMACAddress().equals(PRACTICE_MAC);
+    public static final String PRACTICE_MAC = "030dbdbc";
+    public static final boolean PRACTICE_BOT = RobotController.getSerialNumber().equals(PRACTICE_MAC);
     public static final boolean DEBUG = true;
 
     public static final class Controllers{
@@ -132,7 +129,7 @@ public final class Constants {
             public static final int ANGLE_MOTOR_ID = 8;
             public static final int CANCODER_ID = 21;
             public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(-179.296875);
-            public static final Rotation2d ANGLE_OFFSET_PRACTICE = Rotation2d.fromDegrees(0);
+            public static final Rotation2d ANGLE_OFFSET_PRACTICE = Rotation2d.fromDegrees(-118.74+180);
             public static final SwerveModuleConstants CONSTANTS = 
                 new SwerveModuleConstants(DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, CANCODER_ID, ANGLE_OFFSET, ANGLE_OFFSET_PRACTICE);
         }
@@ -141,9 +138,9 @@ public final class Constants {
         public static final class Mod1 {
             public static final int DRIVE_MOTOR_ID = 0;
             public static final int ANGLE_MOTOR_ID = 1;
-            public static final int CANCODER_ID = 22;
+            public static final int CANCODER_ID = 23;
             public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(-40.693359375);
-            public static final Rotation2d ANGLE_OFFSET_PRACTICE = Rotation2d.fromDegrees(0);
+            public static final Rotation2d ANGLE_OFFSET_PRACTICE = Rotation2d.fromDegrees(9.14);
             public static final SwerveModuleConstants CONSTANTS = 
                 new SwerveModuleConstants(DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, CANCODER_ID, ANGLE_OFFSET, ANGLE_OFFSET_PRACTICE);
         }
@@ -152,9 +149,9 @@ public final class Constants {
         public static final class Mod2 {
             public static final int DRIVE_MOTOR_ID = 10;
             public static final int ANGLE_MOTOR_ID = 11;
-            public static final int CANCODER_ID = 23;
+            public static final int CANCODER_ID = 24;
             public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(-37.529296875);
-            public static final Rotation2d ANGLE_OFFSET_PRACTICE = Rotation2d.fromDegrees(0);
+            public static final Rotation2d ANGLE_OFFSET_PRACTICE = Rotation2d.fromDegrees(-18.98+180);
             public static final SwerveModuleConstants CONSTANTS = 
                 new SwerveModuleConstants(DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, CANCODER_ID, ANGLE_OFFSET, ANGLE_OFFSET_PRACTICE);
         }
@@ -163,9 +160,9 @@ public final class Constants {
         public static final class Mod3 {
             public static final int DRIVE_MOTOR_ID = 19;
             public static final int ANGLE_MOTOR_ID = 18;
-            public static final int CANCODER_ID = 24;
+            public static final int CANCODER_ID = 22;
             public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(148.798828125);
-            public static final Rotation2d ANGLE_OFFSET_PRACTICE = Rotation2d.fromDegrees(0);
+            public static final Rotation2d ANGLE_OFFSET_PRACTICE = Rotation2d.fromDegrees(112.32);
             public static final SwerveModuleConstants CONSTANTS = 
                 new SwerveModuleConstants(DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, CANCODER_ID, ANGLE_OFFSET, ANGLE_OFFSET_PRACTICE);
         }
@@ -218,29 +215,5 @@ public final class Constants {
         public static final double TRAP_LEFT_TARGET_Y_RED = 0;
         public static final double TRAP_RIGHT_TARGET_Y_BLUE = 0;
         public static final double TRAP_RIGHT_TARGET_Y_RED = 0;
-    }
-
-    public static String getMACAddress() {
-        try{
-            Enumeration<NetworkInterface> nwInterface = NetworkInterface.getNetworkInterfaces();
-            StringBuilder ret = new StringBuilder();
-            while(nwInterface.hasMoreElements()){
-                NetworkInterface nis = nwInterface.nextElement();
-                if(nis != null && "eth0".equals(nis.getDisplayName())){
-                    byte[] mac = nis.getHardwareAddress();
-                    if(mac != null){
-                        for(int i = 0; i < mac.length; i++){
-                            ret.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? ":" : ""));
-                        }
-                        String addr = ret.toString();
-                        return addr;
-                    }
-                    else {}
-                } 
-                else {}
-            }
-        } 
-        catch (SocketException | NullPointerException e) {}
-        return "";
     }
 }
