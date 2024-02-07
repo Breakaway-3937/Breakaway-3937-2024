@@ -120,12 +120,12 @@ public class Elevator extends SubsystemBase {
     ePid.setD(0); //FIXME
     ePid.setFF(0.001); //FIXME
     babyPid.setOutputRange(-1, 1);
-    babyPid.setSmartMotionMaxVelocity(0, 0); //FIXME
-    babyPid.setSmartMotionMaxAccel(0, 0); //FIXME
+    babyPid.setSmartMotionMaxVelocity(3500, 0); //FIXME
+    babyPid.setSmartMotionMaxAccel(2500, 0); //FIXME
     babyPid.setP(0); //FIXME
     babyPid.setI(0);
     babyPid.setD(0); //FIXME
-    babyPid.setFF(0); //FIXME
+    babyPid.setFF(0.0004); //FIXME Starting Number. Needs more tuning
     babyShooterConfig.Slot0.kP = 0.11;
     babyShooterConfig.Slot0.kI = 0;
     babyShooterConfig.Slot0.kD = 0; //FIXME

@@ -43,7 +43,7 @@ public class RunNote extends Command {
       s_Intake.stop();
     }
     if(xboxController.getRawButton(6)){
-      s_Shooter.runShooter(100);
+      s_Shooter.runShooter(10);
     }
     else{
       s_Shooter.stopShooter();
