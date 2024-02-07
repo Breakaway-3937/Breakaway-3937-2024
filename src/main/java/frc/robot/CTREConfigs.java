@@ -13,6 +13,7 @@ public final class CTREConfigs {
         swerveCANcoderConfig.MagnetSensor.SensorDirection = Constants.Swerve.CANCODER_INVERT;
 
         /** Swerve Angle Motor Configurations */
+
         /* Motor Inverts and Neutral Mode */
         swerveAngleFXConfig.MotorOutput.Inverted = Constants.Swerve.ANGLE_MOTOR_INVERT;
         swerveAngleFXConfig.MotorOutput.NeutralMode = Constants.Swerve.ANGLE_NEUTRAL_MODE;
@@ -35,6 +36,7 @@ public final class CTREConfigs {
         swerveAngleFXConfig.Audio.AllowMusicDurDisable = true;
 
         /** Swerve Drive Motor Configuration */
+        
         /* Motor Inverts and Neutral Mode */
         swerveDriveFXConfig.MotorOutput.Inverted = Constants.Swerve.DRIVE_MOTOR_INVERT;
         swerveDriveFXConfig.MotorOutput.NeutralMode = Constants.Swerve.DRIVE_NEUTRAL_MODE;
