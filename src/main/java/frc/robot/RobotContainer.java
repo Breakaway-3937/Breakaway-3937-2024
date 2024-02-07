@@ -51,28 +51,28 @@ public class RobotContainer {
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
     private final LED s_LED = new LED();
-    private final Vision s_Vision = new Vision(s_Swerve);
+    //private final Vision s_Vision = new Vision(s_Swerve);
     private final Shooter s_Shooter = new Shooter();
     private final Intake s_Intake = new Intake();
 
 
     /* Commands */
     public final Music c_Music = new Music(s_Swerve);
-    private final Align c_Align = new Align(s_Swerve, s_Vision, () -> translationController.getRawAxis(translationAxis), () -> translationController.getRawAxis(strafeAxis), () -> robotRelative);
+    //private final Align c_Align = new Align(s_Swerve, s_Vision, () -> translationController.getRawAxis(translationAxis), () -> translationController.getRawAxis(strafeAxis), () -> robotRelative);
     private final RunNote c_RunNote = new RunNote(s_Intake, s_Shooter, xboxController);
 
 
-    private final SendableChooser<Command> autoChooser;
+    //private final SendableChooser<Command> autoChooser;
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
-        NamedCommands.registerCommand("note", new AutoNoteAlign(s_Swerve, s_Vision));
+        //NamedCommands.registerCommand("note", new AutoNoteAlign(s_Swerve, s_Vision));
         NamedCommands.registerCommand("FindNote", new InstantCommand());
         NamedCommands.registerCommand("Shoot", new InstantCommand());
         s_Swerve.setDefaultCommand(new TeleopSwerve(s_Swerve, () -> translationController.getRawAxis(translationAxis), () -> translationController.getRawAxis(strafeAxis), () -> rotationController.getRawAxis(rotationAxis), () -> robotRelative));
         s_Shooter.setDefaultCommand(c_RunNote);
-        autoChooser = AutoBuilder.buildAutoChooser();
-        Shuffleboard.getTab("Auto").add("Auto", autoChooser).withPosition(0, 0);
+        //autoChooser = AutoBuilder.buildAutoChooser();
+        //Shuffleboard.getTab("Auto").add("Auto", autoChooser).withPosition(0, 0);
         Shuffleboard.selectTab("Auto");
         // Configure the button bindings
         configureButtonBindings();
@@ -87,7 +87,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         button1.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
-        rotationButton.whileTrue(c_Align);
+        //rotationButton.whileTrue(c_Align);
         button4.onTrue(new InstantCommand(() -> s_Swerve.setNoteTracking(true)));
         button5.onTrue(new InstantCommand(() -> s_Swerve.setNoteTracking(false)));
     }
@@ -98,7 +98,8 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        Logger.recordOutput("Auto", autoChooser.getSelected().toString());
-        return autoChooser.getSelected();
+        //Logger.recordOutput("Auto", autoChooser.getSelected().toString());
+        //return autoChooser.getSelected();
+        return null;
     }
 }
