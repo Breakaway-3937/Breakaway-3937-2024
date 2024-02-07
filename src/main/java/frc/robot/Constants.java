@@ -212,18 +212,10 @@ public final class Constants {
         //FIXME get values and add offsets
         public static final double AMP_TARGET_X_BLUE = 0;
         public static final double AMP_TARGET_X_RED = 0;
-        public static final double AMP_TARGET_Y_BLUE = 0;
-        public static final double AMP_TARGET_Y_RED = 0;
-        public static final double TRAP_CENTER_TARGET_X_BLUE = 0;
-        public static final double TRAP_CENTER_TARGET_X_RED = 0;
         public static final double TRAP_CENTER_TARGET_Y_BLUE = 0;
         public static final double TRAP_CENTER_TARGET_Y_RED = 0;
-        public static final double TRAP_LEFT_TARGET_X_BLUE = 0;
-        public static final double TRAP_LEFT_TARGET_X_RED = 0;
         public static final double TRAP_LEFT_TARGET_Y_BLUE = 0;
         public static final double TRAP_LEFT_TARGET_Y_RED = 0;
-        public static final double TRAP_RIGHT_TARGET_X_BLUE = 0;
-        public static final double TRAP_RIGHT_TARGET_X_RED = 0;
         public static final double TRAP_RIGHT_TARGET_Y_BLUE = 0;
         public static final double TRAP_RIGHT_TARGET_Y_RED = 0;
     }
