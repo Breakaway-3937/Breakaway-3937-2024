@@ -27,9 +27,7 @@ import frc.robot.Constants;
 
 public class Elevator extends SubsystemBase {
 
-  private final CANSparkMax elevatorMotor, followerElevatorMotor, babyWrist;
-  private final TalonFX babyShooter;
-  private final TalonFXConfiguration babyShooterConfig = new TalonFXConfiguration();
+  private final CANSparkMax elevatorMotor, followerElevatorMotor, babyWrist, babyShooter;
   private RelativeEncoder elevatorEncoder, babyWristEncoder;
   private SparkPIDController ePid, babyPid;
   private final GenericEntry elevatorEncoderEntry, brakeEntry, babyWristEntry;
@@ -39,7 +37,7 @@ public class Elevator extends SubsystemBase {
 
   /** Creates a new Elevator. */
   public Elevator() {
-    babyShooter = new TalonFX(Constants.Elevator.BABY_SHOOTER_ID);
+    babyShooter = new CANSparkMax(Constants.Elevator.BABY_SHOOTER_ID, MotorType.kBrushless);
     elevatorMotor = new CANSparkMax(Constants.Elevator.ELEVATOR_MOTOR_ID, MotorType.kBrushless);
     followerElevatorMotor = new CANSparkMax(Constants.Elevator.FOLLOWER_ELEVATOR_MOTOR_ID, MotorType.kBrushless);
     babyWrist = new CANSparkMax(Constants.Elevator.BABY_WRIST_ID, MotorType.kBrushless);
@@ -64,11 +62,11 @@ public class Elevator extends SubsystemBase {
   }
 
   public void runBabyShooterForward(){
-    babyShooter.setControl(new DutyCycleOut(1));
+    babyShooter.set(1);
   }
 
   public void runBabyShooterReverse(){
-    babyShooter.setControl(new DutyCycleOut(-1));
+    babyShooter.set(-1);
   }
 
   public void stopBabyShooter(){
@@ -122,12 +120,14 @@ public class Elevator extends SubsystemBase {
     elevatorMotor.setIdleMode(IdleMode.kBrake);
     followerElevatorMotor.setIdleMode(IdleMode.kBrake);
     babyWrist.restoreFactoryDefaults();
-    babyShooter.getConfigurator().apply(new TalonFXConfiguration());
     babyWrist.setIdleMode(IdleMode.kBrake);
+    babyShooter.restoreFactoryDefaults();
+    babyShooter.setIdleMode(IdleMode.kBrake);
 
     elevatorMotor.setSmartCurrentLimit(35);
     followerElevatorMotor.setSmartCurrentLimit(35);
     babyWrist.setSmartCurrentLimit(35);
+    babyShooter.setSmartCurrentLimit(35);
 
     elevatorEncoder = elevatorMotor.getEncoder();
     babyWristEncoder = babyWrist.getEncoder();
@@ -151,18 +151,8 @@ public class Elevator extends SubsystemBase {
     babyPid.setI(0);
     babyPid.setD(0); //FIXME
     babyPid.setFF(0.0004); //FIXME Starting Number. Needs more tuning
-    babyShooterConfig.Slot0.kP = 0.11;
-    babyShooterConfig.Slot0.kI = 0;
-    babyShooterConfig.Slot0.kD = 0; //FIXME
-    babyShooterConfig.CurrentLimits.SupplyCurrentLimit = 35;
-    babyShooterConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
-    babyShooterConfig.CurrentLimits.SupplyCurrentThreshold = 50;
-    babyShooterConfig.CurrentLimits.SupplyTimeThreshold = 0.1;
-    babyShooterConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
     followerElevatorMotor.follow(elevatorMotor);
-
-    babyShooter.getConfigurator().apply(babyShooterConfig);
   }
 
   @Override
