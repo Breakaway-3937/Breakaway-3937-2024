@@ -17,6 +17,7 @@ public class RunElevator extends Command {
   private final double wristHandoff = -13;
   private final double wristProtect = 52;
   private final double wristAmp = 7.7;
+  private final double wristPreTrap = 0;
   private final double wristTrap = 0;
   private final double wristSource = 0;
   private final double elevatorHandoff = 28.2;
@@ -53,6 +54,7 @@ public class RunElevator extends Command {
     trapScored = false;
     retracting = false;
     climbing = false;
+    handoff = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -74,6 +76,7 @@ public class RunElevator extends Command {
       climb = true;
       retracting = false;
       climbing = true;
+      handoff = false;
     }
     //Retract Climb
     else if(xboxController.getPOV() == Constants.Controllers.DOWN){
@@ -91,6 +94,7 @@ public class RunElevator extends Command {
       climb = false;
       retracting = true;
       climbing = false;
+      handoff = false;
     }
     //Protect
     else if(xboxController.getRawButton(3)){
@@ -108,8 +112,7 @@ public class RunElevator extends Command {
       climb = false;
       retracting = false;
       climbing = false;
-
-
+      handoff = false;
     }
     //Oh Crap!
     else if(xboxController.getRawButton(2)){
@@ -179,6 +182,7 @@ public class RunElevator extends Command {
       Robot.robotContainer.s_LED.reset();
       Robot.robotContainer.s_LED.resetColors();
       Robot.robotContainer.s_LED.orange();
+      handoff = false;
     }
     
     if(Robot.robotContainer.s_Shooter.isSafe() || handoff){
@@ -200,8 +204,11 @@ public class RunElevator extends Command {
         if(Robot.robotContainer.s_Intake.getBabyShooterSensor() && (!Robot.robotContainer.s_Intake.getShooterSensor() || !Robot.robotContainer.s_Intake.getIntakeSensor())){
           s_Elevator.stopBabyShooter();
           trapStage1 = false;
-          trapStage2 = true;
           handoff = false;
+          s_Elevator.setBabyWrist(wristPreTrap);
+        }
+        if(xboxController.getRawButton(8) && Robot.robotContainer.s_Intake.getBabyShooterSensor() && (!Robot.robotContainer.s_Intake.getShooterSensor() || !Robot.robotContainer.s_Intake.getIntakeSensor())){
+          trapStage2 = true;
         }
         if(trapStage2){
           s_Elevator.setElevator(elevatorTrap);
