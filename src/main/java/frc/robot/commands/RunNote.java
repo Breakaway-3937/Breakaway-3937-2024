@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Robot;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 
@@ -13,6 +14,8 @@ public class RunNote extends Command {
   private final Intake s_Intake;
   private final Shooter s_Shooter;
   private final XboxController xboxController;
+  private final double handoff = 17.6;
+  private final double protect = 13;
 
   /** Creates a new RunNote. */
   public RunNote(Intake s_Intake, Shooter s_Shooter, XboxController xboxController) {
@@ -25,11 +28,19 @@ public class RunNote extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    s_Shooter.setWrist(protect);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    if(RunElevator.handoff && Robot.robotContainer.s_Elevator.isAtPosition()){
+      s_Shooter.setWrist(handoff);
+    }
+    else{
+      s_Shooter.setWrist(protect);
+    }
     if(RunElevator.trapStage1){
       s_Intake.intake();
       s_Shooter.setShooter(10);
@@ -39,8 +50,10 @@ public class RunNote extends Command {
       s_Shooter.stopShooter();
     }
     else if(RunElevator.startStage1){
-      s_Intake.intake();
-      s_Shooter.setShooter(10);
+      if(s_Shooter.isAtPosition()){
+        s_Intake.intake();
+        s_Shooter.setShooter(10);
+      }
     }
     else if(RunElevator.startStage2){
       s_Intake.stop();
