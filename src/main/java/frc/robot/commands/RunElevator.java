@@ -14,14 +14,19 @@ public class RunElevator extends Command {
   private final Elevator s_Elevator;
   private final XboxController xboxController;
   //FIXME get all setpoints
-  private final double wristHandoff = 0;
-  private final double wristProtect = 0;
-  private final double wristAmp = 0;
+  private final double shooterShoulderHandoff = 17.6;
+  private final double shooterShoulderProtect = 13;
+  private final double shooterShoulderAmp = 0; //Don't Care, not 0
+  private final double shooterShoulderTrap = 0;
+  private final double shooterShoulderSource = 0;
+  private final double wristHandoff = -14.5;
+  private final double wristProtect = 52;
+  private final double wristAmp = 7.7;
   private final double wristTrap = 0;
   private final double wristSource = 0;
-  private final double elevatorHandoff = 0;
+  private final double elevatorHandoff = 28.2;
   private final double elevatorProtect = 0;
-  private final double elevatorAmp = 0;
+  private final double elevatorAmp = 52.6;
   private final double elevatorTrap = 0;
   private final double elevatorSource = 0;
   private boolean amp, trap, source, protect, ohCrap, climb;
@@ -108,6 +113,8 @@ public class RunElevator extends Command {
       climb = false;
       retracting = false;
       climbing = false;
+
+
     }
     //Oh Crap!
     else if(xboxController.getRawButton(2)){
