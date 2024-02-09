@@ -56,10 +56,10 @@ public class Robot extends LoggedRobot {
     if(isReal()){
       Logger.addDataReceiver(new WPILOGWriter("/media/sda1/"));
       Logger.addDataReceiver(new NT4Publisher());
-      powerDistribution = new PowerDistribution(25, ModuleType.kRev);
+      powerDistribution = new PowerDistribution(26, ModuleType.kRev);
     }
     else{
-      powerDistribution = new PowerDistribution(25, ModuleType.kRev);
+      powerDistribution = new PowerDistribution(26, ModuleType.kRev);
     }
     if(Constants.DEBUG){
       Logger.start();
