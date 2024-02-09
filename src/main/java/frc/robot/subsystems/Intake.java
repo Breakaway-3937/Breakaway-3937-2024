@@ -89,7 +89,10 @@ public class Intake extends SubsystemBase {
   }
 
   public boolean getShooterSensor(){
-    if(shooter.getValue() > 4000){
+    if(!Constants.PRACTICE_BOT && shooter.getValue() > 4000){
+      return true;
+    }
+    else if(Constants.PRACTICE_BOT && shooter.getValue() > 500 && shooter.getValue() < 1000){
       return true;
     }
     else{
