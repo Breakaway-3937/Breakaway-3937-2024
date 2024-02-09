@@ -18,12 +18,12 @@ public class RunElevator extends Command {
   private final double wristProtect = 52;
   private final double wristAmp = 7.7;
   private final double wristTrap = 0;
-  private final double wristSource = 0;
+  private final double wristSource = -13;
   private final double elevatorHandoff = 28.2;
   private final double elevatorProtect = 0;
   private final double elevatorAmp = 52.6;
   private final double elevatorTrap = 0;
-  private final double elevatorSource = 0;
+  private final double elevatorSource = 52.6;
   private boolean amp, trap, source, protect, ohCrap, climb;
   public static boolean deadShooter, trapStage1, trapStage2, startStage1, startStage2, reverse, trapScored, retracting, climbing, handoff;
 
