@@ -103,6 +103,8 @@ public class Elevator extends SubsystemBase {
     babyWrist.setSmartCurrentLimit(35);
     babyShooter.setSmartCurrentLimit(35);
 
+    babyWrist.setInverted(true);
+
     elevatorEncoder = elevatorMotor.getEncoder();
     babyWristEncoder = babyWrist.getEncoder();
     ePid = elevatorMotor.getPIDController();
@@ -112,19 +114,19 @@ public class Elevator extends SubsystemBase {
     elevatorEncoder.setPosition(0);
     babyWristEncoder.setPosition(0);
     ePid.setOutputRange(-1, 1);
-    ePid.setSmartMotionMaxVelocity(0, 0); //FIXME
-    ePid.setSmartMotionMaxAccel(0, 0); //FIXME
-    ePid.setP(1e-12); //FIXME
+    ePid.setSmartMotionMaxVelocity(5500, 0);
+    ePid.setSmartMotionMaxAccel(4000, 0);
+    ePid.setP(0);
     ePid.setI(0);
-    ePid.setD(0); //FIXME
-    ePid.setFF(0.001); //FIXME
+    ePid.setD(0);
+    ePid.setFF(0.0003);
     babyPid.setOutputRange(-1, 1);
-    babyPid.setSmartMotionMaxVelocity(3500, 0); //FIXME
-    babyPid.setSmartMotionMaxAccel(2500, 0); //FIXME
-    babyPid.setP(0); //FIXME
+    babyPid.setSmartMotionMaxVelocity(9000, 0);
+    babyPid.setSmartMotionMaxAccel(8000, 0);
+    babyPid.setP(0);
     babyPid.setI(0);
-    babyPid.setD(0); //FIXME
-    babyPid.setFF(0.0004); //FIXME Starting Number. Needs more tuning
+    babyPid.setD(0);
+    babyPid.setFF(0.00015);
 
     followerElevatorMotor.follow(elevatorMotor);
   }

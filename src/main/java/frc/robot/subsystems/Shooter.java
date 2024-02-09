@@ -33,7 +33,7 @@ public class Shooter extends SubsystemBase {
   private final MotionMagicVelocityVoltage request = new MotionMagicVelocityVoltage(0).withSlot(0);
   private final Follower followerRequest = new Follower(Constants.Shooter.SHOOTER_MOTOR_ID, true);
   private final GenericEntry shooterEncoderEntry, wristEncoderEntry;
-  private double speed = 0;
+  private double speed, position = 0;
 
   /** Creates a new Shooter. */
   public Shooter() {
@@ -82,6 +82,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public void setWrist(double position){
+    this.position = position;
     pid.setReference(position, ControlType.kSmartMotion);
   }
 
@@ -90,7 +91,16 @@ public class Shooter extends SubsystemBase {
   }
 
   public boolean isSafe(){
-    if(getWrist() > 0 && getWrist() < 0){ //FIXME get setpoints
+    if(getWrist() > 12.8 && getWrist() < 13.2){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+
+  public boolean isAtPosition(){
+    if(getWrist() > position - 0.2 && getWrist() < position + 0.2){
       return true;
     }
     else{
@@ -103,7 +113,7 @@ public class Shooter extends SubsystemBase {
     followerShooterMotor.getConfigurator().apply(new TalonFXConfiguration());
 
     shooterMotorConfig.Slot0.kS = 0.4; // Add 0.25 V output to overcome static friction
-    shooterMotorConfig.Slot0.kV = 0.24; // A velocity target of 1 rps results in 0.12 V output
+    shooterMotorConfig.Slot0.kV = 0.13; // A velocity target of 1 rps results in 0.12 V output
     shooterMotorConfig.Slot0.kA = 0.1; // An acceleration of 1 rps/s requires 0.01 V output
     shooterMotorConfig.Slot0.kP = 0.2; // An error of 1 rps results in 0.11 V output
     shooterMotorConfig.Slot0.kI = 0; // no output for integrated error
@@ -114,7 +124,8 @@ public class Shooter extends SubsystemBase {
     shooterMotorConfig.CurrentLimits.SupplyCurrentThreshold = 50;
     shooterMotorConfig.CurrentLimits.SupplyTimeThreshold = 0.1;
 
-    shooterMotorConfig.MotionMagic.MotionMagicAcceleration = 100; //FIXME
+    shooterMotorConfig.MotionMagic.MotionMagicAcceleration = 1200;
+    shooterMotorConfig.MotionMagic.MotionMagicJerk = 4000;
 
     shooterMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
@@ -131,6 +142,8 @@ public class Shooter extends SubsystemBase {
     wristFollowerMotor.setIdleMode(IdleMode.kBrake);
     wristFollowerMotor.follow(wristMotor);
 
+    wristMotor.setInverted(true);
+
     wristMotor.setSmartCurrentLimit(35);
     wristFollowerMotor.setSmartCurrentLimit(35);
 
@@ -139,12 +152,12 @@ public class Shooter extends SubsystemBase {
     pid.setFeedbackDevice(wristEncoder);
     wristEncoder.setPosition(0);
     pid.setOutputRange(-1, 1);
-    pid.setSmartMotionMaxVelocity(0, 0); //FIXME
-    pid.setSmartMotionMaxAccel(0, 0); //FIXME
-    pid.setP(5e-9); //FIXME
+    pid.setSmartMotionMaxVelocity(4250, 0);
+    pid.setSmartMotionMaxAccel(4000, 0);
+    pid.setP(0);
     pid.setI(0);
-    pid.setD(0); //FIXME
-    pid.setFF(0.0005); //FIXME
+    pid.setD(0);
+    pid.setFF(0.0002);
   }
 
   @Override
