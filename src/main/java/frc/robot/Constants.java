@@ -20,9 +20,9 @@ import frc.lib.util.SwerveModuleConstants;
 public final class Constants {
     public static final boolean ROBOT_RELATIVE = false;
     public static final boolean OPEN_LOOP = true;
-    public static final int CANDLE_ID = 12;
-    public static final String PRACTICE_MAC = "030dbdbc";
-    public static final boolean PRACTICE_BOT = RobotController.getSerialNumber().equals(PRACTICE_MAC);
+    public static final int CANDLE_ID = 25;
+    public static final String PRACTICE_SERIAL_NUM = "030dbdbc";
+    public static final boolean PRACTICE_BOT = RobotController.getSerialNumber().equals(PRACTICE_SERIAL_NUM);
     public static final boolean DEBUG = true;
 
     public static final class Controllers{
@@ -173,9 +173,9 @@ public final class Constants {
         public static final int FRONT_INTAKE_MOTOR_ID = 17;
         public static final int BACK_INTAKE_MOTOR_ID = 16;
         public static final int LOADER_MOTOR_ID = 2;
-        public static final int INTAKE_SENSOR_ID = 0; //FIXME
-        public static final int SHOOTER_SENSOR_ID = 1; //FIXME
-        public static final int BABY_SHOOTER_SENSOR_ID = 2; //FIXME
+        public static final int INTAKE_SENSOR_ID = 0;
+        public static final int SHOOTER_SENSOR_ID = 1;
+        public static final int BABY_SHOOTER_SENSOR_ID = 2;
     }
 
     public static final class Shooter {
@@ -188,10 +188,8 @@ public final class Constants {
     public static final class Elevator {
         public static final int ELEVATOR_MOTOR_ID = 15;
         public static final int FOLLOWER_ELEVATOR_MOTOR_ID = 14;
-        public static final int BABY_WRIST_ID = 0; //FIXME
-        public static final int BABY_SHOOTER_ID = 0; //FIXME
-        public static final int FORWARD_CHANNEL = 0; //FIXME
-        public static final int REVERSE_CHANNEL = 0; //FIXME
+        public static final int BABY_WRIST_ID = 12;
+        public static final int BABY_SHOOTER_ID = 13;
     }
 
     public static final class Vision {
