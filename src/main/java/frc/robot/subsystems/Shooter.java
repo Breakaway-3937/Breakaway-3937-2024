@@ -18,6 +18,8 @@ import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.math.Pair;
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -34,7 +36,9 @@ public class Shooter extends SubsystemBase {
   private final Follower followerRequest = new Follower(Constants.Shooter.SHOOTER_MOTOR_ID, true);
   private final GenericEntry shooterEncoderEntry, wristEncoderEntry;
   private double speed, position = 0;
-  private boolean auto, subwoofer, podium;
+  private boolean subwoofer, podium;
+  private final InterpolatingDoubleTreeMap shooterMap = new InterpolatingDoubleTreeMap();
+  private final InterpolatingDoubleTreeMap wristMap = new InterpolatingDoubleTreeMap();
 
   /** Creates a new Shooter. */
   public Shooter() {
@@ -48,16 +52,23 @@ public class Shooter extends SubsystemBase {
     wristEncoderEntry = Shuffleboard.getTab("Shooter").add("Wrist", getWrist()).withPosition(1, 0).getEntry();
   }
 
+  public Pair<TalonFX, TalonFX> getShooterMotors(){
+    return new Pair<TalonFX, TalonFX>(shooterMotor, followerShooterMotor);
+  }
+
   public void setSubShooting(){
     subwoofer = true;
     podium = false;
-    auto = false;
   }
 
   public void setPodiumShooting(){
     subwoofer = false;
     podium = true;
-    auto = false;
+  }
+
+  public void setAutoShooting(){
+    subwoofer = false;
+    podium = false;
   }
 
   public void runShooter(){
@@ -91,12 +102,12 @@ public class Shooter extends SubsystemBase {
       position = 0;
     }
     else if(subwoofer){
-      speed = 3000.0 / 60.0; //FIXME setpoint
+      speed = 3000.0 / 60.0;
       position = 17.5;
     }
     else{
-      speed = 0; //FIXME setpoint
-      position = 0;
+      speed = shooterMap.get(0.0/*Robot.robotContainer.s_Vision.getDistance()*/);
+      position = wristMap.get(0.0/*Robot.robotContainer.s_Vision.getDistance()*/);
     }
     pid.setReference(position, ControlType.kSmartMotion);
   }
