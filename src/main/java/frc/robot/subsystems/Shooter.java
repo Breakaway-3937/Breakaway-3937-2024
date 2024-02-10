@@ -22,6 +22,7 @@ import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -105,10 +106,10 @@ public class Shooter extends SubsystemBase {
       speed = 3000.0 / 60.0;
       position = 17.5;
     }
-    else{
-      speed = shooterMap.get(0.0/*Robot.robotContainer.s_Vision.getDistance()*/);
-      position = wristMap.get(0.0/*Robot.robotContainer.s_Vision.getDistance()*/);
-    }
+    /*else{
+      speed = shooterMap.get(0.0/*Robot.robotContainer.s_Vision.getDistance()*///);
+      //position = //wristMap.get(0.0/*Robot.robotContainer.s_Vision.getDistance()*///);
+    //}
     pid.setReference(position, ControlType.kSmartMotion);
   }
 
@@ -201,5 +202,9 @@ public class Shooter extends SubsystemBase {
     Logger.recordOutput("Shooter", getShooterVelocity());
     wristEncoderEntry.setDouble(getWrist());
     Logger.recordOutput("Wrist", getWrist());
+    SmartDashboard.putNumber("Shooter Speed", getSpeed());
+    SmartDashboard.putNumber("Shoulder Posision", getWrist());
+    speed = SmartDashboard.getNumber("Speed Input", 0);
+    position = SmartDashboard.getNumber("Position of Wrist", 0);
   }
 }
