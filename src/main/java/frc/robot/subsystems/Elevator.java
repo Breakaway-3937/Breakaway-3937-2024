@@ -43,11 +43,22 @@ public class Elevator extends SubsystemBase {
   }
 
   public void setHighClimb(){
-    climb = 0; //FIXME setpoint
+    climb = 100;
+  }
+
+  public void setElevatorFast(){
+    ePid.setSmartMotionMaxVelocity(5500, 0);
+    ePid.setSmartMotionMaxAccel(4000, 0);
   }
 
   public void extendClimb(){
     setElevator(climb);
+  }
+
+  public void retractClimb(){
+    ePid.setSmartMotionMaxVelocity(3000, 0);
+    ePid.setSmartMotionMaxAccel(2500, 0);
+    setElevator(0);
   }
 
   public void runBabyShooterForward(){
