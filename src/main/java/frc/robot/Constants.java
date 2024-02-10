@@ -7,8 +7,10 @@ import com.ctre.phoenix6.signals.SensorDirectionValue;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
@@ -195,9 +197,9 @@ public final class Constants {
     public static final class Vision {
         public static final String FRONT_CAMERA_NAME = "Front Camera";
         public static final String BACK_CAMERA_NAME = "Global_Shutter_Camera";
-        public static final String NOTE_CAMERA_NAME = ""; //FIXME
-        public static final Transform3d FRONT_CAMERA_TRANSFORM = new Transform3d(); //FIXME
-        public static final Transform3d BACK_CAMERA_TRANSFORM = new Transform3d(); //FIXME
+        public static final String NOTE_CAMERA_NAME = "Microsoft_LifeCam_HD-3000"; //FIXME
+        public static final Transform3d FRONT_CAMERA_TRANSFORM = new Transform3d(new Translation3d(-0.2036, -0.173749, 0.5169), new Rotation3d(0, 0.174533, 0));
+        public static final Transform3d BACK_CAMERA_TRANSFORM = new Transform3d(new Translation3d(-0.2036, 0.173749, 0.5169), new Rotation3d(0, 0.174533, Math.PI));
         public static final Vector<N3> VISION_STDS = VecBuilder.fill(0.1, 0.1, Math.toRadians(30));
         public static final double TARGET_X_BLUE = -0.04;
         public static final double TARGET_X_RED = 16.58;
