@@ -95,7 +95,7 @@ public class RunElevator extends Command {
       startStage2 = false;
       deadShooter = false;
       reverse = false;
-      climb = false;
+      climb = true;
       retracting = true;
       climbing = false;
       handoff = false;
@@ -121,6 +121,7 @@ public class RunElevator extends Command {
       handoff = false;
       Robot.robotContainer.s_LED.reset();
       Robot.robotContainer.s_LED.resetColors();
+      s_Elevator.setElevatorFast();
     }
     //Oh Crap!
     else if(xboxController.getRawButton(2)){
@@ -298,7 +299,12 @@ public class RunElevator extends Command {
         }
       }
       else if(climb){
-        s_Elevator.extendClimb();
+        if(climbing){
+          s_Elevator.extendClimb();
+        }
+        else if(retracting){
+          s_Elevator.retractClimb();
+        }
       }
     }
   }
