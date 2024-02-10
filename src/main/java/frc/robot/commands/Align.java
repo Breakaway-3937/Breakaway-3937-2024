@@ -49,7 +49,7 @@ public class Align extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(RunElevator.startStage1){
+    if(RunElevator.startStage1 || RunElevator.startStage2){
       strafeVal = MathUtil.applyDeadband(strafeSup.getAsDouble(), Constants.Controllers.STICK_DEADBAND);
       var alliance = DriverStation.getAlliance();
       if(alliance.isPresent()){
@@ -140,6 +140,7 @@ public class Align extends Command {
       }
       if(s_Swerve.getSpeed().omegaRadiansPerSecond >= 0.1){
         flag = false;
+        Robot.robotContainer.s_LED.reset();
         Robot.robotContainer.s_LED.resetColors();
       }
     }
@@ -148,6 +149,7 @@ public class Align extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    Robot.robotContainer.s_LED.reset();
     Robot.robotContainer.s_LED.resetColors();
   }
 
