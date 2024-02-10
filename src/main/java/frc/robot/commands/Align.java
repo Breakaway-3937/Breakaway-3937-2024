@@ -44,6 +44,7 @@ public class Align extends Command {
   @Override
   public void initialize() {
     flag = false;
+    Robot.robotContainer.s_Shooter.setAutoShooting();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
