@@ -7,6 +7,7 @@ package frc.robot.commands;
 import com.ctre.phoenix6.Orchestra;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Robot;
 import frc.robot.subsystems.Swerve;
 
 public class Music extends Command {
@@ -30,6 +31,9 @@ public class Music extends Command {
       orchestra.addInstrument(s_Swerve.mSwerveMods[i].getDriveMotor());
       orchestra.addInstrument(s_Swerve.mSwerveMods[i].getAngleMotor());
     }
+    orchestra.addInstrument(Robot.robotContainer.s_Intake.getLoaderMotor());
+    orchestra.addInstrument(Robot.robotContainer.s_Shooter.getShooterMotors().getFirst());
+    orchestra.addInstrument(Robot.robotContainer.s_Shooter.getShooterMotors().getSecond());
   }
 
   // Called every time the scheduler runs while the command is scheduled.
