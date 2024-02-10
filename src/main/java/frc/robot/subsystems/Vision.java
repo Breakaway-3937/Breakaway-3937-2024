@@ -66,30 +66,7 @@ public class Vision extends SubsystemBase {
   }
   
   public double getAprilTagRotationSpeed(){
-    if(Robot.getFront()){
-      var result = frontCamera.getLatestResult();
-      if(result.hasTargets() && blue){
-        return -result.getTargets().get(0).getYaw() * 0.8 / 10.0;
-      }
-      else if(result.hasTargets() && !blue){
-        return -result.getTargets().get(result.getTargets().size() == 1 ? 0 : 1).getYaw() * 0.8 / 10.0;
-      }
-      else{
-        return getPoseRotationSpeed();
-      }
-    }
-    else{
-      var result = backCamera.getLatestResult();
-      if(result.hasTargets() && blue){
-        return -result.getTargets().get(0).getYaw() * 0.8 / 10.0;
-      }
-      else if(result.hasTargets() && !blue){
-        return -result.getTargets().get(result.getTargets().size() == 1 ? 0 : 1).getYaw() * 0.8 / 10.0;
-      }
-      else{
-        return getPoseRotationSpeed();
-      }
-    }
+    return posePid.calculate(PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromRadians(0))).getRadians()) * Constants.Swerve.MAX_ANGULAR_VELOCITY;
   }
 
   public double getNoteRotationSpeed(){
@@ -113,10 +90,6 @@ public class Vision extends SubsystemBase {
     else{
       return frontPoseEstimator.update();
     }
-  }
-
-  private double getPoseRotationSpeed(){
-    return posePid.calculate(PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromRadians(0))).getRadians()) * Constants.Swerve.MAX_ANGULAR_VELOCITY;
   }
 
   public boolean isDead(){
