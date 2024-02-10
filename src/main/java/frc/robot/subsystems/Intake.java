@@ -44,6 +44,10 @@ public class Intake extends SubsystemBase {
     babyShooterSensor = Shuffleboard.getTab("Intake").add("Baby Shooter Sensor", 0).withPosition(2, 0).getEntry();
   }
 
+  public TalonFX getLoaderMotor(){
+    return loaderMotor;
+  }
+
   private void configMotors(){
     frontIntakeMotor.restoreFactoryDefaults();
     frontIntakeMotor.setIdleMode(IdleMode.kBrake);
@@ -144,6 +148,7 @@ public class Intake extends SubsystemBase {
       note = false;
       flag2 = false;
     }
+
     intakeSensor.setDouble(intake.getValue());
     shooterSensor.setDouble(shooter.getValue());
     babyShooterSensor.setDouble(babyShooter.getValue());
