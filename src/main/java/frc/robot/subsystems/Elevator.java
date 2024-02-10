@@ -17,6 +17,7 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.commands.RunElevator;
 
 public class Elevator extends SubsystemBase {
 
@@ -54,7 +55,12 @@ public class Elevator extends SubsystemBase {
   }
 
   public void runBabyShooterReverse(){
-    babyShooter.set(-1);
+    if(RunElevator.reverse){
+      babyShooter.set(-0.75);
+    }
+    else{
+      babyShooter.set(-1);
+    }
   }
 
   public void stopBabyShooter(){
@@ -80,7 +86,7 @@ public class Elevator extends SubsystemBase {
   }
 
   public boolean isAtPosition(){
-    if(getElevator() <= ePosition + 0.5 && getElevator() >= ePosition - 0.5 && getBabyWrist() <= babyPosition + 0.5 && getElevator() >= babyPosition - 0.5){
+    if(getElevator() <= ePosition + 0.5 && getElevator() >= ePosition - 0.5 && getBabyWrist() <= babyPosition + 0.5 && getBabyWrist() >= babyPosition - 0.5){
       return true;
     }
     else{
@@ -102,8 +108,6 @@ public class Elevator extends SubsystemBase {
     followerElevatorMotor.setSmartCurrentLimit(35);
     babyWrist.setSmartCurrentLimit(35);
     babyShooter.setSmartCurrentLimit(35);
-
-    babyWrist.setInverted(true);
 
     elevatorEncoder = elevatorMotor.getEncoder();
     babyWristEncoder = babyWrist.getEncoder();

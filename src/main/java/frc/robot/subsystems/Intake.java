@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Robot;
 
 public class Intake extends SubsystemBase {
 
@@ -27,6 +28,7 @@ public class Intake extends SubsystemBase {
   private final TalonFXConfiguration loaderMotorConfig = new TalonFXConfiguration();
   private final AnalogInput intake, shooter, babyShooter;
   private final GenericEntry intakeSensor, shooterSensor, babyShooterSensor;
+  private boolean flag, flag1, flag2, note;
 
   /** Creates a new Intake. */
   public Intake() {
@@ -74,6 +76,11 @@ public class Intake extends SubsystemBase {
     loaderMotor.setControl(new DutyCycleOut(-1));
   }
 
+  public void spitSlowly(){
+    frontIntakeMotor.set(-0.5);
+    loaderMotor.setControl(new DutyCycleOut(-0.5));
+  }
+
   public void stop(){
     frontIntakeMotor.stopMotor();
     loaderMotor.stopMotor();
@@ -89,10 +96,7 @@ public class Intake extends SubsystemBase {
   }
 
   public boolean getShooterSensor(){
-    if(!Constants.PRACTICE_BOT && shooter.getValue() > 4000){
-      return true;
-    }
-    else if(Constants.PRACTICE_BOT && shooter.getValue() > 500 && shooter.getValue() < 1000){
+    if(shooter.getValue() > 4000){
       return true;
     }
     else{
@@ -110,17 +114,36 @@ public class Intake extends SubsystemBase {
   }
 
   public boolean botFull(){
-    if(getIntakeSensor() || getShooterSensor() || getBabyShooterSensor()){
-      return true;
-    }
-    else{
-      return false;
-    }
+    return note;
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    if(getIntakeSensor() || getShooterSensor() || getBabyShooterSensor()){
+      note = true;
+    }
+    if(getShooterSensor()){
+      flag = true;
+    }
+    if(getBabyShooterSensor()){
+      flag1 = true;
+    }
+    if(getIntakeSensor()){
+      flag2 = true;
+    }
+    if(Robot.robotContainer.s_Shooter.getSpeed() > 0 && loaderMotor.get() > 0 && flag && !getShooterSensor()){
+      note = false;
+      flag = false;
+    }
+    if(flag1 && !getBabyShooterSensor()){
+      note = false;
+      flag1 = false;
+    }
+    if(frontIntakeMotor.get() < 0 && flag2 && !getIntakeSensor()){
+      note = false;
+      flag2 = false;
+    }
     intakeSensor.setDouble(intake.getValue());
     shooterSensor.setDouble(shooter.getValue());
     babyShooterSensor.setDouble(babyShooter.getValue());

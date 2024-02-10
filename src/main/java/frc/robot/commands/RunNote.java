@@ -16,6 +16,7 @@ public class RunNote extends Command {
   private final XboxController xboxController;
   private final double handoff = 17.6;
   private final double protect = 13;
+  private boolean runIntakeBackwardsUntilShooterSensorReturnsAFalseValue, deadIntake;
 
   /** Creates a new RunNote. */
   public RunNote(Intake s_Intake, Shooter s_Shooter, XboxController xboxController) {
@@ -30,6 +31,8 @@ public class RunNote extends Command {
   @Override
   public void initialize() {
     s_Shooter.setWrist(protect);
+    runIntakeBackwardsUntilShooterSensorReturnsAFalseValue = false;
+    deadIntake = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -37,9 +40,6 @@ public class RunNote extends Command {
   public void execute() {
     if(RunElevator.handoff && Robot.robotContainer.s_Elevator.isAtPosition()){
       s_Shooter.setWrist(handoff);
-    }
-    else{
-      s_Shooter.setWrist(protect);
     }
     if(RunElevator.trapStage1){
       s_Intake.intake();
@@ -58,6 +58,7 @@ public class RunNote extends Command {
     else if(RunElevator.startStage2){
       s_Intake.stop();
       s_Shooter.stopShooter();
+      s_Shooter.setWrist(protect);
     }
     else if(RunElevator.reverse){
       s_Intake.spit();
@@ -69,28 +70,46 @@ public class RunNote extends Command {
         s_Intake.stop();
       }
       //Intake
-      else if(xboxController.getLeftTriggerAxis() > 0.3 && !s_Intake.getShooterSensor()){
+      else if(xboxController.getLeftTriggerAxis() > 0.3 && !s_Intake.getShooterSensor() && !deadIntake){
         s_Intake.intake();
       }
       //Spit
       else if(xboxController.getRawButton(5)){
+        deadIntake = false;
         s_Intake.spit();
       }
       //Sensor Detects, Stop Intake
       else if(s_Intake.getShooterSensor()){
         s_Intake.stop();
+        runIntakeBackwardsUntilShooterSensorReturnsAFalseValue = true;
+      }
+      if(runIntakeBackwardsUntilShooterSensorReturnsAFalseValue){
+        s_Intake.spitSlowly();
+      }
+      if(runIntakeBackwardsUntilShooterSensorReturnsAFalseValue && !s_Intake.getShooterSensor()){
+        runIntakeBackwardsUntilShooterSensorReturnsAFalseValue = false;
+        deadIntake = true;
+        s_Intake.stop();
       }
       //Run Shooter
       if(xboxController.getRawButton(6)){
-        s_Shooter.setShooter(10);
+        s_Shooter.runShooter();
+        if(!RunElevator.deadShooter){
+          s_Shooter.setWristShooting();
+        }
       }
       //Stop Shooter
       else{
         s_Shooter.stopShooter();
+        s_Shooter.setSpeedToZero();
+        if(!RunElevator.handoff){
+          s_Shooter.setWrist(protect);
+        }
       }
       //Fire Shooter
-      if(s_Shooter.atSpeed() && xboxController.getRightTriggerAxis() > 0.3){
+      if(s_Shooter.atSpeed() && s_Shooter.isAtPosition() && xboxController.getRightTriggerAxis() > 0.3){
         s_Intake.intake();
+        deadIntake = false;
       }
     }
   }

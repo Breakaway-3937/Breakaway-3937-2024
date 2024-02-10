@@ -34,6 +34,7 @@ public class Shooter extends SubsystemBase {
   private final Follower followerRequest = new Follower(Constants.Shooter.SHOOTER_MOTOR_ID, true);
   private final GenericEntry shooterEncoderEntry, wristEncoderEntry;
   private double speed, position = 0;
+  private boolean auto, subwoofer, podium;
 
   /** Creates a new Shooter. */
   public Shooter() {
@@ -48,11 +49,15 @@ public class Shooter extends SubsystemBase {
   }
 
   public void setSubShooting(){
-    speed = 0; //FIXME setpoint
+    subwoofer = true;
+    podium = false;
+    auto = false;
   }
 
   public void setPodiumShooting(){
-    speed = 0; //FIXME setpoint
+    subwoofer = false;
+    podium = true;
+    auto = false;
   }
 
   public void runShooter(){
@@ -60,7 +65,6 @@ public class Shooter extends SubsystemBase {
   }
 
   public void setShooter(double speed){
-    this.speed = speed;
     shooterMotor.setControl(request.withVelocity(speed));
   }
 
@@ -79,6 +83,22 @@ public class Shooter extends SubsystemBase {
   
   public double getShooterVelocity(){
     return shooterMotor.getVelocity().getValueAsDouble();
+  }
+
+  public void setWristShooting(){
+    if(podium){
+      speed = 0; //FIXME setpoint
+      position = 0;
+    }
+    else if(subwoofer){
+      speed = 3000.0 / 60.0; //FIXME setpoint
+      position = 17.5;
+    }
+    else{
+      speed = 0; //FIXME setpoint
+      position = 0;
+    }
+    pid.setReference(position, ControlType.kSmartMotion);
   }
 
   public void setWrist(double position){
@@ -108,6 +128,14 @@ public class Shooter extends SubsystemBase {
     }
   }
 
+  public double getSpeed(){
+    return speed;
+  }
+
+  public void setSpeedToZero(){
+    speed = 0;
+  }
+
   private void configShooterMotors(){
     shooterMotor.getConfigurator().apply(new TalonFXConfiguration());
     followerShooterMotor.getConfigurator().apply(new TalonFXConfiguration());
@@ -118,11 +146,6 @@ public class Shooter extends SubsystemBase {
     shooterMotorConfig.Slot0.kP = 0.2; // An error of 1 rps results in 0.11 V output
     shooterMotorConfig.Slot0.kI = 0; // no output for integrated error
     shooterMotorConfig.Slot0.kD = 0; // no output for error derivative
-
-    shooterMotorConfig.CurrentLimits.SupplyCurrentLimit = 35;
-    shooterMotorConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
-    shooterMotorConfig.CurrentLimits.SupplyCurrentThreshold = 50;
-    shooterMotorConfig.CurrentLimits.SupplyTimeThreshold = 0.1;
 
     shooterMotorConfig.MotionMagic.MotionMagicAcceleration = 1200;
     shooterMotorConfig.MotionMagic.MotionMagicJerk = 4000;

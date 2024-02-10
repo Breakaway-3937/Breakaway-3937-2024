@@ -14,15 +14,15 @@ public class RunElevator extends Command {
   private final Elevator s_Elevator;
   private final XboxController xboxController;
   //FIXME get all setpoints
-  private final double wristHandoff = -13;
-  private final double wristProtect = 52;
-  private final double wristAmp = 7.7;
+  private final double wristHandoff = 65;
+  private final double wristProtect = 0;
+  private final double wristAmp = 46.4;
   private final double wristPreTrap = 0;
   private final double wristTrap = 0;
-  private final double wristSource = -13;
+  private final double wristSource = 65;
   private final double elevatorHandoff = 28.2;
   private final double elevatorProtect = 0;
-  private final double elevatorAmp = 52.6;
+  private final double elevatorAmp = 83.6;
   private final double elevatorTrap = 0;
   private final double elevatorSource = 52.6;
   private boolean amp, trap, source, protect, ohCrap, climb;
@@ -55,6 +55,8 @@ public class RunElevator extends Command {
     retracting = false;
     climbing = false;
     handoff = false;
+    Robot.robotContainer.s_LED.reset();
+    Robot.robotContainer.s_LED.resetColors();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -77,6 +79,8 @@ public class RunElevator extends Command {
       retracting = false;
       climbing = true;
       handoff = false;
+      Robot.robotContainer.s_LED.reset();
+      Robot.robotContainer.s_LED.resetColors();
     }
     //Retract Climb
     else if(xboxController.getPOV() == Constants.Controllers.DOWN){
@@ -95,6 +99,8 @@ public class RunElevator extends Command {
       retracting = true;
       climbing = false;
       handoff = false;
+      Robot.robotContainer.s_LED.reset();
+      Robot.robotContainer.s_LED.resetColors();
     }
     //Protect
     else if(xboxController.getRawButton(3)){
@@ -113,6 +119,8 @@ public class RunElevator extends Command {
       retracting = false;
       climbing = false;
       handoff = false;
+      Robot.robotContainer.s_LED.reset();
+      Robot.robotContainer.s_LED.resetColors();
     }
     //Oh Crap!
     else if(xboxController.getRawButton(2)){
@@ -130,6 +138,8 @@ public class RunElevator extends Command {
       climb = false;
       retracting = false;
       climbing = false;
+      Robot.robotContainer.s_LED.reset();
+      Robot.robotContainer.s_LED.resetColors();
     }
     //Amp
     else if(xboxController.getRawButton(1)){
@@ -147,6 +157,8 @@ public class RunElevator extends Command {
       climb = false;
       retracting = false;
       climbing = false;
+      Robot.robotContainer.s_LED.reset();
+      Robot.robotContainer.s_LED.resetColors();
     }
     //Trap
     else if(xboxController.getRawButton(4)){
@@ -162,6 +174,8 @@ public class RunElevator extends Command {
       climb = false;
       retracting = false;
       climbing = false;
+      Robot.robotContainer.s_LED.reset();
+      Robot.robotContainer.s_LED.resetColors();
     }
     //Source
     else if(xboxController.getRawButton(7)){
@@ -190,14 +204,15 @@ public class RunElevator extends Command {
         s_Elevator.setElevator(elevatorProtect);
         s_Elevator.setBabyWrist(wristProtect);
         handoff = false;
+        s_Elevator.stopBabyShooter();
       }
       else if(trap){
-        if(!trapStage2 && !Robot.robotContainer.s_Intake.getBabyShooterSensor() && (Robot.robotContainer.s_Intake.getShooterSensor() || Robot.robotContainer.s_Intake.getIntakeSensor())){
+        if(!trapStage2){
           s_Elevator.setElevator(elevatorHandoff);
           s_Elevator.setBabyWrist(wristHandoff);
           handoff = true;
         }
-        if(!trapStage2 && s_Elevator.isAtPosition() && !Robot.robotContainer.s_Intake.getBabyShooterSensor() && (Robot.robotContainer.s_Intake.getShooterSensor() || Robot.robotContainer.s_Intake.getIntakeSensor())){
+        if(!trapStage2 && Robot.robotContainer.s_Shooter.isAtPosition() && s_Elevator.isAtPosition() && !Robot.robotContainer.s_Intake.getBabyShooterSensor() && (Robot.robotContainer.s_Intake.botFull())){
           s_Elevator.runBabyShooterForward();
           trapStage1 = true;
         }
@@ -254,15 +269,17 @@ public class RunElevator extends Command {
           s_Elevator.setElevator(elevatorHandoff);
           s_Elevator.setBabyWrist(wristHandoff);
           handoff = true;
-        }
-        if(s_Elevator.isAtPosition() && Robot.robotContainer.s_Intake.getBabyShooterSensor() && (!Robot.robotContainer.s_Intake.getShooterSensor() || !Robot.robotContainer.s_Intake.getIntakeSensor())){
           reverse = true;
+        }
+        if(Robot.robotContainer.s_Shooter.isAtPosition() && s_Elevator.isAtPosition() && Robot.robotContainer.s_Intake.getBabyShooterSensor() && (!Robot.robotContainer.s_Intake.getShooterSensor() || !Robot.robotContainer.s_Intake.getIntakeSensor())){
           s_Elevator.runBabyShooterReverse();
         }
         if(!Robot.robotContainer.s_Intake.getBabyShooterSensor() && (Robot.robotContainer.s_Intake.getShooterSensor() || Robot.robotContainer.s_Intake.getIntakeSensor())){
           reverse = false;
           s_Elevator.stopBabyShooter();
           protect = true;
+          Robot.robotContainer.s_LED.reset();
+          Robot.robotContainer.s_LED.resetColors();
           deadShooter = false;
           ohCrap = false;
           handoff = false;
