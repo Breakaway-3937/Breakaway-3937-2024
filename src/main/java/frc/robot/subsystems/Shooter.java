@@ -40,6 +40,7 @@ public class Shooter extends SubsystemBase {
   private boolean subwoofer, podium;
   private final InterpolatingDoubleTreeMap shooterMap = new InterpolatingDoubleTreeMap();
   private final InterpolatingDoubleTreeMap wristMap = new InterpolatingDoubleTreeMap();
+  private boolean autoFire;
 
   /** Creates a new Shooter. */
   public Shooter() {
@@ -51,6 +52,9 @@ public class Shooter extends SubsystemBase {
     configWristMotor();
     shooterEncoderEntry = Shuffleboard.getTab("Shooter").add("Shooter", getShooterVelocity()).withPosition(0,0).getEntry();
     wristEncoderEntry = Shuffleboard.getTab("Shooter").add("Wrist", getWrist()).withPosition(1, 0).getEntry();
+
+    SmartDashboard.putNumber("Shooter Speed", 0);
+    SmartDashboard.putNumber("Wrist Posision", 0);
   }
 
   public Pair<TalonFX, TalonFX> getShooterMotors(){
@@ -107,9 +111,9 @@ public class Shooter extends SubsystemBase {
       position = 17.5;
     }
     /*else{
-      speed = shooterMap.get(0.0/*Robot.robotContainer.s_Vision.getDistance()*///);
-      //position = //wristMap.get(0.0/*Robot.robotContainer.s_Vision.getDistance()*///);
-    //}
+      speed = shooterMap.get(Robot.robotContainer.s_Vision.getDistance());
+      position = wristMap.get(Robot.robotContainer.s_Vision.getDistance());
+    }*/
     pid.setReference(position, ControlType.kSmartMotion);
   }
 
@@ -146,6 +150,14 @@ public class Shooter extends SubsystemBase {
 
   public void setSpeedToZero(){
     speed = 0;
+  }
+
+  public boolean autoFire(){
+    return autoFire;
+  }
+
+  public void setAutoFire(boolean autoFire){
+    this.autoFire = autoFire;
   }
 
   private void configShooterMotors(){
@@ -202,9 +214,9 @@ public class Shooter extends SubsystemBase {
     Logger.recordOutput("Shooter", getShooterVelocity());
     wristEncoderEntry.setDouble(getWrist());
     Logger.recordOutput("Wrist", getWrist());
-    /*SmartDashboard.putNumber("Shooter Speed", getSpeed());
-    SmartDashboard.putNumber("Shoulder Posision", getWrist());
-    speed = SmartDashboard.getNumber("Speed Input", 0);
-    position = SmartDashboard.getNumber("Position of Wrist", 0);*/
+
+
+    speed = SmartDashboard.getNumber("Shooter Speed", 0);
+    position = SmartDashboard.getNumber("Wrist Position", 0);
   }
 }
