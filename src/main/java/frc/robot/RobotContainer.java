@@ -32,7 +32,7 @@ public class RobotContainer {
 
     /* Driver Buttons */
     private final JoystickButton translationButton = new JoystickButton(translationController, Constants.Controllers.TRANSLATION_BUTTON);
-    //private final JoystickButton rotationButton = new JoystickButton(rotationController, Constants.Controllers.ROTATION_BUTTON);
+    private final JoystickButton rotationButton = new JoystickButton(rotationController, Constants.Controllers.ROTATION_BUTTON);
     private final JoystickButton leftStick = new JoystickButton(xboxController, Constants.Controllers.XBOX_CONTROLLER_LEFT_STICK_BUTTON);
     private final JoystickButton rightStick = new JoystickButton(xboxController, Constants.Controllers.XBOX_CONTROLLER_RIGHT_STICK_BUTTON);
     private final POVButton left = new POVButton(xboxController, Constants.Controllers.LEFT);
@@ -41,16 +41,16 @@ public class RobotContainer {
     /* Subsystems */
     public final Swerve s_Swerve = new Swerve();
     public final LED s_LED = new LED();
-    //public final Vision s_Vision = new Vision(s_Swerve);
+    public final Vision s_Vision = new Vision(s_Swerve);
     public final Shooter s_Shooter = new Shooter();
     public final Intake s_Intake = new Intake();
     public final Elevator s_Elevator = new Elevator();
 
     /* Commands */
     public final Music c_Music = new Music(s_Swerve);
-    //private final Align c_Align = new Align(s_Swerve, s_Vision, () -> translationController.getRawAxis(translationAxis), () -> translationController.getRawAxis(strafeAxis), () -> robotRelative);
-    private final RunNote c_RunNote = new RunNote(s_Intake, s_Shooter, xboxController);
-    private final RunElevator c_RunElevator = new RunElevator(s_Elevator, xboxController);
+    private final Align c_Align = new Align(s_Swerve, s_Vision, () -> translationController.getRawAxis(translationAxis), () -> translationController.getRawAxis(strafeAxis), () -> robotRelative);
+    //private final RunNote c_RunNote = new RunNote(s_Intake, s_Shooter, xboxController);
+    //private final RunElevator c_RunElevator = new RunElevator(s_Elevator, xboxController);
 
 
     //private final SendableChooser<Command> autoChooser;
@@ -61,8 +61,8 @@ public class RobotContainer {
         //NamedCommands.registerCommand("FindNote", new AutoNoteAlign(s_Swerve, s_Vision));
         NamedCommands.registerCommand("Shoot", new InstantCommand());
         s_Swerve.setDefaultCommand(new TeleopSwerve(s_Swerve, () -> translationController.getRawAxis(translationAxis), () -> translationController.getRawAxis(strafeAxis), () -> rotationController.getRawAxis(rotationAxis), () -> robotRelative));
-        s_Shooter.setDefaultCommand(c_RunNote);
-        s_Elevator.setDefaultCommand(c_RunElevator);
+        //s_Shooter.setDefaultCommand(c_RunNote);
+        //s_Elevator.setDefaultCommand(c_RunElevator);
         //autoChooser = AutoBuilder.buildAutoChooser();
         //Shuffleboard.getTab("Auto").add("Auto", autoChooser).withPosition(0, 0);
         //Shuffleboard.selectTab("Auto");
@@ -79,7 +79,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         translationButton.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
-        //rotationButton.whileTrue(c_Align);
+        rotationButton.whileTrue(c_Align);
         leftStick.onTrue(new InstantCommand(() -> s_Elevator.setLowClimb()));
         rightStick.onTrue(new InstantCommand(() -> s_Elevator.setHighClimb()));
         right.onTrue(new InstantCommand(() -> s_Shooter.setSubShooting()));
