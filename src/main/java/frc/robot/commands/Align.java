@@ -8,7 +8,6 @@ import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -24,8 +23,8 @@ public class Align extends Command {
   private final DoubleSupplier translationSup;
   private final DoubleSupplier strafeSup;
   private final BooleanSupplier robotCentricSup;
+  private final double pValue = 8.0 / 9.0;
   private boolean flag;
-  private final PIDController posePid = new PIDController(0.3, 0, 0);
   private double translationVal, strafeVal, rotationVal;
 
 
@@ -44,7 +43,6 @@ public class Align extends Command {
   @Override
   public void initialize() {
     flag = false;
-    Robot.robotContainer.s_Shooter.setAutoShooting();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -56,11 +54,11 @@ public class Align extends Command {
       if(alliance.isPresent()){
         if(alliance.get() == DriverStation.Alliance.Blue){
           translationVal = Constants.Vision.AMP_TARGET_X_BLUE - s_Swerve.getPose().getX();
-          rotationVal = -posePid.calculate(Rotation2d.fromDegrees(270).getRadians() - s_Swerve.getGyroYaw().getRadians()) * Constants.Swerve.MAX_ANGULAR_VELOCITY;
+          rotationVal = pValue * (Rotation2d.fromDegrees(270).getRadians() - s_Swerve.getGyroYaw().getRadians());
         }
         else{
           translationVal = Constants.Vision.AMP_TARGET_X_RED - s_Swerve.getPose().getX();
-          rotationVal = -posePid.calculate(Rotation2d.fromDegrees(90).getRadians() - s_Swerve.getGyroYaw().getRadians()) * Constants.Swerve.MAX_ANGULAR_VELOCITY;
+          rotationVal = pValue * (Rotation2d.fromDegrees(90).getRadians() - s_Swerve.getGyroYaw().getRadians());
         }
       }
       s_Swerve.drive(
@@ -77,29 +75,29 @@ public class Align extends Command {
         if(alliance.get() == DriverStation.Alliance.Blue){
           if(Math.abs(Robot.robotContainer.s_Swerve.getHeading().getDegrees() % 360) > 90 || Math.abs(Robot.robotContainer.s_Swerve.getHeading().getDegrees() % 360) < 270){
             strafeVal = Constants.Vision.TRAP_CENTER_TARGET_Y_BLUE - s_Swerve.getPose().getY();
-            rotationVal = -posePid.calculate(Rotation2d.fromDegrees(0).getRadians() - s_Swerve.getGyroYaw().getRadians()) * Constants.Swerve.MAX_ANGULAR_VELOCITY;
+            rotationVal = pValue * (Rotation2d.fromDegrees(0).getRadians() - s_Swerve.getGyroYaw().getRadians());
           }
           else if(Math.abs(Robot.robotContainer.s_Swerve.getHeading().getDegrees() % 360) > 300){
             strafeVal = Constants.Vision.TRAP_LEFT_TARGET_Y_BLUE - s_Swerve.getPose().getY();
-            rotationVal = -posePid.calculate(Rotation2d.fromDegrees(120).getRadians() - s_Swerve.getGyroYaw().getRadians()) * Constants.Swerve.MAX_ANGULAR_VELOCITY;
+            rotationVal = pValue * (Rotation2d.fromDegrees(120).getRadians() - s_Swerve.getGyroYaw().getRadians());
           }
           else if(Math.abs(Robot.robotContainer.s_Swerve.getHeading().getDegrees() % 360) < 60){
             strafeVal = Constants.Vision.TRAP_RIGHT_TARGET_Y_BLUE - s_Swerve.getPose().getY();
-            rotationVal = -posePid.calculate(Rotation2d.fromDegrees(240).getRadians() - s_Swerve.getGyroYaw().getRadians()) * Constants.Swerve.MAX_ANGULAR_VELOCITY;
+            rotationVal = pValue * (Rotation2d.fromDegrees(240).getRadians() - s_Swerve.getGyroYaw().getRadians());
           }
         }
         else{
           if(Math.abs(Robot.robotContainer.s_Swerve.getHeading().getDegrees() % 360) > 90 || Math.abs(Robot.robotContainer.s_Swerve.getHeading().getDegrees() % 360) < 270){
             strafeVal = Constants.Vision.TRAP_CENTER_TARGET_Y_RED - s_Swerve.getPose().getY();
-            rotationVal = -posePid.calculate(Rotation2d.fromDegrees(0).getRadians() - s_Swerve.getGyroYaw().getRadians()) * Constants.Swerve.MAX_ANGULAR_VELOCITY;
+            rotationVal = pValue * (Rotation2d.fromDegrees(0).getRadians() - s_Swerve.getGyroYaw().getRadians());
           }
           else if(Math.abs(Robot.robotContainer.s_Swerve.getHeading().getDegrees() % 360) > 300){
             strafeVal = Constants.Vision.TRAP_LEFT_TARGET_Y_RED - s_Swerve.getPose().getY();
-            rotationVal = -posePid.calculate(Rotation2d.fromDegrees(120).getRadians() - s_Swerve.getGyroYaw().getRadians()) * Constants.Swerve.MAX_ANGULAR_VELOCITY;
+            rotationVal = pValue * (Rotation2d.fromDegrees(120).getRadians() - s_Swerve.getGyroYaw().getRadians());
           }
           else if(Math.abs(Robot.robotContainer.s_Swerve.getHeading().getDegrees() % 360) < 60){
             strafeVal = Constants.Vision.TRAP_RIGHT_TARGET_Y_RED - s_Swerve.getPose().getY();
-            rotationVal = -posePid.calculate(Rotation2d.fromDegrees(240).getRadians() - s_Swerve.getGyroYaw().getRadians()) * Constants.Swerve.MAX_ANGULAR_VELOCITY;
+            rotationVal = pValue * (Rotation2d.fromDegrees(240).getRadians() - s_Swerve.getGyroYaw().getRadians());
           }
         }
       }
