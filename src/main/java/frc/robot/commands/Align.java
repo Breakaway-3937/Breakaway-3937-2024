@@ -120,7 +120,7 @@ public class Align extends Command {
         s_Swerve.drive(
             new Translation2d(translationVal, strafeVal).times(Constants.Swerve.MAX_SPEED), 
             s_Vision.getNoteRotationSpeed(), 
-            robotCentricSup.getAsBoolean(), 
+            !robotCentricSup.getAsBoolean(), 
             true
         );
       }
