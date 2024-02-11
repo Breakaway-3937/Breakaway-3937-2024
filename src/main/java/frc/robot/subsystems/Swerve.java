@@ -165,10 +165,10 @@ public class Swerve extends SubsystemBase {
     public void updatePoseVision(Optional<EstimatedRobotPose> pose, boolean blue){
         if(pose.isPresent()){
             if(blue){
-                poseEstimator.addVisionMeasurement(pose.get().estimatedPose.toPose2d(), pose.get().timestampSeconds);
+                poseEstimator.addVisionMeasurement(new Pose2d(new Translation2d(pose.get().estimatedPose.toPose2d().getX(), pose.get().estimatedPose.toPose2d().getY()), getGyroYaw()), pose.get().timestampSeconds);
             }
             else{
-                poseEstimator.addVisionMeasurement(new Pose2d(new Translation2d(pose.get().estimatedPose.toPose2d().getX(), pose.get().estimatedPose.toPose2d().getY()), Rotation2d.fromRadians(Math.PI - pose.get().estimatedPose.getRotation().getAngle())), pose.get().timestampSeconds);
+                poseEstimator.addVisionMeasurement(new Pose2d(new Translation2d(pose.get().estimatedPose.toPose2d().getX(), pose.get().estimatedPose.toPose2d().getY()), getGyroYaw()), pose.get().timestampSeconds);
             }
         }
     }
