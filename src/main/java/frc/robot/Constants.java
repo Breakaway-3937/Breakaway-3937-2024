@@ -55,7 +55,7 @@ public final class Constants {
     }
 
     public static final class Swerve {
-        public static final Vector<N3> STATE_STDS = VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(0));
+        public static final Vector<N3> STATE_STDS = VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5));
 
         public static final int PIGEON_ID = 20;
         public static final boolean INVERT_GYRO = false;
@@ -200,7 +200,7 @@ public final class Constants {
         public static final String NOTE_CAMERA_NAME = "Microsoft_LifeCam_HD-3000"; //FIXME
         public static final Transform3d FRONT_CAMERA_TRANSFORM = new Transform3d(new Translation3d(-0.2036, -0.173749, 0.5169), new Rotation3d(0, 0.174533, 0));
         public static final Transform3d BACK_CAMERA_TRANSFORM = new Transform3d(new Translation3d(-0.2036, 0.173749, 0.5169), new Rotation3d(0, 0.174533, Math.PI));
-        public static final Vector<N3> VISION_STDS = VecBuilder.fill(0.1, 0.1, Math.toRadians(Double.POSITIVE_INFINITY));
+        public static final Vector<N3> VISION_STDS = VecBuilder.fill(0.1, 0.1, Math.toRadians(30));
         public static final double TARGET_X_BLUE = -0.04;
         public static final double TARGET_X_RED = 16.58;
         public static final double TARGET_Y_BLUE = 4.98;
