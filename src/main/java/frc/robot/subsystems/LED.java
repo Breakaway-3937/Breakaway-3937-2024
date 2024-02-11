@@ -124,11 +124,11 @@ public class LED extends SubsystemBase {
                     }
                 }
                 else{
-                    for(double i = 0.5; i > 0; i -= 0.025){
+                    for(double i = 0.5; i > 0; i -= 0.005){
                         candle.setLEDs(255, 165, 0, 0, 0, 0);
                         candle.configBrightnessScalar(i);
                     }
-                    for(double i = 0; i < 0.5; i += 0.025){
+                    for(double i = 0; i < 0.5; i += 0.005){
                         candle.setLEDs(255, 165, 0, 0, 0, 0);
                         candle.configBrightnessScalar(i);
                     }
@@ -161,11 +161,11 @@ public class LED extends SubsystemBase {
                     }
                 }
                 else{
-                    for(double i = 0.5; i > 0; i -= 0.025){
+                    for(double i = 0.5; i > 0; i -= 0.005){
                         candle.setLEDs(0, 255, 0, 0, 0, 0);
                         candle.configBrightnessScalar(i);
                     }
-                    for(double i = 0; i < 0.5; i += 0.025){
+                    for(double i = 0; i < 0.5; i += 0.005){
                         candle.setLEDs(0, 255, 0, 0, 0, 0);
                         candle.configBrightnessScalar(i);
                     }
@@ -195,11 +195,11 @@ public class LED extends SubsystemBase {
                     }
                 }
                 else{
-                    for(double i = 0.5; i > 0; i -= 0.025){
+                    for(double i = 0.5; i > 0; i -= 0.005){
                         candle.setLEDs(255, 0, 0, 0, 0, 0);
                         candle.configBrightnessScalar(i);
                     }
-                    for(double i = 0; i < 0.5; i += 0.025){
+                    for(double i = 0; i < 0.5; i += 0.005){
                         candle.setLEDs(255, 0, 0, 0, 0, 0);
                         candle.configBrightnessScalar(i);
                     }
@@ -231,11 +231,11 @@ public class LED extends SubsystemBase {
                     }
                 }
                 else{
-                    for(double i = 0.5; i > 0; i -= 0.025){
+                    for(double i = 0.5; i > 0; i -= 0.005){
                         candle.setLEDs(255, 165, 0);
                         candle.configBrightnessScalar(i);
                     }
-                    for(double i = 0; i < 0.5; i += 0.025){
+                    for(double i = 0; i < 0.5; i += 0.005){
                         candle.setLEDs(255, 165, 0);
                         candle.configBrightnessScalar(i);
                     }
@@ -268,11 +268,11 @@ public class LED extends SubsystemBase {
                     }
                 }
                 else{
-                    for(double i = 0.5; i > 0; i -= 0.025){
+                    for(double i = 0.5; i > 0; i -= 0.005){
                         candle.setLEDs(0, 255, 0);
                         candle.configBrightnessScalar(i);
                     }
-                    for(double i = 0; i < 0.5; i += 0.025){
+                    for(double i = 0; i < 0.5; i += 0.005){
                         candle.setLEDs(0, 255, 0);
                         candle.configBrightnessScalar(i);
                     }
@@ -302,11 +302,11 @@ public class LED extends SubsystemBase {
                     }
                 }
                 else{
-                    for(double i = 0.5; i > 0; i -= 0.025){
+                    for(double i = 0.5; i > 0; i -= 0.005){
                         candle.setLEDs(255, 0, 0);
                         candle.configBrightnessScalar(i);
                     }
-                    for(double i = 0; i < 0.5; i += 0.025){
+                    for(double i = 0; i < 0.5; i += 0.005){
                         candle.setLEDs(255, 0, 0);
                         candle.configBrightnessScalar(i);
                     }
