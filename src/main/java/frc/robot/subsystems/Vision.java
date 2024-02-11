@@ -17,6 +17,7 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -30,8 +31,9 @@ public class Vision extends SubsystemBase {
     private AprilTagFieldLayout atfl;
     private final PhotonPoseEstimator frontPoseEstimator, backPoseEstimator;
     private final Swerve s_Swerve;
-    private double targetX, targetY, slowDown;
-    private boolean blue = false;
+    private double targetX, targetY;
+    private boolean blue;
+    private final PIDController posePid = new PIDController(0.3, 0, 0);
 
   /** Creates a new Vision. */
   public Vision(Swerve s_Swerve) {
@@ -64,20 +66,7 @@ public class Vision extends SubsystemBase {
   }
   
   public double getAprilTagRotationSpeed(){
-    double yawDiff = (PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromRadians(0))).getRadians() + (Math.PI * 500)) % (Math.PI * 2) - (s_Swerve.getHeading().getRadians() + Math.PI * 500) % (Math.PI * 2);
-    if(Math.abs(yawDiff) < Math.PI / 4.0){
-      slowDown = 0.5;
-    }
-    else{
-      slowDown = 1;
-    }
-    System.out.println(yawDiff);
-    if(yawDiff > Math.PI){
-      return -yawDiff * 10 * slowDown;
-    }
-    else{
-      return yawDiff * 10 * slowDown;
-    }
+    return posePid.calculate(PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromRadians(0))).getRadians());
   }
 
   public double getNoteRotationSpeed(){
@@ -94,13 +83,12 @@ public class Vision extends SubsystemBase {
     return noteCamera.getLatestResult().hasTargets();
   }
 
-  public Optional<EstimatedRobotPose> getEstimatedGlobalPose(){
-    if(backCamera.getLatestResult().hasTargets()){
-      return backPoseEstimator.update();
-    }
-    else{
-      return frontPoseEstimator.update();
-    }
+  public Optional<EstimatedRobotPose> getFrontEstimatedGlobalPose(){
+    return frontPoseEstimator.update();
+  }
+
+  public Optional<EstimatedRobotPose> getBackEstimatedGlobalPose(){
+    return backPoseEstimator.update();
   }
 
   public boolean isDead(){
@@ -115,7 +103,8 @@ public class Vision extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    s_Swerve.updatePoseVision(getEstimatedGlobalPose(), blue);
+    s_Swerve.updatePoseVision(getFrontEstimatedGlobalPose(), blue);
+    s_Swerve.updatePoseVision(getBackEstimatedGlobalPose(), blue);
     var alliance = DriverStation.getAlliance();
     if(alliance.isPresent()){
       if(alliance.get() == DriverStation.Alliance.Blue){
