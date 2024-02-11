@@ -1,10 +1,15 @@
 package frc.robot;
 
+import org.littletonrobotics.junction.Logger;
+
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -49,23 +54,23 @@ public class RobotContainer {
     /* Commands */
     public final Music c_Music = new Music(s_Swerve);
     private final Align c_Align = new Align(s_Swerve, s_Vision, () -> translationController.getRawAxis(translationAxis), () -> translationController.getRawAxis(strafeAxis), () -> robotRelative);
-    //private final RunNote c_RunNote = new RunNote(s_Intake, s_Shooter, xboxController);
-    //private final RunElevator c_RunElevator = new RunElevator(s_Elevator, xboxController);
+    public final RunNote c_RunNote = new RunNote(s_Intake, s_Shooter, xboxController);
+    public final AutoRunNote c_AutoRunNote = new AutoRunNote(s_Intake, s_Shooter);
+    private final RunElevator c_RunElevator = new RunElevator(s_Elevator, xboxController);
+    private final AutoNoteAlign c_AutoNoteAlign = new AutoNoteAlign(s_Swerve, s_Vision);
 
-
-    //private final SendableChooser<Command> autoChooser;
+    private final SendableChooser<Command> autoChooser;
 
     /** The container for the robot. Contains subsystems, IO devices, and commands. */
     public RobotContainer() {
-        //FIXME named commands
-        //NamedCommands.registerCommand("FindNote", new AutoNoteAlign(s_Swerve, s_Vision));
-        NamedCommands.registerCommand("Shoot", new InstantCommand());
+        NamedCommands.registerCommand("FindNote", c_AutoNoteAlign);
+        NamedCommands.registerCommand("Shoot", new InstantCommand(() -> s_Shooter.setAutoFire(true)));
+        NamedCommands.registerCommand("Intake", new InstantCommand(() -> s_Intake.setAutoIntake(true)));
         s_Swerve.setDefaultCommand(new TeleopSwerve(s_Swerve, () -> translationController.getRawAxis(translationAxis), () -> translationController.getRawAxis(strafeAxis), () -> rotationController.getRawAxis(rotationAxis), () -> robotRelative));
-        //s_Shooter.setDefaultCommand(c_RunNote);
-        //s_Elevator.setDefaultCommand(c_RunElevator);
-        //autoChooser = AutoBuilder.buildAutoChooser();
-        //Shuffleboard.getTab("Auto").add("Auto", autoChooser).withPosition(0, 0);
-        //Shuffleboard.selectTab("Auto");
+        s_Elevator.setDefaultCommand(c_RunElevator);
+        autoChooser = AutoBuilder.buildAutoChooser();
+        Shuffleboard.getTab("Auto").add("Auto", autoChooser).withPosition(0, 0);
+        Shuffleboard.selectTab("Auto");
         // Configure the button bindings
         configureButtonBindings();
     }
@@ -80,8 +85,8 @@ public class RobotContainer {
         /* Driver Buttons */
         translationButton.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
         rotationButton.whileTrue(c_Align);
-        leftStick.onTrue(new InstantCommand(() -> s_Elevator.setLowClimb()));
-        rightStick.onTrue(new InstantCommand(() -> s_Elevator.setHighClimb()));
+        leftStick.onTrue(new InstantCommand(() -> s_Shooter.setAutoShooting()));
+        rightStick.onTrue(new InstantCommand(() -> s_Shooter.setAutoShooting()));
         right.onTrue(new InstantCommand(() -> s_Shooter.setSubShooting()));
         left.onTrue(new InstantCommand(() -> s_Shooter.setPodiumShooting()));
     }
@@ -92,8 +97,7 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        //Logger.recordOutput("Auto", autoChooser.getSelected().toString());
-        //return autoChooser.getSelected();
-        return null;
+        Logger.recordOutput("Auto", autoChooser.getSelected().toString());
+        return autoChooser.getSelected();
     }
 }
