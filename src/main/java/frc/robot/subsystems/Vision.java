@@ -32,8 +32,7 @@ public class Vision extends SubsystemBase {
     private final PhotonPoseEstimator frontPoseEstimator, backPoseEstimator;
     private final Swerve s_Swerve;
     private double targetX, targetY;
-    private boolean blue;
-    private final PIDController posePid = new PIDController(0.3, 0, 0);
+    private final PIDController posePid = new PIDController(0.5, 0, 0.3);
 
   /** Creates a new Vision. */
   public Vision(Swerve s_Swerve) {
@@ -103,17 +102,19 @@ public class Vision extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    s_Swerve.updatePoseVision(getFrontEstimatedGlobalPose(), blue);
-    s_Swerve.updatePoseVision(getBackEstimatedGlobalPose(), blue);
+    if(frontCamera.getLatestResult().hasTargets()){
+      s_Swerve.updatePoseVision(getFrontEstimatedGlobalPose());
+    }
+    if(backCamera.getLatestResult().hasTargets()){
+      s_Swerve.updatePoseVision(getBackEstimatedGlobalPose());
+    }
     var alliance = DriverStation.getAlliance();
     if(alliance.isPresent()){
       if(alliance.get() == DriverStation.Alliance.Blue){
-        blue = true;
         targetX = Constants.Vision.TARGET_X_BLUE;
         targetY = Constants.Vision.TARGET_Y_BLUE;
       }
       else{
-        blue = false;
         targetX = Constants.Vision.TARGET_X_RED;
         targetY = Constants.Vision.TARGET_Y_RED;
       }

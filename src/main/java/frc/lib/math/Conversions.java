@@ -1,5 +1,7 @@
 package frc.lib.math;
 
+import edu.wpi.first.wpilibj.DriverStation;
+
 public class Conversions {
     
     /**
@@ -23,12 +25,19 @@ public class Conversions {
     }
 
     /**
+     * @author Braden Harris Lynn
      * @param wheelRotations Wheel Position: (in Rotations)
      * @param circumference Wheel Circumference: (in Meters)
      * @return Wheel Distance: (in Meters)
      */
     public static double rotationsToMeters(double wheelRotations, double circumference){
         double wheelMeters = wheelRotations * circumference;
+        var alliance = DriverStation.getAlliance();
+        if(alliance.isPresent()){
+            if(alliance.get() == DriverStation.Alliance.Red){
+                return -wheelMeters;
+            }
+        }
         return wheelMeters;
     }
 
