@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Swerve extends SubsystemBase {
@@ -165,10 +166,10 @@ public class Swerve extends SubsystemBase {
     public void updatePoseVision(Optional<EstimatedRobotPose> pose, boolean blue){
         if(pose.isPresent()){
             if(blue){
-                poseEstimator.addVisionMeasurement(new Pose2d(new Translation2d(pose.get().estimatedPose.toPose2d().getX(), pose.get().estimatedPose.toPose2d().getY()), getGyroYaw()), pose.get().timestampSeconds);
+                poseEstimator.addVisionMeasurement(pose.get().estimatedPose.toPose2d(), pose.get().timestampSeconds);
             }
             else{
-                poseEstimator.addVisionMeasurement(new Pose2d(new Translation2d(pose.get().estimatedPose.toPose2d().getX(), pose.get().estimatedPose.toPose2d().getY()), getGyroYaw()), pose.get().timestampSeconds);
+                poseEstimator.addVisionMeasurement(new Pose2d(new Translation2d(pose.get().estimatedPose.toPose2d().getX(), pose.get().estimatedPose.toPose2d().getY()), Rotation2d.fromRadians(Math.PI - pose.get().estimatedPose.getRotation().getAngle())), pose.get().timestampSeconds);
             }
         }
     }
@@ -176,6 +177,13 @@ public class Swerve extends SubsystemBase {
     @Override
     public void periodic(){
         poseEstimator.update(getGyroYaw(), getModulePositions());
+
+        SmartDashboard.putNumber("Gyro", getGyroYaw().getDegrees());
+
+        SmartDashboard.putNumber("Module 0", getModulePositions()[0].distanceMeters);
+        SmartDashboard.putNumber("Module 1", getModulePositions()[1].distanceMeters);
+        SmartDashboard.putNumber("Module 2", getModulePositions()[2].distanceMeters);
+        SmartDashboard.putNumber("Module 3", getModulePositions()[3].distanceMeters);
 
         if(Robot.robotContainer.s_Intake.botFull()){
             setNoteTracking(false);
