@@ -17,7 +17,6 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -31,9 +30,8 @@ public class Vision extends SubsystemBase {
     private AprilTagFieldLayout atfl;
     private final PhotonPoseEstimator frontPoseEstimator, backPoseEstimator;
     private final Swerve s_Swerve;
-    private double targetX, targetY;
+    private double targetX, targetY, slowDown;
     private boolean blue = false;
-    private final PIDController posePid = new PIDController(0.3, 0, 0);
 
   /** Creates a new Vision. */
   public Vision(Swerve s_Swerve) {
@@ -58,7 +56,7 @@ public class Vision extends SubsystemBase {
 
   public Optional<Rotation2d> getRotationTargetOverride(){
     if(Robot.robotContainer.s_Intake.botFull()){
-        return Optional.of(PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromDegrees(0))));
+        return Optional.of(PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromRadians(0))));
     }
     else{
         return Optional.empty();
@@ -66,13 +64,26 @@ public class Vision extends SubsystemBase {
   }
   
   public double getAprilTagRotationSpeed(){
-    return posePid.calculate(PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromRadians(0))).getRadians()) * Constants.Swerve.MAX_ANGULAR_VELOCITY;
+    double yawDiff = (PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromRadians(0))).getRadians() + (Math.PI * 500)) % (Math.PI * 2) - (s_Swerve.getHeading().getRadians() + Math.PI * 500) % (Math.PI * 2);
+    if(Math.abs(yawDiff) < Math.PI / 4.0){
+      slowDown = 0.5;
+    }
+    else{
+      slowDown = 1;
+    }
+    System.out.println(yawDiff);
+    if(yawDiff > Math.PI){
+      return -yawDiff * 10 * slowDown;
+    }
+    else{
+      return yawDiff * 10 * slowDown;
+    }
   }
 
   public double getNoteRotationSpeed(){
     var result = noteCamera.getLatestResult();
     if(result.hasTargets()){
-      return -result.getBestTarget().getYaw() * 0.8 / 10.0;
+      return -result.getBestTarget().getYaw() * 0.8 / 9.0;
     }
     else{
       return 0;
