@@ -29,6 +29,7 @@ public class Intake extends SubsystemBase {
   private final AnalogInput intake, shooter, babyShooter;
   private final GenericEntry intakeSensor, shooterSensor, babyShooterSensor;
   private boolean flag, flag1, flag2, note;
+  public boolean autoIntake;
 
   /** Creates a new Intake. */
   public Intake() {
@@ -119,6 +120,14 @@ public class Intake extends SubsystemBase {
 
   public boolean botFull(){
     return note;
+  }
+
+  public boolean autoIntake(){
+    return autoIntake;
+  }
+
+  public void setAutoIntake(boolean autoIntake){
+    this.autoIntake = autoIntake;
   }
 
   @Override
