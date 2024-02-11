@@ -25,7 +25,7 @@ public class Elevator extends SubsystemBase {
   private RelativeEncoder elevatorEncoder, babyWristEncoder;
   private SparkPIDController ePid, babyPid;
   private final GenericEntry elevatorEncoderEntry, babyWristEntry;
-  private double ePosition, babyPosition, climb = 0;
+  private double ePosition, babyPosition;
 
   /** Creates a new Elevator. */
   public Elevator() {
@@ -38,27 +38,14 @@ public class Elevator extends SubsystemBase {
     elevatorEncoderEntry = Shuffleboard.getTab("Elevator").add("Elevator", getElevator()).withPosition(0,0).getEntry();
   }
 
-  public void setLowClimb(){
-    climb = 0; //FIXME setpoint
-  }
-
-  public void setHighClimb(){
-    climb = 100;
-  }
-
   public void setElevatorFast(){
     ePid.setSmartMotionMaxVelocity(5500, 0);
     ePid.setSmartMotionMaxAccel(4000, 0);
   }
 
-  public void extendClimb(){
-    setElevator(climb);
-  }
-
-  public void retractClimb(){
+  public void setElevatorSlow(){
     ePid.setSmartMotionMaxVelocity(3000, 0);
     ePid.setSmartMotionMaxAccel(2500, 0);
-    setElevator(0);
   }
 
   public void runBabyShooterForward(){
