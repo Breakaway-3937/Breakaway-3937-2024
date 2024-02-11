@@ -54,7 +54,7 @@ public class Robot extends LoggedRobot {
     // autonomous chooser on the dashboard.
     Logger.recordMetadata("ProjectName", "MyProject");
     if(isReal()){
-      Logger.addDataReceiver(new WPILOGWriter("/media/sda1/"));
+      Logger.addDataReceiver(new WPILOGWriter());
       Logger.addDataReceiver(new NT4Publisher());
       powerDistribution = new PowerDistribution(26, ModuleType.kRev);
     }
@@ -70,6 +70,7 @@ public class Robot extends LoggedRobot {
     CommandScheduler.getInstance().setPeriod(0.025);
     ComplexWidget pdh = Shuffleboard.getTab("System").add("PDH", powerDistribution).withPosition(1, 0);
     pdh.hashCode();
+    Robot.robotContainer.s_Shooter.setDefaultCommand(Robot.robotContainer.c_AutoRunNote);
   }
 
   /**
@@ -144,6 +145,7 @@ public class Robot extends LoggedRobot {
     if(autonomousCommand != null){
       autonomousCommand.cancel();
     }
+    Robot.robotContainer.s_Shooter.setDefaultCommand(Robot.robotContainer.c_RunNote);
     Shuffleboard.selectTab("Drive");
   }
 
