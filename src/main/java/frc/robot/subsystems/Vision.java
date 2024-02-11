@@ -17,7 +17,6 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -31,8 +30,7 @@ public class Vision extends SubsystemBase {
     private AprilTagFieldLayout atfl;
     private final PhotonPoseEstimator frontPoseEstimator, backPoseEstimator;
     private final Swerve s_Swerve;
-    private double targetX, targetY;
-    private final PIDController posePid = new PIDController(0.5, 0, 0.3);
+    private double targetX, targetY, robotX, robotY;
 
   /** Creates a new Vision. */
   public Vision(Swerve s_Swerve) {
@@ -65,7 +63,13 @@ public class Vision extends SubsystemBase {
   }
   
   public double getAprilTagRotationSpeed(){
-    return posePid.calculate(PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromRadians(0))).getRadians());
+    return PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromRadians(0))).getDegrees() * 8.0 / 9.0;
+  }
+
+  public double getDistance(){
+    robotX = s_Swerve.getPose().getX();
+    robotY = s_Swerve.getPose().getY();
+    return Math.sqrt(Math.pow(targetX - robotX, 2) + Math.pow(targetY - robotY, 2));
   }
 
   public double getNoteRotationSpeed(){
