@@ -20,11 +20,13 @@ public class RunElevator extends Command {
   private final double wristPreTrap = 0;
   private final double wristTrap = 0;
   private final double wristSource = 65;
+  private final double wristClimb = 50;
   private final double elevatorHandoff = 28.2;
   private final double elevatorProtect = 0;
   private final double elevatorAmp = 83.6;
   private final double elevatorTrap = 0;
   private final double elevatorSource = 52.6;
+  private final double elevatorClimb = 102;
   private boolean amp, trap, source, protect, ohCrap, climb;
   public static boolean deadShooter, trapStage1, trapStage2, startStage1, startStage2, reverse, trapScored, retracting, climbing, handoff;
 
@@ -62,6 +64,10 @@ public class RunElevator extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    if(protect && s_Elevator.isAtPosition()){
+      deadShooter = false;
+    }
+
     //Extend Climb
     if(xboxController.getPOV() == Constants.Controllers.UP){
       amp = false;
@@ -93,7 +99,6 @@ public class RunElevator extends Command {
       trapStage2 = false;
       startStage1 = false;
       startStage2 = false;
-      deadShooter = false;
       reverse = false;
       climb = true;
       retracting = true;
@@ -113,7 +118,6 @@ public class RunElevator extends Command {
       trapStage2 = false;
       startStage1 = false;
       startStage2 = false;
-      deadShooter = false;
       reverse = false;
       climb = false;
       retracting = false;
@@ -122,6 +126,7 @@ public class RunElevator extends Command {
       Robot.robotContainer.s_LED.reset();
       Robot.robotContainer.s_LED.resetColors();
       s_Elevator.setElevatorFast();
+      s_Elevator.stopBabyShooter();
     }
     //Oh Crap!
     else if(xboxController.getRawButton(2)){
@@ -205,7 +210,6 @@ public class RunElevator extends Command {
         s_Elevator.setElevator(elevatorProtect);
         s_Elevator.setBabyWrist(wristProtect);
         handoff = false;
-        s_Elevator.stopBabyShooter();
       }
       else if(trap){
         if(!trapStage2){
@@ -281,7 +285,6 @@ public class RunElevator extends Command {
           protect = true;
           Robot.robotContainer.s_LED.reset();
           Robot.robotContainer.s_LED.resetColors();
-          deadShooter = false;
           ohCrap = false;
           handoff = false;
         }
@@ -300,10 +303,13 @@ public class RunElevator extends Command {
       }
       else if(climb){
         if(climbing){
-          s_Elevator.extendClimb();
+          s_Elevator.setElevatorFast();
+          s_Elevator.setBabyWrist(wristClimb);
+          s_Elevator.setElevator(elevatorClimb);
         }
         else if(retracting){
-          s_Elevator.retractClimb();
+          s_Elevator.setElevatorSlow();
+          s_Elevator.setElevator(elevatorProtect);
         }
       }
     }
