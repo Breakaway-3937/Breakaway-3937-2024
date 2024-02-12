@@ -26,7 +26,7 @@ public class RunElevator extends Command {
   private final double elevatorAmp = 83.6;
   private final double elevatorTrap = 0;
   private final double elevatorSource = 52.6;
-  private final double elevatorClimb = 102;
+  private final double elevatorClimb = 100;
   private boolean amp, trap, source, protect, ohCrap, climb;
   public static boolean deadShooter, trapStage1, trapStage2, startStage1, startStage2, reverse, trapScored, retracting, climbing, handoff;
 
