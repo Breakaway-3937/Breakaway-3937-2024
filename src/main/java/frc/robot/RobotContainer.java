@@ -68,7 +68,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("Intake", new InstantCommand(() -> s_Intake.setAutoIntake(true)));
         s_Swerve.setDefaultCommand(new TeleopSwerve(s_Swerve, () -> translationController.getRawAxis(translationAxis), () -> translationController.getRawAxis(strafeAxis), () -> rotationController.getRawAxis(rotationAxis), () -> robotRelative));
         s_Elevator.setDefaultCommand(c_RunElevator);
-        autoChooser = AutoBuilder.buildAutoChooser();
+        autoChooser = AutoBuilder.buildAutoChooser("DO NOTHING");
         Shuffleboard.getTab("Auto").add("Auto", autoChooser).withPosition(0, 0);
         Shuffleboard.selectTab("Auto");
         // Configure the button bindings
