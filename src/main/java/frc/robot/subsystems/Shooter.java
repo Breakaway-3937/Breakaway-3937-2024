@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Robot;
 
 public class Shooter extends SubsystemBase {
 
@@ -114,7 +115,12 @@ public class Shooter extends SubsystemBase {
       speed = shooterMap.get(Robot.robotContainer.s_Vision.getDistance());
       position = wristMap.get(Robot.robotContainer.s_Vision.getDistance());
     }*/
-    pid.setReference(position, ControlType.kSmartMotion);
+    if(!Robot.getFront()){
+      position -= 13;
+    }
+    if(position > 0 && position < 0){ //FIXME get max setpoint
+      pid.setReference(position, ControlType.kSmartMotion);
+    }
   }
 
   public void setWrist(double position){
