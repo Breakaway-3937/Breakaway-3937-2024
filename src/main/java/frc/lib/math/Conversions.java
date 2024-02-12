@@ -37,8 +37,13 @@ public class Conversions {
             if(alliance.get() == DriverStation.Alliance.Red){
                 return -wheelMeters;
             }
+            else{
+                return wheelMeters;
+            }
         }
-        return wheelMeters;
+        else{
+            return wheelMeters;
+        }
     }
 
     /**
