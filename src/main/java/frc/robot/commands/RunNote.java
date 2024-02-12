@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.subsystems.Intake;
@@ -40,43 +41,52 @@ public class RunNote extends Command {
   public void execute() {
     if(RunElevator.handoff && Robot.robotContainer.s_Elevator.isAtPosition()){
       s_Shooter.setWrist(handoff);
+      Shuffleboard.selectTab("Elevator");
     }
     if(RunElevator.trapStage1){
       s_Intake.intake();
       s_Shooter.setShooter(10);
+      Shuffleboard.selectTab("Elevator");
     }
     else if(RunElevator.trapStage2){
       s_Intake.stop();
       s_Shooter.stopShooter();
+      Shuffleboard.selectTab("Elevator");
     }
     else if(RunElevator.startStage1){
       if(s_Shooter.isAtPosition()){
         s_Intake.intake();
         s_Shooter.setShooter(10);
+        Shuffleboard.selectTab("Elevator");
       }
     }
     else if(RunElevator.startStage2){
       s_Intake.stop();
       s_Shooter.stopShooter();
       s_Shooter.setWrist(protect);
+      Shuffleboard.selectTab("Elevator");
     }
     else if(RunElevator.reverse){
       s_Intake.spit();
       s_Shooter.setShooter(-10);
+      Shuffleboard.selectTab("Elevator");
     }
     else{
       //No Buttons
       if(xboxController.getLeftTriggerAxis() <= 0.3 && !xboxController.getRawButton(5) && xboxController.getRightTriggerAxis() <= 0.3){
         s_Intake.stop();
+        Shuffleboard.selectTab("Drive");
       }
       //Intake
       else if(xboxController.getLeftTriggerAxis() > 0.3 && !s_Intake.getShooterSensor() && !deadIntake){
         s_Intake.intake();
+        Shuffleboard.selectTab("Intake");
       }
       //Spit
       else if(xboxController.getRawButton(5)){
         deadIntake = false;
         s_Intake.spit();
+        Shuffleboard.selectTab("Intake");
       }
       //Sensor Detects, Stop Intake
       else if(s_Intake.getShooterSensor()){
@@ -97,6 +107,7 @@ public class RunNote extends Command {
         if(!RunElevator.deadShooter){
           s_Shooter.setWristShooting();
         }
+        Shuffleboard.selectTab("Shooter");
       }
       //Stop Shooter
       else{
@@ -105,6 +116,7 @@ public class RunNote extends Command {
         if(!RunElevator.handoff){
           s_Shooter.setWrist(protect);
         }
+        Shuffleboard.selectTab("Drive");
       }
       //Fire Shooter
       if(s_Shooter.atSpeed() && s_Shooter.isAtPosition() && xboxController.getRightTriggerAxis() > 0.3){
