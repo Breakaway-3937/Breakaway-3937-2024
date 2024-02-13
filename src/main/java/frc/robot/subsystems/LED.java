@@ -93,8 +93,6 @@ public class LED extends SubsystemBase {
                 pocket.setR((int) (Math.random() * 255));
                 pocket.setG((int) (Math.random() * 255));
                 pocket.setB((int) (Math.random() * 255));
-                fire.setSparking(Math.random());
-                fire.setCooling(Math.random());
             }
         }
         else if(DriverStation.isAutonomousEnabled()){
