@@ -118,7 +118,7 @@ public class Shooter extends SubsystemBase {
     if(!Robot.getFront()){
       position -= 13;
     }
-    if(position > 0 && position < 0){ //FIXME get max setpoint
+    if(position > 0 && position < 23){
       pid.setReference(position, ControlType.kSmartMotion);
     }
   }
@@ -222,7 +222,7 @@ public class Shooter extends SubsystemBase {
     Logger.recordOutput("Wrist", getWrist());
 
 
-    speed = SmartDashboard.getNumber("Shooter Speed", 0);
-    position = SmartDashboard.getNumber("Wrist Position", 0);
+    //speed = SmartDashboard.getNumber("Shooter Speed", 0);
+    //position = SmartDashboard.getNumber("Wrist Position", 0);
   }
 }
