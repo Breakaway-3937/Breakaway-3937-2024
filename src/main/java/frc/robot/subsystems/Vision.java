@@ -66,7 +66,12 @@ public class Vision extends SubsystemBase {
   }
   
   public double getAprilTagRotationSpeed(){
-    return PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromRadians(0))).getDegrees() * 8.0 / 42.0;
+    if(Robot.getFront()){
+      return (180 - PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromRadians(0))).getDegrees()) * 8.0 / 42.0;
+    }
+    else{
+      return PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromRadians(0))).getDegrees() * 8.0 / 42.0;
+    }
   }
 
   public double getDistance(){
