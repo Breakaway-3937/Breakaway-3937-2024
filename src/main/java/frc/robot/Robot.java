@@ -70,7 +70,7 @@ public class Robot extends LoggedRobot {
     CommandScheduler.getInstance().setPeriod(0.025);
     ComplexWidget pdh = Shuffleboard.getTab("System").add("PDH", powerDistribution).withPosition(1, 0);
     pdh.hashCode();
-    Robot.robotContainer.s_Shooter.setDefaultCommand(Robot.robotContainer.c_AutoRunNote);
+    //Robot.robotContainer.s_Shooter.setDefaultCommand(Robot.robotContainer.c_AutoRunNote);
   }
 
   /**
@@ -114,7 +114,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void disabledInit() {
     if(DriverStation.isEStopped() || (DriverStation.isFMSAttached() && DriverStation.getMatchTime() < 3 && teleop)){
-      CommandScheduler.getInstance().schedule(robotContainer.c_Music.ignoringDisable(true));
+      //CommandScheduler.getInstance().schedule(robotContainer.c_Music.ignoringDisable(true));
     }
   }
 
@@ -145,7 +145,7 @@ public class Robot extends LoggedRobot {
     if(autonomousCommand != null){
       autonomousCommand.cancel();
     }
-    Robot.robotContainer.s_Shooter.setDefaultCommand(Robot.robotContainer.c_RunNote);
+    //Robot.robotContainer.s_Shooter.setDefaultCommand(Robot.robotContainer.c_RunNote);
     Shuffleboard.selectTab("Drive");
   }
 
