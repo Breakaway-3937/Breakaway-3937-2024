@@ -14,29 +14,32 @@ import frc.robot.commands.RunElevator;
 import com.ctre.phoenix.led.*;
 import com.ctre.phoenix.led.CANdle.LEDStripType;
 import com.ctre.phoenix.led.CANdle.VBatOutputMode;
+import com.ctre.phoenix.led.TwinkleOffAnimation.TwinkleOffPercent;
 
 
 public class LED extends SubsystemBase {
     private final CANdle candle;
-    private final Timer timer, timer1, autoTimer, funeralTimer;
-    private boolean green, orange, flag, flag1, flag2, funeralFlag = false; 
+    private final Timer timer, funeralTimer;
+    private boolean green, orange, flag, flag1, funeralFlag, autoFlag = false; 
     private final CANdleConfiguration config = new CANdleConfiguration();
-    private final ColorFlowAnimation flow = new ColorFlowAnimation(0, 0, 0, 0, 0.1, 8, ColorFlowAnimation.Direction.Backward, 0);
-    private final RainbowAnimation rainbow = new RainbowAnimation(0.5, 0.1, 8, true, 0);
-    private final FireAnimation fire = new FireAnimation(0.5, 0.1, 50, 0.1, 0.1, false, 0);
-    private final LarsonAnimation pocket = new LarsonAnimation(255, 0, 0, 0, 0.1, 8, LarsonAnimation.BounceMode.Center, 1);
-    private final SingleFadeAnimation redFade = new SingleFadeAnimation(255, 0, 0, 0, 0.1, 8, 0);
+    private final ColorFlowAnimation flow = new ColorFlowAnimation(0, 0, 0, 0, 0.1, Constants.NUM_LEDS, ColorFlowAnimation.Direction.Backward, 0);
+    private final RainbowAnimation rainbow = new RainbowAnimation(0.5, 0.1, Constants.NUM_LEDS, false, 0);
+    private final FireAnimation fire = new FireAnimation(0.5, 0.1, Constants.NUM_LEDS, 0.1, 0.1, false, 0);
+    private final LarsonAnimation pocket = new LarsonAnimation(255, 0, 0, 0, 0.1, Constants.NUM_LEDS, LarsonAnimation.BounceMode.Center, 1);
+    private final TwinkleOffAnimation twinkle = new TwinkleOffAnimation(0, 255, 0, 0, 0.1, Constants.NUM_LEDS, TwinkleOffPercent.Percent100, 0);
+    private final SingleFadeAnimation redFade = new SingleFadeAnimation(255, 0, 0, 0, 0.1, Constants.NUM_LEDS, 0);
+    private final SingleFadeAnimation orangeFade = new SingleFadeAnimation(255, 165, 0, 0, 0.1, Constants.NUM_LEDS, 0);
+    private final SingleFadeAnimation greenFade = new SingleFadeAnimation(0, 255, 0, 0, 0.1, Constants.NUM_LEDS, 0);
+    private final StrobeAnimation blueStrobe = new StrobeAnimation(0, 0, 254, 0, 0.1, Constants.NUM_LEDS, 0);
+    private final StrobeAnimation orangeStrobe = new StrobeAnimation(255, 165, 0, 0, 0.1, Constants.NUM_LEDS, 0);
+    private final StrobeAnimation greenStrobe = new StrobeAnimation(0, 255, 0, 0, 0.1, Constants.NUM_LEDS, 0);
 
     public LED() {
         candle = new CANdle(Constants.CANDLE_ID, "CANivore");
         timer = new Timer();
-        timer1 = new Timer();
-        autoTimer = new Timer();
         funeralTimer = new Timer();
         timer.reset();
         timer.start();
-        timer1.reset();
-        autoTimer.reset();
         funeralTimer.reset();
         funeralTimer.start();
         candle.configAllSettings(new CANdleConfiguration());
@@ -72,12 +75,39 @@ public class LED extends SubsystemBase {
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
-        if(DriverStation.isDisabled() && true/*!Robot.robotContainer.s_Vision.isDead()*/){
-            //TODO make pattern
-            candle.animate(rainbow);
+        if(DriverStation.isDisabled() && !Robot.robotContainer.s_Vision.isDead()){
+            if(timer.get() < 10){
+                candle.animate(fire);
+            }
+            else if(timer.get() < 20){
+                candle.animate(pocket);
+            }
+            else if(timer.get() < 30){
+                candle.animate(twinkle);
+            }
+            else{
+                timer.reset();
+                twinkle.setR((int) (Math.random() * 255));
+                twinkle.setG((int) (Math.random() * 255));
+                twinkle.setB((int) (Math.random() * 255));
+                pocket.setR((int) (Math.random() * 255));
+                pocket.setG((int) (Math.random() * 255));
+                pocket.setB((int) (Math.random() * 255));
+                fire.setSparking(Math.random());
+                fire.setCooling(Math.random());
+            }
         }
         else if(DriverStation.isAutonomousEnabled()){
-            candle.setLEDs(0, 0, 254);
+            var alliance = DriverStation.getAlliance();
+            if(alliance.isPresent() && !autoFlag){
+                if(alliance.get() == DriverStation.Alliance.Blue){
+                    candle.setLEDs(0, 0, 254);
+                }
+                else{
+                    candle.setLEDs(255, 0, 0);
+                }
+                autoFlag = true;
+            }
             candle.animate(flow);
         }
         else if(RunElevator.trapScored){
@@ -86,50 +116,36 @@ public class LED extends SubsystemBase {
         else if(RunElevator.retracting && Robot.robotContainer.s_Elevator.isAtPosition()){
             candle.setLEDs(0, 255, 0);
         }
-        else if(false/*Robot.robotContainer.s_Vision.isDead()*/){
+        else if(Robot.robotContainer.s_Vision.isDead()){
             //FIXME get values for whole else if structure
-            if(funeralTimer.get() > 0.2 && !funeralFlag){
+            if(funeralTimer.get() < 0.2 && !funeralFlag){
                 candle.setLEDs(12, 237, 54, 0, 0, 0);
                 funeralTimer.reset();
                 funeralFlag = true;
             }
-            else if(funeralTimer.get() > 0.2 && funeralFlag){
+            else if(funeralTimer.get() < 0.2 && funeralFlag){
                 candle.setLEDs(179, 83, 97, 0, 0, 0);
                 funeralTimer.reset();
                 funeralFlag = false;
             }
             if(orange){
                 if(!flag){
-                    timer1.reset();
-                    timer1.start();
+                    timer.reset();
+                    timer.start();
                     flag = true;
                     flag1 = false;
-                    flag2 = false;
+                    //FIXME get values
+                    orangeStrobe.setLedOffset(0);
+                    orangeFade.setLedOffset(0);
                 }
-                else if(timer1.get() > 1){
+                else if(timer.get() > 1){
                     flag1 = true;
                 }
                 if(!flag1){
-                    if(timer.get() > 0.1 && !flag2){
-                        candle.setLEDs(255, 165, 0, 0, 0, 0);
-                        timer.reset();
-                        flag2 = true;
-                    }
-                    else if(timer.get() > 0.1 && flag2){
-                        candle.setLEDs(0, 0, 0, 0, 0, 0);
-                        timer.reset();
-                        flag2 = false;
-                    }
+                    candle.animate(orangeStrobe);
                 }
                 else{
-                    /*for(double i = 0.5; i > 0; i -= 0.001){
-                        candle.setLEDs(255, 165, 0, 0, 0, 0);
-                        candle.configBrightnessScalar(i);
-                    }
-                    for(double i = 0; i < 0.5; i += 0.001){
-                        candle.setLEDs(255, 165, 0, 0, 0, 0);
-                        candle.configBrightnessScalar(i);
-                    }*/
+                    candle.animate(orangeFade);
                 }
             }
             else if(!Robot.robotContainer.s_Intake.botFull()){
@@ -137,106 +153,63 @@ public class LED extends SubsystemBase {
             }
             else if(green){
                 if(!flag){
-                    timer1.reset();
-                    timer1.start();
+                    timer.reset();
+                    timer.start();
                     flag = true;
                     flag1 = false;
-                    flag2 = false;
+                    //FIXME get values
+                    greenStrobe.setLedOffset(0);
+                    greenFade.setLedOffset(0);
                 }
-                else if(timer1.get() > 1){
+                else if(timer.get() > 1){
                     flag1 = true;
                 }
                 if(!flag1){
-                    if(timer.get() > 0.1 && !flag2){
-                        candle.setLEDs(0, 255, 0, 0, 0, 0);
-                        timer.reset();
-                        flag2 = true;
-                    }
-                    else if(timer.get() > 0.1 && flag2){
-                        candle.setLEDs(0, 0, 0, 0, 0, 0);
-                        timer.reset();
-                        flag2 = false;
-                    }
+                    candle.animate(greenStrobe);
                 }
                 else{
-                    /*for(double i = 0.5; i > 0; i -= 0.001){
-                        candle.setLEDs(0, 255, 0, 0, 0, 0);
-                        candle.configBrightnessScalar(i);
-                    }
-                    for(double i = 0; i < 0.5; i += 0.001){
-                        candle.setLEDs(0, 255, 0, 0, 0, 0);
-                        candle.configBrightnessScalar(i);
-                    }*/
+                    candle.animate(greenFade);
                 }
             }
             else if(Robot.robotContainer.s_Intake.botFull()){
                 if(!flag){
-                    timer1.reset();
-                    timer1.start();
+                    timer.reset();
+                    timer.start();
                     flag = true;
                     flag1 = false;
-                    flag2 = false;
+                    //FIXME get values
+                    blueStrobe.setLedOffset(0);
+                    redFade.setLedOffset(0);
                 }
-                else if(timer1.get() > 1){
+                else if(timer.get() > 1){
                     flag1 = true;
                 }
                 if(!flag1){
-                    if(timer.get() > 0.1 && !flag2){
-                        candle.setLEDs(0, 0, 254, 0, 0, 0);
-                        timer.reset();
-                        flag2 = true;
-                    }
-                    else if(timer.get() > 0.1 && flag2){
-                        candle.setLEDs(0, 0, 0, 0, 0, 0);
-                        timer.reset();
-                        flag2 = false;
-                    }
+                    candle.animate(blueStrobe);
                 }
                 else{
-                    /*for(double i = 0.5; i > 0; i -= 0.001){
-                        candle.setLEDs(255, 0, 0, 0, 0, 0);
-                        candle.configBrightnessScalar(i);
-                    }
-                    for(double i = 0; i < 0.5; i += 0.001){
-                        candle.setLEDs(255, 0, 0, 0, 0, 0);
-                        candle.configBrightnessScalar(i);
-                    }*/
+                    candle.animate(redFade);
                 }
             }
         }
-        else if(true /*!Robot.robotContainer.s_Vision.isDead()*/){
+        else if(!Robot.robotContainer.s_Vision.isDead()){
             if(orange){
                 if(!flag){
-                    timer1.reset();
-                    timer1.start();
+                    timer.reset();
+                    timer.start();
                     flag = true;
                     flag1 = false;
-                    flag2 = false;
+                    orangeStrobe.setLedOffset(0);
+                    orangeFade.setLedOffset(0);
                 }
-                else if(timer1.get() > 1){
+                else if(timer.get() > 1){
                     flag1 = true;
                 }
                 if(!flag1){
-                    if(timer.get() > 0.1 && !flag2){
-                        candle.setLEDs(255, 165, 0);
-                        timer.reset();
-                        flag2 = true;
-                    }
-                    else if(timer.get() > 0.1 && flag2){
-                        candle.setLEDs(0, 0, 0);
-                        timer.reset();
-                        flag2 = false;
-                    }
+                    candle.animate(orangeStrobe);
                 }
                 else{
-                    /*for(double i = 0.5; i > 0; i -= 0.001){
-                        candle.setLEDs(255, 165, 0);
-                        candle.configBrightnessScalar(i);
-                    }
-                    for(double i = 0; i < 0.5; i += 0.001){
-                        candle.setLEDs(255, 165, 0);
-                        candle.configBrightnessScalar(i);
-                    }*/
+                    candle.animate(orangeFade);
                 }
             }
             else if(!Robot.robotContainer.s_Intake.botFull()){
@@ -244,70 +217,40 @@ public class LED extends SubsystemBase {
             }
             else if(green){
                 if(!flag){
-                    timer1.reset();
-                    timer1.start();
+                    timer.reset();
+                    timer.start();
                     flag = true;
                     flag1 = false;
-                    flag2 = false;
+                    greenStrobe.setLedOffset(0);
+                    greenFade.setLedOffset(0);
                 }
-                else if(timer1.get() > 1){
+                else if(timer.get() > 1){
                     flag1 = true;
                 }
                 if(!flag1){
-                    if(timer.get() > 0.1 && !flag2){
-                        candle.setLEDs(0, 255, 0);
-                        timer.reset();
-                        flag2 = true;
-                    }
-                    else if(timer.get() > 0.1 && flag2){
-                        candle.setLEDs(0, 0, 0);
-                        timer.reset();
-                        flag2 = false;
-                    }
+                    candle.animate(greenStrobe);
                 }
                 else{
-                    /*for(double i = 0.5; i > 0; i -= 0.001){
-                        candle.setLEDs(0, 255, 0);
-                        candle.configBrightnessScalar(i);
-                    }
-                    for(double i = 0; i < 0.5; i += 0.001){
-                        candle.setLEDs(0, 255, 0);
-                        candle.configBrightnessScalar(i);
-                    }*/
+                    candle.animate(greenFade);
                 }
             }
             else if(Robot.robotContainer.s_Intake.botFull()){
                 if(!flag){
-                    timer1.reset();
-                    timer1.start();
+                    timer.reset();
+                    timer.start();
                     flag = true;
                     flag1 = false;
-                    flag2 = false;
+                    blueStrobe.setLedOffset(0);
+                    redFade.setLedOffset(0);
                 }
-                else if(timer1.get() > 1){
+                else if(timer.get() > 1){
                     flag1 = true;
                 }
                 if(!flag1){
-                    if(timer.get() > 0.1 && !flag2){
-                        candle.setLEDs(0, 0, 254);
-                        timer.reset();
-                        flag2 = true;
-                    }
-                    else if(timer.get() > 0.1 && flag2){
-                        candle.setLEDs(0, 0, 0);
-                        timer.reset();
-                        flag2 = false;
-                    }
+                    candle.animate(blueStrobe);
                 }
                 else{
-                    /*for(double i = 0.5; i > 0; i -= 0.001){
-                        candle.setLEDs(255, 0, 0);
-                        candle.configBrightnessScalar(i);
-                    }
-                    for(double i = 0; i < 0.5; i += 0.001){
-                        candle.setLEDs(255, 0, 0);
-                        candle.configBrightnessScalar(i);
-                    }*/
+                    candle.animate(redFade);
                 }
             }
         }
