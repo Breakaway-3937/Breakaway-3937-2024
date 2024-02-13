@@ -15,7 +15,7 @@ public class RunElevator extends Command {
   private final XboxController xboxController;
   //FIXME get all setpoints
   private final double wristHandoff = 65;
-  private final double wristProtect = 0;
+  private final double wristProtect = 3;
   private final double wristAmp = 46.4;
   private final double wristPreTrap = 0;
   private final double wristTrap = 0;
@@ -26,7 +26,7 @@ public class RunElevator extends Command {
   private final double elevatorAmp = 83.6;
   private final double elevatorTrap = 0;
   private final double elevatorSource = 52.6;
-  private final double elevatorClimb = 100;
+  private final double elevatorClimb = 102;
   private boolean amp, trap, source, protect, ohCrap, climb;
   public static boolean deadShooter, trapStage1, trapStage2, startStage1, startStage2, reverse, trapScored, retracting, climbing, handoff;
 
@@ -50,7 +50,6 @@ public class RunElevator extends Command {
     trapStage2 = false;
     startStage1 = false;
     startStage2 = false;
-    deadShooter = false;
     reverse = false;
     climb = false;
     trapScored = false;
@@ -67,6 +66,9 @@ public class RunElevator extends Command {
     if(protect && s_Elevator.isAtPosition()){
       deadShooter = false;
     }
+    else{
+      deadShooter = true;
+    }
 
     //Extend Climb
     if(xboxController.getPOV() == Constants.Controllers.UP){
@@ -79,7 +81,6 @@ public class RunElevator extends Command {
       trapStage2 = false;
       startStage1 = false;
       startStage2 = false;
-      deadShooter = true;
       reverse = false;
       climb = true;
       retracting = false;
@@ -139,7 +140,6 @@ public class RunElevator extends Command {
       trapStage2 = false;
       startStage1 = false;
       startStage2 = false;
-      deadShooter = true;
       reverse = false;
       climb = false;
       retracting = false;
@@ -158,7 +158,6 @@ public class RunElevator extends Command {
       trapStage2 = false;
       startStage1 = false;
       startStage2 = false;
-      deadShooter = true;
       reverse = false;
       climb = false;
       retracting = false;
@@ -175,7 +174,6 @@ public class RunElevator extends Command {
       ohCrap = false;
       startStage1 = false;
       startStage2 = false;
-      deadShooter = true;
       reverse = false;
       climb = false;
       retracting = false;
@@ -194,7 +192,6 @@ public class RunElevator extends Command {
       trapStage2 = false;
       startStage1 = false;
       startStage2 = false;
-      deadShooter = true;
       reverse = false;
       climb = false;
       retracting = false;
