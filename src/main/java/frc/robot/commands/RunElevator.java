@@ -124,6 +124,7 @@ public class RunElevator extends Command {
       retracting = false;
       climbing = false;
       handoff = false;
+      trapScored = false;
       Robot.robotContainer.s_LED.reset();
       Robot.robotContainer.s_LED.resetColors();
       s_Elevator.setElevatorFast();
