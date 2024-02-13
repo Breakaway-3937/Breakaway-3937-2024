@@ -24,7 +24,7 @@ public class LED extends SubsystemBase {
     //FIXME get led count
     private final ColorFlowAnimation flow = new ColorFlowAnimation(0, 0, 0, 0, 0.1, 50, ColorFlowAnimation.Direction.Backward, 0);
     private final RainbowAnimation rainbow = new RainbowAnimation(0.5, 0.1, 50, true, 0);
-
+    private final FireAnimation fire = new FireAnimation(0.5, 0.1, 50, 0.1, 0.1, false, 0);
 
     public LED() {
         candle = new CANdle(Constants.CANDLE_ID, "CANivore");
@@ -71,8 +71,9 @@ public class LED extends SubsystemBase {
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
-        if(DriverStation.isDisabled() && false/*!Robot.robotContainer.s_Vision.isDead()*/){
+        if(DriverStation.isDisabled() && true/*!Robot.robotContainer.s_Vision.isDead()*/){
             //TODO make pattern
+            candle.animate(fire);
             animationFlag = false;
         }
         else if(DriverStation.isAutonomousEnabled()){
