@@ -19,8 +19,11 @@ import com.ctre.phoenix.led.CANdle.VBatOutputMode;
 public class LED extends SubsystemBase {
     private final CANdle candle;
     private final Timer timer, timer1, autoTimer, funeralTimer;
-    private boolean green, orange, flag, flag1, flag2, autoFlag, funeralFlag = false; 
+    private boolean green, orange, flag, flag1, flag2, animationFlag, funeralFlag = false; 
     private final CANdleConfiguration config = new CANdleConfiguration();
+    //FIXME get led count
+    private final ColorFlowAnimation flow = new ColorFlowAnimation(0, 0, 0, 0, 0.1, 50, ColorFlowAnimation.Direction.Backward, 0);
+    private final RainbowAnimation rainbow = new RainbowAnimation(0.5, 0.1, 50, true, 0);
 
 
     public LED() {
@@ -36,7 +39,7 @@ public class LED extends SubsystemBase {
         funeralTimer.reset();
         funeralTimer.start();
         candle.configAllSettings(new CANdleConfiguration());
-        config.statusLedOffWhenActive = true;
+        config.statusLedOffWhenActive = false;
         config.disableWhenLOS = false;
         config.stripType = LEDStripType.GRB;
         config.brightnessScalar = 0.5;
@@ -70,20 +73,20 @@ public class LED extends SubsystemBase {
         // This method will be called once per scheduler run
         if(DriverStation.isDisabled() && false/*!Robot.robotContainer.s_Vision.isDead()*/){
             //TODO make pattern
-            autoFlag = false;
+            animationFlag = false;
         }
         else if(DriverStation.isAutonomousEnabled()){
-            //FIXME get values
-            if(!autoFlag){
-                candle.setLEDs(0, 0, 0);
-                autoTimer.reset();
-                autoTimer.start();
-                autoFlag = true;
+            if(!animationFlag){
+                candle.setLEDs(0, 0, 254);
+                candle.animate(flow);
+                animationFlag = true;
             }
-            candle.setLEDs(0, 0, 0, 0, 0, 0);
         }
         else if(RunElevator.trapScored){
-            //TODO make pattern
+            if(!animationFlag){
+                candle.animate(rainbow);
+                animationFlag = true;
+            }
         }
         else if(RunElevator.retracting && Robot.robotContainer.s_Elevator.isAtPosition()){
             candle.setLEDs(0, 255, 0);
