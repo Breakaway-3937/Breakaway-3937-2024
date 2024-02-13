@@ -17,9 +17,12 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -63,7 +66,7 @@ public class Vision extends SubsystemBase {
   }
   
   public double getAprilTagRotationSpeed(){
-    return PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromRadians(0))).getDegrees() * 8.0 / 9.0;
+    return PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromRadians(0))).getDegrees() * 8.0 / 42.0;
   }
 
   public double getDistance(){
@@ -103,14 +106,40 @@ public class Vision extends SubsystemBase {
     }
   }
 
+
+  //FIXME tune more
+  private Matrix<N3, N1> confidenceCalculator(EstimatedRobotPose estimation) {
+    double smallestDistance = Double.POSITIVE_INFINITY;
+    for(var target : estimation.targetsUsed){
+      var transform = target.getBestCameraToTarget();
+      var distance = Math.sqrt(Math.pow(transform.getX(), 2) + Math.pow(transform.getY(), 2) + Math.pow(transform.getZ(), 2));
+      if (distance < smallestDistance){
+        smallestDistance = distance;
+      }
+    }
+
+    double poseAmbiguityFactor = estimation.targetsUsed.size() != 1 ? 1 : Math.max(1, (estimation.targetsUsed.get(0).getPoseAmbiguity() + 0.2) * 4);
+    double confidenceMultiplier = Math.max(1, (Math.max(1, Math.max(0, smallestDistance - 2.5) 
+      * 7) * poseAmbiguityFactor) / (1
+      + ((estimation.targetsUsed.size() - 1) * 10)));
+
+    return Constants.Vision.VISION_STDS.times(confidenceMultiplier);
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     if(frontCamera.getLatestResult().hasTargets()){
-      s_Swerve.updatePoseVision(getFrontEstimatedGlobalPose());
+      var pose = getFrontEstimatedGlobalPose();
+      if(pose.isPresent()){
+        s_Swerve.updatePoseVision(pose.get(), confidenceCalculator(pose.get()));
+      }
     }
     if(backCamera.getLatestResult().hasTargets()){
-      s_Swerve.updatePoseVision(getBackEstimatedGlobalPose());
+      var pose = getBackEstimatedGlobalPose();
+      if(pose.isPresent()){
+        s_Swerve.updatePoseVision(pose.get(), confidenceCalculator(pose.get()));
+      }
     }
     var alliance = DriverStation.getAlliance();
     if(alliance.isPresent()){
