@@ -19,12 +19,13 @@ import com.ctre.phoenix.led.CANdle.VBatOutputMode;
 public class LED extends SubsystemBase {
     private final CANdle candle;
     private final Timer timer, timer1, autoTimer, funeralTimer;
-    private boolean green, orange, flag, flag1, flag2, animationFlag, funeralFlag = false; 
+    private boolean green, orange, flag, flag1, flag2, funeralFlag = false; 
     private final CANdleConfiguration config = new CANdleConfiguration();
-    //FIXME get led count
-    private final ColorFlowAnimation flow = new ColorFlowAnimation(0, 0, 0, 0, 0.1, 50, ColorFlowAnimation.Direction.Backward, 0);
-    private final RainbowAnimation rainbow = new RainbowAnimation(0.5, 0.1, 50, true, 0);
+    private final ColorFlowAnimation flow = new ColorFlowAnimation(0, 0, 0, 0, 0.1, 8, ColorFlowAnimation.Direction.Backward, 0);
+    private final RainbowAnimation rainbow = new RainbowAnimation(0.5, 0.1, 8, true, 0);
     private final FireAnimation fire = new FireAnimation(0.5, 0.1, 50, 0.1, 0.1, false, 0);
+    private final LarsonAnimation pocket = new LarsonAnimation(255, 0, 0, 0, 0.1, 8, LarsonAnimation.BounceMode.Center, 1);
+    private final SingleFadeAnimation redFade = new SingleFadeAnimation(255, 0, 0, 0, 0.1, 8, 0);
 
     public LED() {
         candle = new CANdle(Constants.CANDLE_ID, "CANivore");
@@ -42,7 +43,7 @@ public class LED extends SubsystemBase {
         config.statusLedOffWhenActive = false;
         config.disableWhenLOS = false;
         config.stripType = LEDStripType.GRB;
-        config.brightnessScalar = 0.5;
+        config.brightnessScalar = 1;
         config.vBatOutputMode = VBatOutputMode.Modulated;
         candle.configAllSettings(config);
         candle.setLEDs(0, 0, 0);
@@ -73,21 +74,14 @@ public class LED extends SubsystemBase {
         // This method will be called once per scheduler run
         if(DriverStation.isDisabled() && true/*!Robot.robotContainer.s_Vision.isDead()*/){
             //TODO make pattern
-            candle.animate(fire);
-            animationFlag = false;
+            candle.animate(rainbow);
         }
         else if(DriverStation.isAutonomousEnabled()){
-            if(!animationFlag){
-                candle.setLEDs(0, 0, 254);
-                candle.animate(flow);
-                animationFlag = true;
-            }
+            candle.setLEDs(0, 0, 254);
+            candle.animate(flow);
         }
         else if(RunElevator.trapScored){
-            if(!animationFlag){
-                candle.animate(rainbow);
-                animationFlag = true;
-            }
+            candle.animate(rainbow);
         }
         else if(RunElevator.retracting && Robot.robotContainer.s_Elevator.isAtPosition()){
             candle.setLEDs(0, 255, 0);
