@@ -106,22 +106,20 @@ public class Vision extends SubsystemBase {
     }
   }
 
-
-  //FIXME tune more
   private Matrix<N3, N1> confidenceCalculator(EstimatedRobotPose estimation) {
     double smallestDistance = Double.POSITIVE_INFINITY;
     for(var target : estimation.targetsUsed){
       var transform = target.getBestCameraToTarget();
       var distance = Math.sqrt(Math.pow(transform.getX(), 2) + Math.pow(transform.getY(), 2) + Math.pow(transform.getZ(), 2));
-      if (distance < smallestDistance){
+      if(distance < smallestDistance){
         smallestDistance = distance;
       }
     }
-
-    double poseAmbiguityFactor = estimation.targetsUsed.size() != 1 ? 1 : Math.max(1, (estimation.targetsUsed.get(0).getPoseAmbiguity() + 0.2) * 4);
-    double confidenceMultiplier = Math.max(1, (Math.max(1, Math.max(0, smallestDistance - 2.5) 
-      * 7) * poseAmbiguityFactor) / (1
-      + ((estimation.targetsUsed.size() - 1) * 10)));
+    double poseAmbiguityFactor = estimation.targetsUsed.size() != 1 ? 1 : Math.max(1, (estimation.targetsUsed.get(0).getPoseAmbiguity()
+      + Constants.Vision.POSE_AMBIGUITY_SHIFTER) * Constants.Vision.POSE_AMBIGUITY_MULTIPLIER);
+    double confidenceMultiplier = Math.max(1, (Math.max(1, Math.max(0, smallestDistance - Constants.Vision.NOISY_DISTANCE_METERS)
+      * Constants.Vision.DISTANCE_WEIGHT) * poseAmbiguityFactor) / (1 + ((estimation.targetsUsed.size() - 1) 
+      * Constants.Vision.TAG_PRESENCE_WEIGHT)));
 
     return Constants.Vision.VISION_STDS.times(confidenceMultiplier);
   }
@@ -141,6 +139,7 @@ public class Vision extends SubsystemBase {
         s_Swerve.updatePoseVision(pose.get(), confidenceCalculator(pose.get()));
       }
     }
+    
     var alliance = DriverStation.getAlliance();
     if(alliance.isPresent()){
       if(alliance.get() == DriverStation.Alliance.Blue){
