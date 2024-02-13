@@ -24,8 +24,9 @@ public final class Constants {
     public static final boolean OPEN_LOOP = true;
     public static final int CANDLE_ID = 25;
     public static final String PRACTICE_SERIAL_NUM = "030dbdbc";
-    public static final boolean PRACTICE_BOT = RobotController.getSerialNumber().equals(PRACTICE_SERIAL_NUM);
-    public static final boolean DEBUG = true;
+    //FIXME has stopped working
+    public static final boolean PRACTICE_BOT = true;//RobotController.getSerialNumber().equals(PRACTICE_SERIAL_NUM);
+    public static final boolean DEBUG = false;
 
     public static final class Controllers{
         public static final GenericHID TRANSLATION_CONTROLLER = new GenericHID(0);
@@ -200,7 +201,7 @@ public final class Constants {
         public static final String NOTE_CAMERA_NAME = "Microsoft_LifeCam_HD-3000"; //FIXME
         public static final Transform3d FRONT_CAMERA_TRANSFORM = new Transform3d(new Translation3d(-0.2036, -0.173749, 0.5169), new Rotation3d(0, 0.174533, 0));
         public static final Transform3d BACK_CAMERA_TRANSFORM = new Transform3d(new Translation3d(-0.2036, 0.173749, 0.5169), new Rotation3d(0, 0.174533, Math.PI));
-        public static final Vector<N3> VISION_STDS = VecBuilder.fill(0.1, 0.1, Math.toRadians(30));
+        public static final Vector<N3> VISION_STDS = VecBuilder.fill(1, 1, Math.PI);
         public static final double TARGET_X_BLUE = -0.04;
         public static final double TARGET_X_RED = 16.58;
         public static final double TARGET_Y_BLUE = 4.98;
