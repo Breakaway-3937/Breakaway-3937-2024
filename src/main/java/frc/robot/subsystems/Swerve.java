@@ -19,11 +19,14 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
@@ -171,10 +174,8 @@ public class Swerve extends SubsystemBase {
             this);
     }
 
-    public void updatePoseVision(Optional<EstimatedRobotPose> pose){
-        if(pose.isPresent()){
-            poseEstimator.addVisionMeasurement(new Pose2d(new Translation2d(pose.get().estimatedPose.getX(), pose.get().estimatedPose.getY()), getGyroYaw()), pose.get().timestampSeconds);
-        }
+    public void updatePoseVision(EstimatedRobotPose pose, Matrix<N3, N1> mat){
+        poseEstimator.addVisionMeasurement(new Pose2d(new Translation2d(pose.estimatedPose.getX(), pose.estimatedPose.getY()), getGyroYaw()), pose.timestampSeconds, mat);
     }
 
     @Override
