@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -108,6 +109,8 @@ public class Robot extends LoggedRobot {
     }
 
     Logger.recordOutput("Front", getFront());
+
+    SmartDashboard.putBoolean("Front", front);
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
