@@ -55,7 +55,7 @@ public class Shooter extends SubsystemBase {
     wristEncoderEntry = Shuffleboard.getTab("Shooter").add("Wrist", getWrist()).withPosition(1, 0).getEntry();
 
     SmartDashboard.putNumber("Shooter Speed", 0);
-    SmartDashboard.putNumber("Wrist Posision", 0);
+    SmartDashboard.putNumber("Wrist Position", 0);
   }
 
   public Pair<TalonFX, TalonFX> getShooterMotors(){
@@ -104,8 +104,8 @@ public class Shooter extends SubsystemBase {
 
   public void setWristShooting(){
     if(podium){
-      speed = 0; //FIXME setpoint
-      position = 0;
+      speed = 3500.0 / 60.0;
+      position = 20;
     }
     else if(subwoofer){
       speed = 3000.0 / 60.0;
@@ -116,9 +116,9 @@ public class Shooter extends SubsystemBase {
       position = wristMap.get(Robot.robotContainer.s_Vision.getDistance());
     }*/
     if(!Robot.getFront()){
-      position -= 13;
+      position -= 11.5;
     }
-    if(position > 0 && position < 23){
+    if((position > 0 && position < 4) || (position > 10 && position < 23)){
       pid.setReference(position, ControlType.kSmartMotion);
     }
   }
@@ -177,7 +177,7 @@ public class Shooter extends SubsystemBase {
     shooterMotorConfig.Slot0.kI = 0; // no output for integrated error
     shooterMotorConfig.Slot0.kD = 0; // no output for error derivative
 
-    shooterMotorConfig.MotionMagic.MotionMagicAcceleration = 1200;
+    shooterMotorConfig.MotionMagic.MotionMagicAcceleration = 2500;
     shooterMotorConfig.MotionMagic.MotionMagicJerk = 4000;
 
     shooterMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
@@ -222,7 +222,7 @@ public class Shooter extends SubsystemBase {
     Logger.recordOutput("Wrist", getWrist());
 
 
-    //speed = SmartDashboard.getNumber("Shooter Speed", 0);
-    //position = SmartDashboard.getNumber("Wrist Position", 0);
+    speed = SmartDashboard.getNumber("Shooter Speed", 0);
+    position = SmartDashboard.getNumber("Wrist Position", 0);
   }
 }
