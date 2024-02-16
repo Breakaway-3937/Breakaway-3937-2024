@@ -18,12 +18,12 @@ public class RunElevator extends Command {
   private final double wristProtect = 3;
   private final double wristAmp = 46.4;
   private final double wristPreTrap = 0;
-  private final double wristTrap = 0;
+  private final double wristTrap = 41.7;
   private final double wristSource = 65;
-  private final double wristClimb = 50;
+  private final double wristClimb = 61.7;
   private final double elevatorHandoff = 28.2;
   private final double elevatorProtect = 0;
-  private final double elevatorAmp = 83.6;
+  private final double elevatorAmp = 80.6;
   private final double elevatorTrap = 0;
   private final double elevatorSource = 52.6;
   private final double elevatorClimb = 102;
@@ -307,6 +307,7 @@ public class RunElevator extends Command {
         }
         else if(retracting){
           s_Elevator.setElevatorSlow();
+          s_Elevator.setBabyWrist(wristTrap);
           s_Elevator.setElevator(elevatorProtect);
         }
       }
