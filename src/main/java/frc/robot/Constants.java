@@ -24,7 +24,7 @@ public final class Constants {
     public static final boolean OPEN_LOOP = true;
     public static final int CANDLE_ID = 25;
     public static final int NUM_LEDS = 8;
-    public static final String PRACTICE_SERIAL_NUM = "030dbdbc";
+    public static final String PRACTICE_SERIAL_NUM = "0324152B";
     public static final boolean PRACTICE_BOT = RobotController.getSerialNumber().equals(PRACTICE_SERIAL_NUM);
     public static final boolean DEBUG = true;
 
