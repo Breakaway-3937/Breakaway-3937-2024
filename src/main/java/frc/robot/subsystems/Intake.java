@@ -10,6 +10,7 @@ import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
@@ -28,6 +29,7 @@ public class Intake extends SubsystemBase {
   private final TalonFXConfiguration loaderMotorConfig = new TalonFXConfiguration();
   private final AnalogInput intake, shooter, babyShooter;
   private final GenericEntry intakeSensor, shooterSensor, babyShooterSensor;
+  private final Follower followIntake = new Follower(Constants.Intake.FRONT_INTAKE_MOTOR_ID, true);
   private boolean flag, flag1, flag2, note;
   public boolean autoIntake;
 
@@ -64,6 +66,7 @@ public class Intake extends SubsystemBase {
     loaderMotor.getConfigurator().apply(loaderMotorConfig);
     frontIntakeMotor.getConfigurator().apply(loaderMotorConfig);
     backIntakeMotor.getConfigurator().apply(loaderMotorConfig);
+    backIntakeMotor.setControl(followIntake);
   }
 
   public void intake(){
