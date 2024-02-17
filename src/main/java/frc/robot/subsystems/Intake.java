@@ -37,7 +37,7 @@ public class Intake extends SubsystemBase {
   public Intake() {
     frontIntakeMotor = new TalonFX(Constants.Intake.FRONT_INTAKE_MOTOR_ID);
     backIntakeMotor = new TalonFX(Constants.Intake.BACK_INTAKE_MOTOR_ID);
-    bags = new TalonSRX(0); //FIXME
+    bags = new TalonSRX(Constants.Intake.BAGS_MOTOR_ID); //FIXME
     loaderMotor = new TalonFX(Constants.Intake.LOADER_MOTOR_ID);
     configMotors();
     intake = new AnalogInput(Constants.Intake.INTAKE_SENSOR_ID);
