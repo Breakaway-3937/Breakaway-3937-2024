@@ -154,7 +154,7 @@ public class Swerve extends SubsystemBase {
 
     public void configPathPlanner(){
         AutoBuilder.configureHolonomic(this::getPose, this::setPose, this::getSpeed, (speeds) -> setModuleStates(Constants.Swerve.SWERVE_KINEMATICS.toSwerveModuleStates(speeds)),
-            new HolonomicPathFollowerConfig(new PIDConstants(5.0, 0.0, 0.0), new PIDConstants(5.0, 0.0, 0.0), Constants.Swerve.MAX_SPEED, Constants.Swerve.DRIVE_BASE_RADIUS, new ReplanningConfig()),
+            new HolonomicPathFollowerConfig(new PIDConstants(5.0, 0.0, 0.0), new PIDConstants(5.0, 0.0, 0.0), Constants.Swerve.MAX_SPEED, Constants.Swerve.DRIVE_BASE_RADIUS, new ReplanningConfig(false, false)),
             () -> {
                 var alliance = DriverStation.getAlliance();
                 if(alliance.isPresent()){
