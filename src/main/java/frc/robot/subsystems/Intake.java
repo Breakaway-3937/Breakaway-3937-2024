@@ -12,9 +12,6 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkBase.IdleMode;
-import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.AnalogInput;
@@ -25,7 +22,7 @@ import frc.robot.Robot;
 
 public class Intake extends SubsystemBase {
 
-  private final CANSparkMax frontIntakeMotor, backIntakeMotor;
+  private final TalonFX frontIntakeMotor, backIntakeMotor;
   private final TalonFX loaderMotor;
   private final TalonSRX bags;
   private final TalonFXConfiguration loaderMotorConfig = new TalonFXConfiguration();
@@ -36,8 +33,8 @@ public class Intake extends SubsystemBase {
 
   /** Creates a new Intake. */
   public Intake() {
-    frontIntakeMotor = new CANSparkMax(Constants.Intake.FRONT_INTAKE_MOTOR_ID, MotorType.kBrushless);
-    backIntakeMotor = new CANSparkMax(Constants.Intake.BACK_INTAKE_MOTOR_ID, MotorType.kBrushless);
+    frontIntakeMotor = new TalonFX(Constants.Intake.FRONT_INTAKE_MOTOR_ID);
+    backIntakeMotor = new TalonFX(Constants.Intake.BACK_INTAKE_MOTOR_ID);
     bags = new TalonSRX(0); //FIXME
     loaderMotor = new TalonFX(Constants.Intake.LOADER_MOTOR_ID);
     configMotors();
@@ -54,20 +51,10 @@ public class Intake extends SubsystemBase {
   }
 
   private void configMotors(){
-    frontIntakeMotor.restoreFactoryDefaults();
-    frontIntakeMotor.setIdleMode(IdleMode.kBrake);
-    frontIntakeMotor.setInverted(true);
-
-    backIntakeMotor.restoreFactoryDefaults();
-    backIntakeMotor.setIdleMode(IdleMode.kBrake);
-
-    frontIntakeMotor.setSmartCurrentLimit(35);
-    backIntakeMotor.setSmartCurrentLimit(35);
-
-    backIntakeMotor.follow(frontIntakeMotor, true);
 
     bags.configFactoryDefault();
-
+    frontIntakeMotor.getConfigurator().apply(new TalonFXConfiguration());
+    backIntakeMotor.getConfigurator().apply(new TalonFXConfiguration());
     loaderMotor.getConfigurator().apply(new TalonFXConfiguration());
     loaderMotorConfig.CurrentLimits.SupplyCurrentLimit = 35;
     loaderMotorConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
@@ -75,6 +62,8 @@ public class Intake extends SubsystemBase {
     loaderMotorConfig.CurrentLimits.SupplyTimeThreshold = 0.1;
     loaderMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     loaderMotor.getConfigurator().apply(loaderMotorConfig);
+    frontIntakeMotor.getConfigurator().apply(loaderMotorConfig);
+    backIntakeMotor.getConfigurator().apply(loaderMotorConfig);
   }
 
   public void intake(){
