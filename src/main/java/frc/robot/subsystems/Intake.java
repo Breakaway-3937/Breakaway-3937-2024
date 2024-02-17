@@ -6,6 +6,8 @@ package frc.robot.subsystems;
 
 import org.littletonrobotics.junction.Logger;
 
+import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -25,6 +27,7 @@ public class Intake extends SubsystemBase {
 
   private final CANSparkMax frontIntakeMotor, backIntakeMotor;
   private final TalonFX loaderMotor;
+  private final TalonSRX bags;
   private final TalonFXConfiguration loaderMotorConfig = new TalonFXConfiguration();
   private final AnalogInput intake, shooter, babyShooter;
   private final GenericEntry intakeSensor, shooterSensor, babyShooterSensor;
@@ -35,6 +38,7 @@ public class Intake extends SubsystemBase {
   public Intake() {
     frontIntakeMotor = new CANSparkMax(Constants.Intake.FRONT_INTAKE_MOTOR_ID, MotorType.kBrushless);
     backIntakeMotor = new CANSparkMax(Constants.Intake.BACK_INTAKE_MOTOR_ID, MotorType.kBrushless);
+    bags = new TalonSRX(0); //FIXME
     loaderMotor = new TalonFX(Constants.Intake.LOADER_MOTOR_ID);
     configMotors();
     intake = new AnalogInput(Constants.Intake.INTAKE_SENSOR_ID);
@@ -62,6 +66,8 @@ public class Intake extends SubsystemBase {
 
     backIntakeMotor.follow(frontIntakeMotor, true);
 
+    bags.configFactoryDefault();
+
     loaderMotor.getConfigurator().apply(new TalonFXConfiguration());
     loaderMotorConfig.CurrentLimits.SupplyCurrentLimit = 35;
     loaderMotorConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
@@ -72,6 +78,7 @@ public class Intake extends SubsystemBase {
   }
 
   public void intake(){
+    bags.set(TalonSRXControlMode.PercentOutput, 1);
     frontIntakeMotor.set(1);
     loaderMotor.setControl(new DutyCycleOut(1));
   }
