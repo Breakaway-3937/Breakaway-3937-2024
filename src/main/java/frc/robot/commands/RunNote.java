@@ -86,6 +86,7 @@ public class RunNote extends Command {
       else if(xboxController.getRawButton(5)){
         deadIntake = false;
         s_Intake.spit();
+        s_Shooter.setShooter(-10);
         Shuffleboard.selectTab("Intake");
       }
       //Sensor Detects, Stop Intake
@@ -95,11 +96,13 @@ public class RunNote extends Command {
       }
       if(runIntakeBackwardsUntilShooterSensorReturnsAFalseValue){
         s_Intake.spitSlowly();
+        s_Shooter.setShooter(-10);
       }
       if(runIntakeBackwardsUntilShooterSensorReturnsAFalseValue && !s_Intake.getShooterSensor()){
         runIntakeBackwardsUntilShooterSensorReturnsAFalseValue = false;
         deadIntake = true;
         s_Intake.stop();
+        s_Shooter.stopShooter();
       }
       //Run Shooter
       if(xboxController.getRawButton(6)){
