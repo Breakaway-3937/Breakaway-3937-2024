@@ -182,6 +182,8 @@ public class Shooter extends SubsystemBase {
 
     shooterMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
+    shooterMotorConfig.Audio.AllowMusicDurDisable = true;
+
     shooterMotor.getConfigurator().apply(shooterMotorConfig);
     followerShooterMotor.getConfigurator().apply(shooterMotorConfig);
 
@@ -216,13 +218,13 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    shooterEncoderEntry.setDouble(getShooterVelocity());
-    Logger.recordOutput("Shooter", getShooterVelocity());
+    shooterEncoderEntry.setDouble(getShooterVelocity() * 60.0);
+    Logger.recordOutput("Shooter", getShooterVelocity() * 60.0);
     wristEncoderEntry.setDouble(getWrist());
     Logger.recordOutput("Wrist", getWrist());
 
 
-    /*speed = SmartDashboard.getNumber("Shooter Speed", 0);
+    /*speed = SmartDashboard.getNumber("Shooter Speed", 0) / 60.0;
     position = SmartDashboard.getNumber("Wrist Position", 0);*/
   }
 }
