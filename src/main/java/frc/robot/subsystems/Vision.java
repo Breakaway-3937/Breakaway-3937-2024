@@ -138,7 +138,7 @@ public class Vision extends SubsystemBase {
         s_Swerve.updatePoseVision(pose.get(), confidenceCalculator(pose.get()));
       }
     }
-    if(backCamera.getLatestResult().hasTargets()){
+    else if(backCamera.getLatestResult().hasTargets()){
       var pose = getBackEstimatedGlobalPose();
       if(pose.isPresent()){
         s_Swerve.updatePoseVision(pose.get(), confidenceCalculator(pose.get()));
