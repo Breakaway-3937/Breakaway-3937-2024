@@ -1,15 +1,8 @@
 package frc.robot;
 
-import org.littletonrobotics.junction.Logger;
-
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
-
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -28,7 +21,7 @@ public class RobotContainer {
     private final Joystick translationController = new Joystick(Constants.Controllers.TRANSLATION_CONTROLLER.getPort());
     private final Joystick rotationController = new Joystick(Constants.Controllers.ROTATION_CONTROLLER.getPort());
     private final XboxController xboxController = new XboxController(Constants.Controllers.XBOX_CONTROLLER.getPort());
-    private final Joystick buttons = new Joystick(Constants.Controllers.BUTTONS.getPort());
+    //private final Joystick buttons = new Joystick(Constants.Controllers.BUTTONS.getPort());
     
 
     /* Drive Controls */
@@ -39,9 +32,9 @@ public class RobotContainer {
 
     /* Driver Buttons */
     private final JoystickButton translationButton = new JoystickButton(translationController, Constants.Controllers.TRANSLATION_BUTTON);
-    private final JoystickButton rotationButton = new JoystickButton(rotationController, Constants.Controllers.ROTATION_BUTTON);
-    private final JoystickButton button7 = new JoystickButton(buttons, 7);
-    private final JoystickButton button8 = new JoystickButton(buttons, 8);
+    //private final JoystickButton rotationButton = new JoystickButton(rotationController, Constants.Controllers.ROTATION_BUTTON);
+    //private final JoystickButton button7 = new JoystickButton(buttons, 7);
+    //private final JoystickButton button8 = new JoystickButton(buttons, 8);
     private final JoystickButton leftStick = new JoystickButton(xboxController, Constants.Controllers.XBOX_CONTROLLER_LEFT_STICK_BUTTON);
     private final JoystickButton rightStick = new JoystickButton(xboxController, Constants.Controllers.XBOX_CONTROLLER_RIGHT_STICK_BUTTON);
     private final POVButton left = new POVButton(xboxController, Constants.Controllers.LEFT);
