@@ -23,7 +23,7 @@ public class Align extends Command {
   private final DoubleSupplier translationSup;
   private final DoubleSupplier strafeSup;
   private final BooleanSupplier robotCentricSup;
-  private final double pValue = 8.0 / 9.0;
+  private final double pValue = 8.0 / 42.0;
   private boolean flag;
   private double translationVal, strafeVal, rotationVal;
 
@@ -53,20 +53,23 @@ public class Align extends Command {
       var alliance = DriverStation.getAlliance();
       if(alliance.isPresent()){
         if(alliance.get() == DriverStation.Alliance.Blue){
-          translationVal = Constants.Vision.AMP_TARGET_X_BLUE - s_Swerve.getPose().getX();
-          rotationVal = pValue * (Rotation2d.fromDegrees(270).getRadians() - (s_Swerve.getGyroYaw().getRadians() + (Math.PI * 500)) % (Math.PI * 2));
+          //TODO Jack ????
+          //translationVal = Constants.Vision.AMP_TARGET_X_BLUE - s_Swerve.getPose().getX();
+          rotationVal = pValue * (Rotation2d.fromDegrees(270).getRadians() - Math.abs(s_Swerve.getGyroYaw().getRadians()) % (Math.PI * 2));
         }
         else{
-          translationVal = Constants.Vision.AMP_TARGET_X_RED - s_Swerve.getPose().getX();
-          rotationVal = pValue * (Rotation2d.fromDegrees(90).getRadians() - (s_Swerve.getGyroYaw().getRadians() + (Math.PI * 500)) % (Math.PI * 2));
+          //translationVal = Constants.Vision.AMP_TARGET_X_RED - s_Swerve.getPose().getX(); //TODO Ask Jack
+          //rotationVal = pValue * (Rotation2d.fromDegrees(90).getRadians() - Math.abs(s_Swerve.getGyroYaw().getRadians()) % (Math.PI * 2));
+          rotationVal = pValue * (Rotation2d.fromDegrees(-90).getDegrees() - s_Swerve.getGyroYaw().getDegrees() % 360);
         }
       }
       s_Swerve.drive(
-          new Translation2d(translationVal, strafeVal), 
+          new Translation2d(translationVal, strafeVal).times(Constants.Swerve.MAX_SPEED), 
           rotationVal, 
           !robotCentricSup.getAsBoolean(), 
-          false
+          true
       );
+      System.out.println("GOOD:    " + rotationVal);
     }
     else if(RunElevator.climbing){
       translationVal = MathUtil.applyDeadband(translationSup.getAsDouble(), Constants.Controllers.STICK_DEADBAND);
@@ -107,6 +110,7 @@ public class Align extends Command {
           !robotCentricSup.getAsBoolean(), 
           false
       );
+      System.out.println("BAAAAAAAAAAAAAAAAAAD:    " + rotationVal);
     }
     else if(!RunElevator.deadShooter){
       /* Get Values, Deadband*/
