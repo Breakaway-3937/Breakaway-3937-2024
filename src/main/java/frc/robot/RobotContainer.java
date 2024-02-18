@@ -50,31 +50,31 @@ public class RobotContainer {
     /* Subsystems */
     public final Swerve s_Swerve = new Swerve();
     public final LED s_LED = new LED();
-    public final Vision s_Vision = new Vision(s_Swerve);
+    //public final Vision s_Vision = new Vision(s_Swerve);
     public final Shooter s_Shooter = new Shooter();
     public final Intake s_Intake = new Intake();
     public final Elevator s_Elevator = new Elevator();
 
     /* Commands */
     public final Music c_Music = new Music(s_Swerve);
-    private final Align c_Align = new Align(s_Swerve, s_Vision, () -> translationController.getRawAxis(translationAxis), () -> translationController.getRawAxis(strafeAxis), () -> robotRelative);
+    //private final Align c_Align = new Align(s_Swerve, s_Vision, () -> translationController.getRawAxis(translationAxis), () -> translationController.getRawAxis(strafeAxis), () -> robotRelative);
     public final RunNote c_RunNote = new RunNote(s_Intake, s_Shooter, xboxController);
     public final AutoRunNote c_AutoRunNote = new AutoRunNote(s_Intake, s_Shooter);
     private final RunElevator c_RunElevator = new RunElevator(s_Elevator, xboxController);
-    private final AutoNoteAlign c_AutoNoteAlign = new AutoNoteAlign(s_Swerve, s_Vision);
+    //private final AutoNoteAlign c_AutoNoteAlign = new AutoNoteAlign(s_Swerve, s_Vision);
 
-    private final SendableChooser<Command> autoChooser;
+    //private final SendableChooser<Command> autoChooser;
 
     /** The container for the robot. Contains subsystems, IO devices, and commands. */
     public RobotContainer() {
-        NamedCommands.registerCommand("FindNote", c_AutoNoteAlign);
-        NamedCommands.registerCommand("Shoot", new InstantCommand(() -> s_Shooter.setAutoFire(true)));
-        NamedCommands.registerCommand("Intake", new InstantCommand(() -> s_Intake.setAutoIntake(true)));
+       //NamedCommands.registerCommand("FindNote", c_AutoNoteAlign);
+       //NamedCommands.registerCommand("Shoot", new InstantCommand(() -> s_Shooter.setAutoFire(true)));
+       //NamedCommands.registerCommand("Intake", new InstantCommand(() -> s_Intake.setAutoIntake(true)));
         s_Swerve.setDefaultCommand(new TeleopSwerve(s_Swerve, () -> translationController.getRawAxis(translationAxis), () -> translationController.getRawAxis(strafeAxis), () -> rotationController.getRawAxis(rotationAxis), () -> robotRelative));
         s_Elevator.setDefaultCommand(c_RunElevator);
-        autoChooser = AutoBuilder.buildAutoChooser("DO NOTHING");
-        Shuffleboard.getTab("Auto").add("Auto", autoChooser).withPosition(0, 0);
-        Shuffleboard.selectTab("Auto");
+        //autoChooser = AutoBuilder.buildAutoChooser("DO NOTHING");
+        //Shuffleboard.getTab("Auto").add("Auto", autoChooser).withPosition(0, 0);
+        //Shuffleboard.selectTab("Auto");
         // Configure the button bindings
         configureButtonBindings();
     }
@@ -88,9 +88,9 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         translationButton.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
-        rotationButton.whileTrue(c_Align);
-        button7.whileTrue(c_Align);
-        button8.whileTrue(c_Align);
+        //rotationButton.whileTrue(c_Align);
+        //button7.whileTrue(c_Align);
+        //button8.whileTrue(c_Align);
         leftStick.onTrue(new InstantCommand(() -> s_Shooter.setAutoShooting()));
         rightStick.onTrue(new InstantCommand(() -> s_Shooter.setAutoShooting()));
         right.onTrue(new InstantCommand(() -> s_Shooter.setSubShooting()));
@@ -103,7 +103,8 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        Logger.recordOutput("Auto", autoChooser.getSelected().toString());
-        return autoChooser.getSelected();
+        //Logger.recordOutput("Auto", autoChooser.getSelected().toString());
+        //return autoChooser.getSelected();
+        return null;
     }
 }
