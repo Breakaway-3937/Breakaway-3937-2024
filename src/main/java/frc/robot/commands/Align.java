@@ -53,14 +53,12 @@ public class Align extends Command {
       var alliance = DriverStation.getAlliance();
       if(alliance.isPresent()){
         if(alliance.get() == DriverStation.Alliance.Blue){
-          //TODO Jack ????
-          //translationVal = Constants.Vision.AMP_TARGET_X_BLUE - s_Swerve.getPose().getX();
-          rotationVal = pValue * (Rotation2d.fromDegrees(270).getRadians() - Math.abs(s_Swerve.getGyroYaw().getRadians()) % (Math.PI * 2));
+          translationVal = Constants.Vision.AMP_TARGET_X_BLUE - s_Swerve.getPose().getX();
+          rotationVal = pValue * (Rotation2d.fromDegrees(270).getRadians() - (s_Swerve.getGyroYaw().getRadians() + (Math.PI * 500)) % (Math.PI * 2));
         }
         else{
-          //translationVal = Constants.Vision.AMP_TARGET_X_RED - s_Swerve.getPose().getX(); //TODO Ask Jack
-          //rotationVal = pValue * (Rotation2d.fromDegrees(90).getRadians() - Math.abs(s_Swerve.getGyroYaw().getRadians()) % (Math.PI * 2));
-          rotationVal = pValue * (Rotation2d.fromDegrees(-90).getDegrees() - s_Swerve.getGyroYaw().getDegrees() % 360);
+          translationVal = Constants.Vision.AMP_TARGET_X_RED - s_Swerve.getPose().getX();
+          rotationVal = pValue * (Rotation2d.fromDegrees(90).getRadians() - (s_Swerve.getGyroYaw().getRadians() + (Math.PI * 500)) % (Math.PI * 2));
         }
       }
       s_Swerve.drive(
@@ -69,7 +67,6 @@ public class Align extends Command {
           !robotCentricSup.getAsBoolean(), 
           true
       );
-      System.out.println("GOOD:    " + rotationVal);
     }
     else if(RunElevator.climbing){
       translationVal = MathUtil.applyDeadband(translationSup.getAsDouble(), Constants.Controllers.STICK_DEADBAND);
@@ -78,29 +75,29 @@ public class Align extends Command {
         if(alliance.get() == DriverStation.Alliance.Blue){
           if((Robot.robotContainer.s_Swerve.getHeading().getDegrees() + 360000000) % 360 > 90 || (Robot.robotContainer.s_Swerve.getHeading().getDegrees() + 360000000) % 360 < 270){
             strafeVal = Constants.Vision.TRAP_CENTER_TARGET_Y_BLUE - s_Swerve.getPose().getY();
-            rotationVal = pValue * (Rotation2d.fromDegrees(0).getRadians() - s_Swerve.getGyroYaw().getRadians());
+            rotationVal = pValue * (Rotation2d.fromDegrees(0).getRadians() - (s_Swerve.getGyroYaw().getRadians() + (Math.PI * 500)) % (Math.PI * 2));
           }
           else if((Robot.robotContainer.s_Swerve.getHeading().getDegrees() + 360000000) % 360 > 300){
             strafeVal = Constants.Vision.TRAP_LEFT_TARGET_Y_BLUE - s_Swerve.getPose().getY();
-            rotationVal = pValue * (Rotation2d.fromDegrees(120).getRadians() - s_Swerve.getGyroYaw().getRadians());
+            rotationVal = pValue * (Rotation2d.fromDegrees(120).getRadians() - (s_Swerve.getGyroYaw().getRadians() + (Math.PI * 500)) % (Math.PI * 2));
           }
           else if((Robot.robotContainer.s_Swerve.getHeading().getDegrees() + 360000000) % 360 < 60){
             strafeVal = Constants.Vision.TRAP_RIGHT_TARGET_Y_BLUE - s_Swerve.getPose().getY();
-            rotationVal = pValue * (Rotation2d.fromDegrees(240).getRadians() - s_Swerve.getGyroYaw().getRadians());
+            rotationVal = pValue * (Rotation2d.fromDegrees(240).getRadians() - (s_Swerve.getGyroYaw().getRadians() + (Math.PI * 500)) % (Math.PI * 2));
           }
         }
         else{
           if((Robot.robotContainer.s_Swerve.getHeading().getDegrees() + 360000000) % 360 > 90 || (Robot.robotContainer.s_Swerve.getHeading().getDegrees() + 360000000) % 360 < 270){
             strafeVal = Constants.Vision.TRAP_CENTER_TARGET_Y_RED - s_Swerve.getPose().getY();
-            rotationVal = pValue * (Rotation2d.fromDegrees(0).getRadians() - s_Swerve.getGyroYaw().getRadians());
+            rotationVal = pValue * (Rotation2d.fromDegrees(0).getRadians() - (s_Swerve.getGyroYaw().getRadians() + (Math.PI * 500)) % (Math.PI * 2));
           }
           else if((Robot.robotContainer.s_Swerve.getHeading().getDegrees() + 360000000) % 360 > 300){
             strafeVal = Constants.Vision.TRAP_LEFT_TARGET_Y_RED - s_Swerve.getPose().getY();
-            rotationVal = pValue * (Rotation2d.fromDegrees(120).getRadians() - s_Swerve.getGyroYaw().getRadians());
+            rotationVal = pValue * (Rotation2d.fromDegrees(120).getRadians() - (s_Swerve.getGyroYaw().getRadians() + (Math.PI * 500)) % (Math.PI * 2));
           }
           else if((Robot.robotContainer.s_Swerve.getHeading().getDegrees() + 360000000) % 360 < 60){
             strafeVal = Constants.Vision.TRAP_RIGHT_TARGET_Y_RED - s_Swerve.getPose().getY();
-            rotationVal = pValue * (Rotation2d.fromDegrees(240).getRadians() - s_Swerve.getGyroYaw().getRadians());
+            rotationVal = pValue * (Rotation2d.fromDegrees(240).getRadians() - (s_Swerve.getGyroYaw().getRadians() + (Math.PI * 500)) % (Math.PI * 2));
           }
         }
       }
@@ -110,7 +107,6 @@ public class Align extends Command {
           !robotCentricSup.getAsBoolean(), 
           false
       );
-      System.out.println("BAAAAAAAAAAAAAAAAAAD:    " + rotationVal);
     }
     else if(!RunElevator.deadShooter){
       /* Get Values, Deadband*/
@@ -137,14 +133,12 @@ public class Align extends Command {
 
       if(s_Swerve.getSpeed().omegaRadiansPerSecond < 0.1 && !flag){
         Robot.robotContainer.s_LED.reset();
-        Robot.robotContainer.s_LED.resetColors();
         Robot.robotContainer.s_LED.green();
         flag = true;
       }
       if(s_Swerve.getSpeed().omegaRadiansPerSecond >= 0.1){
         flag = false;
         Robot.robotContainer.s_LED.reset();
-        Robot.robotContainer.s_LED.resetColors();
       }
     }
   }
@@ -153,7 +147,6 @@ public class Align extends Command {
   @Override
   public void end(boolean interrupted) {
     Robot.robotContainer.s_LED.reset();
-    Robot.robotContainer.s_LED.resetColors();
   }
 
   // Returns true when the command should end.
