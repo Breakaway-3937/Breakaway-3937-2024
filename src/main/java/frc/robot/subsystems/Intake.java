@@ -12,6 +12,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.networktables.GenericEntry;
@@ -23,8 +24,7 @@ import frc.robot.Robot;
 
 public class Intake extends SubsystemBase {
 
-  private final TalonFX frontIntakeMotor, backIntakeMotor;
-  private final TalonFX loaderMotor;
+  private final TalonFX frontIntakeMotor, backIntakeMotor, loaderMotor;
   private final TalonSRX bags;
   private final TalonFXConfiguration loaderMotorConfig = new TalonFXConfiguration();
   private final AnalogInput intake, shooter, babyShooter;
@@ -37,7 +37,7 @@ public class Intake extends SubsystemBase {
   public Intake() {
     frontIntakeMotor = new TalonFX(Constants.Intake.FRONT_INTAKE_MOTOR_ID);
     backIntakeMotor = new TalonFX(Constants.Intake.BACK_INTAKE_MOTOR_ID);
-    bags = new TalonSRX(Constants.Intake.BAGS_MOTOR_ID); //FIXME
+    bags = new TalonSRX(Constants.Intake.BAGS_MOTOR_ID);
     loaderMotor = new TalonFX(Constants.Intake.LOADER_MOTOR_ID);
     configMotors();
     intake = new AnalogInput(Constants.Intake.INTAKE_SENSOR_ID);
@@ -53,8 +53,8 @@ public class Intake extends SubsystemBase {
   }
 
   private void configMotors(){
-
     bags.configFactoryDefault();
+    bags.setInverted(true);
     frontIntakeMotor.getConfigurator().apply(new TalonFXConfiguration());
     backIntakeMotor.getConfigurator().apply(new TalonFXConfiguration());
     loaderMotor.getConfigurator().apply(new TalonFXConfiguration());
@@ -63,31 +63,35 @@ public class Intake extends SubsystemBase {
     loaderMotorConfig.CurrentLimits.SupplyCurrentThreshold = 50;
     loaderMotorConfig.CurrentLimits.SupplyTimeThreshold = 0.1;
     loaderMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-    loaderMotor.getConfigurator().apply(loaderMotorConfig);
-    frontIntakeMotor.getConfigurator().apply(loaderMotorConfig);
     backIntakeMotor.getConfigurator().apply(loaderMotorConfig);
+    frontIntakeMotor.getConfigurator().apply(loaderMotorConfig);
+    loaderMotorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    loaderMotor.getConfigurator().apply(loaderMotorConfig);
     backIntakeMotor.setControl(followIntake);
   }
 
   public void intake(){
-    bags.set(TalonSRXControlMode.PercentOutput, 1);
     frontIntakeMotor.set(1);
     loaderMotor.setControl(new DutyCycleOut(1));
+    bags.set(TalonSRXControlMode.PercentOutput, 1);
   }
 
   public void spit(){
     frontIntakeMotor.set(-1);
     loaderMotor.setControl(new DutyCycleOut(-1));
+    bags.set(TalonSRXControlMode.PercentOutput, -1);
   }
 
   public void spitSlowly(){
     frontIntakeMotor.set(-0.5);
     loaderMotor.setControl(new DutyCycleOut(-0.5));
+    bags.set(TalonSRXControlMode.PercentOutput, -0.5);
   }
 
   public void stop(){
     frontIntakeMotor.stopMotor();
     loaderMotor.stopMotor();
+    bags.set(TalonSRXControlMode.PercentOutput, 0);
   }
 
   public boolean getIntakeSensor(){
