@@ -34,6 +34,8 @@ public class Music extends Command {
     orchestra.addInstrument(Robot.robotContainer.s_Intake.getLoaderMotor());
     orchestra.addInstrument(Robot.robotContainer.s_Shooter.getShooterMotors().getFirst());
     orchestra.addInstrument(Robot.robotContainer.s_Shooter.getShooterMotors().getSecond());
+    orchestra.addInstrument(Robot.robotContainer.s_Intake.getIntakeMotors().getFirst());
+    orchestra.addInstrument(Robot.robotContainer.s_Intake.getIntakeMotors().getSecond());
   }
 
   // Called every time the scheduler runs while the command is scheduled.
