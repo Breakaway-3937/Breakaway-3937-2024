@@ -48,11 +48,13 @@ public class AutoRunNote extends Command {
     }
     if(runIntakeBackwardsUntilShooterSensorReturnsAFalseValue){
       s_Intake.spitSlowly();
+      s_Shooter.setShooter(-10);
     }
-    if(runIntakeBackwardsUntilShooterSensorReturnsAFalseValue && !s_Intake.getShooterSensor()){
+    if(runIntakeBackwardsUntilShooterSensorReturnsAFalseValue && s_Intake.getIntakeSensor()){
       runIntakeBackwardsUntilShooterSensorReturnsAFalseValue = false;
       deadIntake = true;
       s_Intake.stop();
+      s_Shooter.stopShooter();
     }
     //Shoot
     if(s_Shooter.autoFire()){

@@ -98,7 +98,7 @@ public class RunNote extends Command {
         s_Intake.spitSlowly();
         s_Shooter.setShooter(-10);
       }
-      if(runIntakeBackwardsUntilShooterSensorReturnsAFalseValue && !s_Intake.getShooterSensor()){
+      if(runIntakeBackwardsUntilShooterSensorReturnsAFalseValue && s_Intake.getIntakeSensor()){
         runIntakeBackwardsUntilShooterSensorReturnsAFalseValue = false;
         deadIntake = true;
         s_Intake.stop();
