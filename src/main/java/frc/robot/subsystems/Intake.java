@@ -8,6 +8,7 @@ import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
@@ -15,6 +16,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -26,10 +28,11 @@ public class Intake extends SubsystemBase {
 
   private final TalonFX frontIntakeMotor, backIntakeMotor, loaderMotor;
   private final TalonSRX bags;
-  private final TalonFXConfiguration loaderMotorConfig = new TalonFXConfiguration();
+  private final TalonFXConfiguration motorConfig = new TalonFXConfiguration();
+  private final TalonSRXConfiguration bagsConfig = new TalonSRXConfiguration();
   private final AnalogInput intake, shooter, babyShooter;
   private final GenericEntry intakeSensor, shooterSensor, babyShooterSensor;
-  private final Follower followIntake = new Follower(Constants.Intake.FRONT_INTAKE_MOTOR_ID, true);
+  private final Follower followerRequest = new Follower(Constants.Intake.FRONT_INTAKE_MOTOR_ID, true);
   private boolean flag, flag1, flag2, note;
   public boolean autoIntake;
 
@@ -48,6 +51,10 @@ public class Intake extends SubsystemBase {
     babyShooterSensor = Shuffleboard.getTab("Intake").add("Baby Shooter Sensor", 0).withPosition(2, 0).getEntry();
   }
 
+  public Pair<TalonFX, TalonFX> getIntakeMotors(){
+    return new Pair<TalonFX, TalonFX>(frontIntakeMotor, backIntakeMotor);
+  }
+
   public TalonFX getLoaderMotor(){
     return loaderMotor;
   }
@@ -55,19 +62,24 @@ public class Intake extends SubsystemBase {
   private void configMotors(){
     bags.configFactoryDefault();
     bags.setInverted(true);
+    bagsConfig.peakCurrentDuration = 100;
+    bagsConfig.peakCurrentLimit = 40;
+    bagsConfig.continuousCurrentLimit = 25;
+    bags.configAllSettings(bagsConfig);
     frontIntakeMotor.getConfigurator().apply(new TalonFXConfiguration());
     backIntakeMotor.getConfigurator().apply(new TalonFXConfiguration());
     loaderMotor.getConfigurator().apply(new TalonFXConfiguration());
-    loaderMotorConfig.CurrentLimits.SupplyCurrentLimit = 35;
-    loaderMotorConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
-    loaderMotorConfig.CurrentLimits.SupplyCurrentThreshold = 50;
-    loaderMotorConfig.CurrentLimits.SupplyTimeThreshold = 0.1;
-    loaderMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-    backIntakeMotor.getConfigurator().apply(loaderMotorConfig);
-    frontIntakeMotor.getConfigurator().apply(loaderMotorConfig);
-    loaderMotorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-    loaderMotor.getConfigurator().apply(loaderMotorConfig);
-    backIntakeMotor.setControl(followIntake);
+    motorConfig.CurrentLimits.SupplyCurrentLimit = 35;
+    motorConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+    motorConfig.CurrentLimits.SupplyCurrentThreshold = 50;
+    motorConfig.CurrentLimits.SupplyTimeThreshold = 0.1;
+    motorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    motorConfig.Audio.AllowMusicDurDisable = true;
+    backIntakeMotor.getConfigurator().apply(motorConfig);
+    frontIntakeMotor.getConfigurator().apply(motorConfig);
+    motorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    loaderMotor.getConfigurator().apply(motorConfig);
+    backIntakeMotor.setControl(followerRequest);
   }
 
   public void intake(){
