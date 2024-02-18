@@ -6,9 +6,9 @@
     "data": {
       "commands": [
         {
-          "type": "wait",
+          "type": "path",
           "data": {
-            "waitTime": 0
+            "pathName": "New Path"
           }
         }
       ]
