@@ -222,7 +222,7 @@ public class Shooter extends SubsystemBase {
     Logger.recordOutput("Wrist", getWrist());
 
 
-    speed = SmartDashboard.getNumber("Shooter Speed", 0);
-    position = SmartDashboard.getNumber("Wrist Position", 0);
+    /*speed = SmartDashboard.getNumber("Shooter Speed", 0);
+    position = SmartDashboard.getNumber("Wrist Position", 0);*/
   }
 }
