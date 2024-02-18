@@ -57,10 +57,10 @@ public class Robot extends LoggedRobot {
     if(isReal()){
       Logger.addDataReceiver(new WPILOGWriter());
       Logger.addDataReceiver(new NT4Publisher());
-      powerDistribution = new PowerDistribution(26, ModuleType.kRev);
+      powerDistribution = new PowerDistribution(Constants.PDH_ID, ModuleType.kRev);
     }
     else{
-      powerDistribution = new PowerDistribution(26, ModuleType.kRev);
+      powerDistribution = new PowerDistribution(Constants.PDH_ID, ModuleType.kRev);
     }
     if(Constants.DEBUG){
       Logger.start();
@@ -101,7 +101,7 @@ public class Robot extends LoggedRobot {
       teleop = true;
     }
 
-    if((Robot.robotContainer.s_Swerve.getHeading().getDegrees() + 360000000) % 360 < 90 || (Robot.robotContainer.s_Swerve.getHeading().getDegrees() + 360000000) % 360 > 270){
+    if((Robot.robotContainer.s_Swerve.getHeading().getDegrees() + 3600000) % 360 < 90 || (Robot.robotContainer.s_Swerve.getHeading().getDegrees() + 3600000) % 360 > 270){
       front = false;
     }
     else{
@@ -110,7 +110,7 @@ public class Robot extends LoggedRobot {
 
     Logger.recordOutput("Front", getFront());
 
-    SmartDashboard.putBoolean("Front", front);
+    SmartDashboard.putBoolean("Front", getFront());
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
