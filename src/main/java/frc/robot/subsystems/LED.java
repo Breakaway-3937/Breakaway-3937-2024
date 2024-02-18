@@ -72,7 +72,7 @@ public class LED extends SubsystemBase {
         orange = false;
     }
 
-    @Override
+    /*@Override
     public void periodic() {
         // This method will be called once per scheduler run
         if(DriverStation.isDisabled() && !Robot.robotContainer.s_Vision.isDead()){
@@ -253,4 +253,5 @@ public class LED extends SubsystemBase {
             }
         }
     }
+}*/
 }
