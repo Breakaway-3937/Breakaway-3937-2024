@@ -34,8 +34,9 @@ public class Conversions {
         double wheelMeters = wheelRotations * circumference;
         var alliance = DriverStation.getAlliance();
         if(alliance.isPresent()){
-            if(alliance.get() == DriverStation.Alliance.Red){
+            if(alliance.get() == DriverStation.Alliance.Red && DriverStation.isTeleopEnabled()){
                 return -wheelMeters;
+
             }
             else{
                 return wheelMeters;
