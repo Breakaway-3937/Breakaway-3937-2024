@@ -42,7 +42,7 @@ public class Swerve extends SubsystemBase {
     private boolean noteTracking = false;
 
     public Swerve() {
-        gyro = new Pigeon2(Constants.Swerve.PIGEON_ID, "CANivore");
+        gyro = new Pigeon2(Constants.Swerve.PIGEON_ID, Constants.CANIVORE_BUS);
         gyro.getConfigurator().apply(new Pigeon2Configuration());
         gyro.setYaw(0);
 
