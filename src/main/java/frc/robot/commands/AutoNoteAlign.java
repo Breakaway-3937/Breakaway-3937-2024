@@ -16,7 +16,8 @@ public class AutoNoteAlign extends Command {
   private final Vision s_Vision;
   private final Timer timer;
   private boolean done = false;
-  private double lastRotationSpeed = 0, translationXValue = 1;
+  private double lastRotationSpeed = 0;
+  private double translationXValue = 1;
 
   /** Creates a new AutoNoteAlign. */
   public AutoNoteAlign(Swerve s_Swerve, Vision s_Vision) {
