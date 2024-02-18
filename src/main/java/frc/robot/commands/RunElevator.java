@@ -57,7 +57,6 @@ public class RunElevator extends Command {
     climbing = false;
     handoff = false;
     Robot.robotContainer.s_LED.reset();
-    Robot.robotContainer.s_LED.resetColors();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -87,7 +86,6 @@ public class RunElevator extends Command {
       climbing = true;
       handoff = false;
       Robot.robotContainer.s_LED.reset();
-      Robot.robotContainer.s_LED.resetColors();
     }
     //Retract Climb
     else if(xboxController.getPOV() == Constants.Controllers.DOWN){
@@ -106,7 +104,6 @@ public class RunElevator extends Command {
       climbing = false;
       handoff = false;
       Robot.robotContainer.s_LED.reset();
-      Robot.robotContainer.s_LED.resetColors();
     }
     //Protect
     else if(xboxController.getRawButton(3)){
@@ -126,7 +123,6 @@ public class RunElevator extends Command {
       handoff = false;
       trapScored = false;
       Robot.robotContainer.s_LED.reset();
-      Robot.robotContainer.s_LED.resetColors();
       s_Elevator.setElevatorFast();
       s_Elevator.stopBabyShooter();
     }
@@ -146,7 +142,6 @@ public class RunElevator extends Command {
       retracting = false;
       climbing = false;
       Robot.robotContainer.s_LED.reset();
-      Robot.robotContainer.s_LED.resetColors();
     }
     //Amp
     else if(xboxController.getRawButton(1)){
@@ -164,7 +159,6 @@ public class RunElevator extends Command {
       retracting = false;
       climbing = false;
       Robot.robotContainer.s_LED.reset();
-      Robot.robotContainer.s_LED.resetColors();
     }
     //Trap
     else if(xboxController.getRawButton(4)){
@@ -180,7 +174,6 @@ public class RunElevator extends Command {
       retracting = false;
       climbing = false;
       Robot.robotContainer.s_LED.reset();
-      Robot.robotContainer.s_LED.resetColors();
     }
     //Source
     else if(xboxController.getRawButton(7)){
@@ -198,7 +191,6 @@ public class RunElevator extends Command {
       retracting = false;
       climbing = false;
       Robot.robotContainer.s_LED.reset();
-      Robot.robotContainer.s_LED.resetColors();
       Robot.robotContainer.s_LED.orange();
       handoff = false;
     }
@@ -282,7 +274,6 @@ public class RunElevator extends Command {
           s_Elevator.stopBabyShooter();
           protect = true;
           Robot.robotContainer.s_LED.reset();
-          Robot.robotContainer.s_LED.resetColors();
           ohCrap = false;
           handoff = false;
         }
