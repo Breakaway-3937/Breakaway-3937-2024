@@ -27,15 +27,11 @@ public class LED extends SubsystemBase {
     private final FireAnimation fire = new FireAnimation(0.5, 0.1, Constants.NUM_LEDS, 0.1, 0.1, false, 0);
     private final LarsonAnimation pocket = new LarsonAnimation(255, 0, 0, 0, 0.1, Constants.NUM_LEDS, LarsonAnimation.BounceMode.Center, 1);
     private final TwinkleOffAnimation twinkle = new TwinkleOffAnimation(0, 255, 0, 0, 0.1, Constants.NUM_LEDS, TwinkleOffPercent.Percent100, 0);
-    private final SingleFadeAnimation redFade = new SingleFadeAnimation(255, 0, 0, 0, 0.1, Constants.NUM_LEDS, 0);
-    private final SingleFadeAnimation orangeFade = new SingleFadeAnimation(255, 165, 0, 0, 0.1, Constants.NUM_LEDS, 0);
-    private final SingleFadeAnimation greenFade = new SingleFadeAnimation(0, 255, 0, 0, 0.1, Constants.NUM_LEDS, 0);
-    private final StrobeAnimation blueStrobe = new StrobeAnimation(0, 0, 254, 0, 0.1, Constants.NUM_LEDS, 0);
-    private final StrobeAnimation orangeStrobe = new StrobeAnimation(255, 165, 0, 0, 0.1, Constants.NUM_LEDS, 0);
-    private final StrobeAnimation greenStrobe = new StrobeAnimation(0, 255, 0, 0, 0.1, Constants.NUM_LEDS, 0);
+    private final SingleFadeAnimation fade = new SingleFadeAnimation(0, 0, 0, 0, 0.1, Constants.NUM_LEDS, 0);
+    private final StrobeAnimation strobe = new StrobeAnimation(0, 0, 0, 0, 0.1, Constants.NUM_LEDS, 0);
 
     public LED() {
-        candle = new CANdle(Constants.CANDLE_ID, "CANivore");
+        candle = new CANdle(Constants.CANDLE_ID, Constants.CANIVORE_BUS);
         timer = new Timer();
         funeralTimer = new Timer();
         timer.reset();
@@ -64,18 +60,14 @@ public class LED extends SubsystemBase {
 
     public void reset(){
         flag = false;
-        candle.configBrightnessScalar(0.5);
-    }
-
-    public void resetColors(){
         green = false;
         orange = false;
     }
 
-    /*@Override
+    @Override
     public void periodic() {
         // This method will be called once per scheduler run
-        if(DriverStation.isDisabled() && !Robot.robotContainer.s_Vision.isDead()){
+        if(DriverStation.isDisabled() && false/*!Robot.robotContainer.s_Vision.isDead()*/){
             if(timer.get() < 10){
                 candle.animate(fire);
             }
@@ -114,7 +106,7 @@ public class LED extends SubsystemBase {
         else if(RunElevator.retracting && Robot.robotContainer.s_Elevator.isAtPosition()){
             candle.setLEDs(0, 255, 0);
         }
-        else if(Robot.robotContainer.s_Vision.isDead()){
+        else if(false/*Robot.robotContainer.s_Vision.isDead()*/){
             //FIXME get values for whole else if structure
             if(funeralTimer.get() < 0.2 && !funeralFlag){
                 candle.setLEDs(12, 237, 54, 0, 0, 0);
@@ -133,17 +125,23 @@ public class LED extends SubsystemBase {
                     flag = true;
                     flag1 = false;
                     //FIXME get values
-                    orangeStrobe.setLedOffset(0);
-                    orangeFade.setLedOffset(0);
+                    strobe.setLedOffset(0);
+                    fade.setLedOffset(0);
+                    strobe.setR(255);
+                    strobe.setG(165);
+                    strobe.setB(0);
+                    fade.setR(255);
+                    fade.setG(165);
+                    fade.setB(0);
                 }
                 else if(timer.get() > 1){
                     flag1 = true;
                 }
                 if(!flag1){
-                    candle.animate(orangeStrobe);
+                    candle.animate(strobe);
                 }
                 else{
-                    candle.animate(orangeFade);
+                    candle.animate(fade);
                 }
             }
             else if(!Robot.robotContainer.s_Intake.botFull()){
@@ -156,17 +154,23 @@ public class LED extends SubsystemBase {
                     flag = true;
                     flag1 = false;
                     //FIXME get values
-                    greenStrobe.setLedOffset(0);
-                    greenFade.setLedOffset(0);
+                    strobe.setLedOffset(0);
+                    fade.setLedOffset(0);
+                    strobe.setR(0);
+                    strobe.setG(255);
+                    strobe.setB(0);
+                    fade.setR(0);
+                    fade.setG(255);
+                    fade.setB(0);
                 }
                 else if(timer.get() > 1){
                     flag1 = true;
                 }
                 if(!flag1){
-                    candle.animate(greenStrobe);
+                    candle.animate(strobe);
                 }
                 else{
-                    candle.animate(greenFade);
+                    candle.animate(fade);
                 }
             }
             else if(Robot.robotContainer.s_Intake.botFull()){
@@ -176,38 +180,50 @@ public class LED extends SubsystemBase {
                     flag = true;
                     flag1 = false;
                     //FIXME get values
-                    blueStrobe.setLedOffset(0);
-                    redFade.setLedOffset(0);
+                    strobe.setLedOffset(0);
+                    fade.setLedOffset(0);
+                    strobe.setR(0);
+                    strobe.setG(0);
+                    strobe.setB(254);
+                    fade.setR(255);
+                    fade.setG(0);
+                    fade.setB(0);
                 }
                 else if(timer.get() > 1){
                     flag1 = true;
                 }
                 if(!flag1){
-                    candle.animate(blueStrobe);
+                    candle.animate(strobe);
                 }
                 else{
-                    candle.animate(redFade);
+                    candle.animate(fade);
                 }
             }
         }
-        else if(!Robot.robotContainer.s_Vision.isDead()){
+        else if(true/*!Robot.robotContainer.s_Vision.isDead()*/){
             if(orange){
                 if(!flag){
                     timer.reset();
                     timer.start();
                     flag = true;
                     flag1 = false;
-                    orangeStrobe.setLedOffset(0);
-                    orangeFade.setLedOffset(0);
+                    strobe.setLedOffset(0);
+                    fade.setLedOffset(0);
+                    strobe.setR(255);
+                    strobe.setG(165);
+                    strobe.setB(0);
+                    fade.setR(255);
+                    fade.setG(165);
+                    fade.setB(0);
                 }
                 else if(timer.get() > 1){
                     flag1 = true;
                 }
                 if(!flag1){
-                    candle.animate(orangeStrobe);
+                    candle.animate(strobe);
                 }
                 else{
-                    candle.animate(orangeFade);
+                    candle.animate(fade);
                 }
             }
             else if(!Robot.robotContainer.s_Intake.botFull()){
@@ -219,17 +235,23 @@ public class LED extends SubsystemBase {
                     timer.start();
                     flag = true;
                     flag1 = false;
-                    greenStrobe.setLedOffset(0);
-                    greenFade.setLedOffset(0);
+                    strobe.setLedOffset(0);
+                    fade.setLedOffset(0);
+                    strobe.setR(0);
+                    strobe.setG(255);
+                    strobe.setB(0);
+                    fade.setR(0);
+                    fade.setG(255);
+                    fade.setB(0);
                 }
                 else if(timer.get() > 1){
                     flag1 = true;
                 }
                 if(!flag1){
-                    candle.animate(greenStrobe);
+                    candle.animate(strobe);
                 }
                 else{
-                    candle.animate(greenFade);
+                    candle.animate(fade);
                 }
             }
             else if(Robot.robotContainer.s_Intake.botFull()){
@@ -238,20 +260,25 @@ public class LED extends SubsystemBase {
                     timer.start();
                     flag = true;
                     flag1 = false;
-                    blueStrobe.setLedOffset(0);
-                    redFade.setLedOffset(0);
+                    strobe.setLedOffset(0);
+                    fade.setLedOffset(0);
+                    strobe.setR(0);
+                    strobe.setG(0);
+                    strobe.setB(254);
+                    fade.setR(255);
+                    fade.setG(0);
+                    fade.setB(0);
                 }
                 else if(timer.get() > 1){
                     flag1 = true;
                 }
                 if(!flag1){
-                    candle.animate(blueStrobe);
+                    candle.animate(strobe);
                 }
                 else{
-                    candle.animate(redFade);
+                    candle.animate(fade);
                 }
             }
         }
     }
-}*/
 }
