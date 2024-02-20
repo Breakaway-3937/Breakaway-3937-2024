@@ -22,7 +22,7 @@ public class LED extends SubsystemBase {
     private final Timer timer, funeralTimer;
     private boolean green, orange, flag, flag1, funeralFlag, autoFlag = false; 
     private final CANdleConfiguration config = new CANdleConfiguration();
-    private final ColorFlowAnimation flow = new ColorFlowAnimation(0, 0, 0, 0, 0.1, Constants.NUM_LEDS, ColorFlowAnimation.Direction.Backward, 0);
+    private final ColorFlowAnimation flow = new ColorFlowAnimation(0, 0, 0, 0, 0.01, Constants.NUM_LEDS, ColorFlowAnimation.Direction.Backward, 0);
     private final RainbowAnimation rainbow = new RainbowAnimation(0.5, 0.1, Constants.NUM_LEDS, false, 0);
     private final FireAnimation fire = new FireAnimation(0.5, 0.1, Constants.NUM_LEDS, 0.1, 0.1, false, 0);
     private final LarsonAnimation pocket = new LarsonAnimation(255, 0, 0, 0, 0.1, Constants.NUM_LEDS, LarsonAnimation.BounceMode.Center, 1);
@@ -41,9 +41,10 @@ public class LED extends SubsystemBase {
         candle.configAllSettings(new CANdleConfiguration());
         config.statusLedOffWhenActive = false;
         config.disableWhenLOS = false;
-        config.stripType = LEDStripType.GRB;
+        config.stripType = LEDStripType.RGBW;
         config.brightnessScalar = 1;
-        config.vBatOutputMode = VBatOutputMode.Modulated;
+        config.vBatOutputMode = VBatOutputMode.On;
+        config.v5Enabled = false;
         candle.configAllSettings(config);
         candle.setLEDs(0, 0, 0);
     }
@@ -67,7 +68,7 @@ public class LED extends SubsystemBase {
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
-        if(DriverStation.isDisabled() && false/*!Robot.robotContainer.s_Vision.isDead()*/){
+        if(DriverStation.isDisabled() && true/*!Robot.robotContainer.s_Vision.isDead()*/){
             if(timer.get() < 10){
                 candle.animate(fire);
             }
@@ -107,14 +108,13 @@ public class LED extends SubsystemBase {
             candle.setLEDs(0, 255, 0);
         }
         else if(false/*Robot.robotContainer.s_Vision.isDead()*/){
-            //FIXME get values for whole else if structure
             if(funeralTimer.get() < 0.2 && !funeralFlag){
-                candle.setLEDs(12, 237, 54, 0, 0, 0);
+                candle.setLEDs(12, 237, 54, 0, 0, 17);
                 funeralTimer.reset();
                 funeralFlag = true;
             }
             else if(funeralTimer.get() < 0.2 && funeralFlag){
-                candle.setLEDs(179, 83, 97, 0, 0, 0);
+                candle.setLEDs(179, 83, 97, 0, 0, 17);
                 funeralTimer.reset();
                 funeralFlag = false;
             }
@@ -124,9 +124,8 @@ public class LED extends SubsystemBase {
                     timer.start();
                     flag = true;
                     flag1 = false;
-                    //FIXME get values
-                    strobe.setLedOffset(0);
-                    fade.setLedOffset(0);
+                    strobe.setLedOffset(18);
+                    fade.setLedOffset(18);
                     strobe.setR(255);
                     strobe.setG(165);
                     strobe.setB(0);
@@ -145,7 +144,7 @@ public class LED extends SubsystemBase {
                 }
             }
             else if(!Robot.robotContainer.s_Intake.botFull()){
-                candle.setLEDs(0, 0, 254, 0, 0, 0);
+                candle.setLEDs(0, 0, 254, 0, 0, 17);
             }
             else if(green){
                 if(!flag){
@@ -153,9 +152,8 @@ public class LED extends SubsystemBase {
                     timer.start();
                     flag = true;
                     flag1 = false;
-                    //FIXME get values
-                    strobe.setLedOffset(0);
-                    fade.setLedOffset(0);
+                    strobe.setLedOffset(18);
+                    fade.setLedOffset(18);
                     strobe.setR(0);
                     strobe.setG(255);
                     strobe.setB(0);
@@ -179,9 +177,8 @@ public class LED extends SubsystemBase {
                     timer.start();
                     flag = true;
                     flag1 = false;
-                    //FIXME get values
-                    strobe.setLedOffset(0);
-                    fade.setLedOffset(0);
+                    strobe.setLedOffset(18);
+                    fade.setLedOffset(18);
                     strobe.setR(0);
                     strobe.setG(0);
                     strobe.setB(254);
@@ -227,6 +224,7 @@ public class LED extends SubsystemBase {
                 }
             }
             else if(!Robot.robotContainer.s_Intake.botFull()){
+                candle.clearAnimation(0);
                 candle.setLEDs(0, 0, 254);
             }
             else if(green){
