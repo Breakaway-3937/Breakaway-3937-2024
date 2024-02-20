@@ -201,7 +201,7 @@ public final class Constants {
     public static final class Vision {
         public static final String FRONT_CAMERA_NAME = "Front Camera";
         public static final String BACK_CAMERA_NAME = "Global_Shutter_Camera";
-        public static final String NOTE_CAMERA_NAME = "Microsoft_LifeCam_HD-3000"; //FIXME
+        public static final String NOTE_CAMERA_NAME = "HD_USB_Camera";
         public static final Transform3d FRONT_CAMERA_TRANSFORM = new Transform3d(new Translation3d(-0.2036, -0.173749, 0.5169), new Rotation3d(0, 0.174533, 0));
         public static final Transform3d BACK_CAMERA_TRANSFORM = new Transform3d(new Translation3d(-0.2036, 0.173749, 0.5169), new Rotation3d(0, 0.174533, Math.PI));
         public static final Vector<N3> VISION_STDS = VecBuilder.fill(1, 1, Math.PI);
