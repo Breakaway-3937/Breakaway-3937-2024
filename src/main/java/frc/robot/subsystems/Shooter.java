@@ -34,7 +34,7 @@ public class Shooter extends SubsystemBase {
   private final CANSparkMax wristMotor, wristFollowerMotor;
   private RelativeEncoder wristEncoder;
   private SparkPIDController pid;
-  private final MotionMagicVelocityVoltage request = new MotionMagicVelocityVoltage(0).withSlot(0);
+  private final MotionMagicVelocityVoltage request = new MotionMagicVelocityVoltage(0).withSlot(0).withEnableFOC(true);
   private final Follower followerRequest = new Follower(Constants.Shooter.SHOOTER_MOTOR_ID, true);
   private final GenericEntry shooterEncoderEntry, wristEncoderEntry;
   private double speed, position = 0;
