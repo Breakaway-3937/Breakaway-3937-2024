@@ -26,20 +26,20 @@ import frc.robot.Robot;
 
 public class Intake extends SubsystemBase {
 
-  private final TalonFX frontIntakeMotor, backIntakeMotor, loaderMotor;
+  private final TalonFX leadIntakeMotor, followerIntakeMotor, loaderMotor;
   private final TalonSRX bags;
   private final TalonFXConfiguration motorConfig = new TalonFXConfiguration();
   private final TalonSRXConfiguration bagsConfig = new TalonSRXConfiguration();
   private final AnalogInput intake, shooter, babyShooter;
   private final GenericEntry intakeSensor, shooterSensor, babyShooterSensor;
-  private final Follower followerRequest = new Follower(Constants.Intake.FRONT_INTAKE_MOTOR_ID, true);
+  private final Follower followerRequest = new Follower(Constants.Intake.LEAD_INTAKE_MOTOR_ID, true);
   private boolean flag, flag1, flag2, note;
   public boolean autoIntake;
 
   /** Creates a new Intake. */
   public Intake() {
-    frontIntakeMotor = new TalonFX(Constants.Intake.FRONT_INTAKE_MOTOR_ID);
-    backIntakeMotor = new TalonFX(Constants.Intake.BACK_INTAKE_MOTOR_ID);
+    leadIntakeMotor = new TalonFX(Constants.Intake.LEAD_INTAKE_MOTOR_ID);
+    followerIntakeMotor = new TalonFX(Constants.Intake.FOLLOWER_INTAKE_MOTOR_ID);
     bags = new TalonSRX(Constants.Intake.BAGS_MOTOR_ID);
     loaderMotor = new TalonFX(Constants.Intake.LOADER_MOTOR_ID);
     configMotors();
@@ -52,7 +52,7 @@ public class Intake extends SubsystemBase {
   }
 
   public Pair<TalonFX, TalonFX> getIntakeMotors(){
-    return new Pair<TalonFX, TalonFX>(frontIntakeMotor, backIntakeMotor);
+    return new Pair<TalonFX, TalonFX>(leadIntakeMotor, followerIntakeMotor);
   }
 
   public TalonFX getLoaderMotor(){
@@ -66,8 +66,8 @@ public class Intake extends SubsystemBase {
     bagsConfig.peakCurrentLimit = 40;
     bagsConfig.continuousCurrentLimit = 25;
     bags.configAllSettings(bagsConfig);
-    frontIntakeMotor.getConfigurator().apply(new TalonFXConfiguration());
-    backIntakeMotor.getConfigurator().apply(new TalonFXConfiguration());
+    leadIntakeMotor.getConfigurator().apply(new TalonFXConfiguration());
+    followerIntakeMotor.getConfigurator().apply(new TalonFXConfiguration());
     loaderMotor.getConfigurator().apply(new TalonFXConfiguration());
     motorConfig.CurrentLimits.SupplyCurrentLimit = 35;
     motorConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
@@ -75,33 +75,33 @@ public class Intake extends SubsystemBase {
     motorConfig.CurrentLimits.SupplyTimeThreshold = 0.1;
     motorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     motorConfig.Audio.AllowMusicDurDisable = true;
-    backIntakeMotor.getConfigurator().apply(motorConfig);
-    frontIntakeMotor.getConfigurator().apply(motorConfig);
+    followerIntakeMotor.getConfigurator().apply(motorConfig);
+    leadIntakeMotor.getConfigurator().apply(motorConfig);
     motorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     loaderMotor.getConfigurator().apply(motorConfig);
-    backIntakeMotor.setControl(followerRequest);
+    followerIntakeMotor.setControl(followerRequest);
   }
 
   public void intake(){
-    frontIntakeMotor.set(1);
+    leadIntakeMotor.set(1);
     loaderMotor.setControl(new DutyCycleOut(1));
     bags.set(TalonSRXControlMode.PercentOutput, 1);
   }
 
   public void spit(){
-    frontIntakeMotor.set(-1);
+    leadIntakeMotor.set(-1);
     loaderMotor.setControl(new DutyCycleOut(-1));
     bags.set(TalonSRXControlMode.PercentOutput, -1);
   }
 
   public void spitSlowly(){
-    frontIntakeMotor.set(-0.5);
+    leadIntakeMotor.set(-0.5);
     loaderMotor.setControl(new DutyCycleOut(-0.5));
     bags.set(TalonSRXControlMode.PercentOutput, -0.5);
   }
 
   public void stop(){
-    frontIntakeMotor.stopMotor();
+    leadIntakeMotor.stopMotor();
     loaderMotor.stopMotor();
     bags.set(TalonSRXControlMode.PercentOutput, 0);
   }
@@ -168,7 +168,7 @@ public class Intake extends SubsystemBase {
       note = false;
       flag1 = false;
     }
-    if(frontIntakeMotor.get() < 0 && flag2 && !getIntakeSensor()){
+    if(leadIntakeMotor.get() < 0 && flag2 && !getIntakeSensor()){
       note = false;
       flag2 = false;
     }
