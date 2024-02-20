@@ -43,8 +43,6 @@ public class TeleopSwerve extends Command {
             rotationVal = ((lastHeading + 3600000) % 360 - (s_Swerve.getHeading().getDegrees() + 3600000) % 360) * (8.0 / 42.0) / Constants.Swerve.MAX_ANGULAR_VELOCITY;
         }*/
 
-        //System.out.println(rotationVal);
-
         /* Drive */
         s_Swerve.drive(
             new Translation2d(translationVal, strafeVal).times(Constants.Swerve.MAX_SPEED), 
