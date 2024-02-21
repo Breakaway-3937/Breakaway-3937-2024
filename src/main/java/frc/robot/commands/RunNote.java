@@ -17,7 +17,7 @@ public class RunNote extends Command {
   private final XboxController xboxController;
   private final double handoff = 17.6;
   private final double protect = 13;
-  private boolean runIntakeBackwardsUntilShooterSensorReturnsAFalseValue, deadIntake;
+  private boolean runIntakeBackwardsUntilIntakeSensorReturnsATrueValue, deadIntake;
 
   /** Creates a new RunNote. */
   public RunNote(Intake s_Intake, Shooter s_Shooter, XboxController xboxController) {
@@ -32,13 +32,17 @@ public class RunNote extends Command {
   @Override
   public void initialize() {
     s_Shooter.setWrist(protect);
-    runIntakeBackwardsUntilShooterSensorReturnsAFalseValue = false;
+    runIntakeBackwardsUntilIntakeSensorReturnsATrueValue = false;
     deadIntake = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    if(RunElevator.wristSourceBool){
+      s_Shooter.setWrist(handoff);
+      Shuffleboard.selectTab("Elevator");
+    }
     if(RunElevator.handoff && Robot.robotContainer.s_Elevator.isAtPosition()){
       s_Shooter.setWrist(handoff);
       Shuffleboard.selectTab("Elevator");
@@ -51,6 +55,7 @@ public class RunNote extends Command {
     else if(RunElevator.trapStage2){
       s_Intake.stop();
       s_Shooter.stopShooter();
+      deadIntake = false;
       Shuffleboard.selectTab("Elevator");
     }
     else if(RunElevator.startStage1){
@@ -64,16 +69,18 @@ public class RunNote extends Command {
       s_Intake.stop();
       s_Shooter.stopShooter();
       s_Shooter.setWrist(protect);
+      deadIntake = false;
       Shuffleboard.selectTab("Elevator");
     }
     else if(RunElevator.reverse){
       s_Intake.spit();
       s_Shooter.setShooter(-10);
+      runIntakeBackwardsUntilIntakeSensorReturnsATrueValue = true;
       Shuffleboard.selectTab("Elevator");
     }
     else{
       //No Buttons
-      if(xboxController.getLeftTriggerAxis() <= 0.3 && !xboxController.getRawButton(5) && xboxController.getRightTriggerAxis() <= 0.3){
+      if(!runIntakeBackwardsUntilIntakeSensorReturnsATrueValue && xboxController.getLeftTriggerAxis() <= 0.3 && !xboxController.getRawButton(5) && xboxController.getRightTriggerAxis() <= 0.3){
         s_Intake.stop();
         Shuffleboard.selectTab("Drive");
       }
@@ -89,17 +96,12 @@ public class RunNote extends Command {
         s_Shooter.setShooter(-10);
         Shuffleboard.selectTab("Intake");
       }
-      //Sensor Detects, Stop Intake
-      else if(s_Intake.getShooterSensor()){
-        s_Intake.stop();
-        runIntakeBackwardsUntilShooterSensorReturnsAFalseValue = true;
-      }
-      if(runIntakeBackwardsUntilShooterSensorReturnsAFalseValue){
+      if(runIntakeBackwardsUntilIntakeSensorReturnsATrueValue){
         s_Intake.spitSlowly();
         s_Shooter.setShooter(-10);
       }
-      if(runIntakeBackwardsUntilShooterSensorReturnsAFalseValue && s_Intake.getIntakeSensor()){
-        runIntakeBackwardsUntilShooterSensorReturnsAFalseValue = false;
+      if(runIntakeBackwardsUntilIntakeSensorReturnsATrueValue && s_Intake.getIntakeSensor()){
+        runIntakeBackwardsUntilIntakeSensorReturnsATrueValue = false;
         deadIntake = true;
         s_Intake.stop();
         s_Shooter.stopShooter();
@@ -125,6 +127,10 @@ public class RunNote extends Command {
       if(s_Shooter.atSpeed() && s_Shooter.isAtPosition() && xboxController.getRightTriggerAxis() > 0.3){
         s_Intake.intake();
         deadIntake = false;
+      }
+      //Sensor Detects, Stop Intake
+      else if(xboxController.getRightTriggerAxis() <= 0.3 && s_Intake.getShooterSensor()){
+        runIntakeBackwardsUntilIntakeSensorReturnsATrueValue = true;
       }
     }
   }

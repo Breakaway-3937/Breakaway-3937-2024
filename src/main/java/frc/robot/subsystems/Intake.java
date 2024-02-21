@@ -83,21 +83,21 @@ public class Intake extends SubsystemBase {
   }
 
   public void intake(){
-    leadIntakeMotor.setControl(new DutyCycleOut(1).withEnableFOC(true));
-    loaderMotor.setControl(new DutyCycleOut(1).withEnableFOC(true));
-    bags.set(TalonSRXControlMode.PercentOutput, 1);
+    leadIntakeMotor.setControl(new DutyCycleOut(0.9).withEnableFOC(true));
+    loaderMotor.setControl(new DutyCycleOut(0.9).withEnableFOC(true));
+    bags.set(TalonSRXControlMode.PercentOutput, 0.9);
   }
 
   public void spit(){
-    leadIntakeMotor.setControl(new DutyCycleOut(-1).withEnableFOC(true));
-    loaderMotor.setControl(new DutyCycleOut(-1).withEnableFOC(true));
-    bags.set(TalonSRXControlMode.PercentOutput, -1);
+    leadIntakeMotor.setControl(new DutyCycleOut(-0.9).withEnableFOC(true));
+    loaderMotor.setControl(new DutyCycleOut(-0.9).withEnableFOC(true));
+    bags.set(TalonSRXControlMode.PercentOutput, -0.9);
   }
 
   public void spitSlowly(){
-    leadIntakeMotor.setControl(new DutyCycleOut(-0.25).withEnableFOC(true));
-    loaderMotor.setControl(new DutyCycleOut(-0.25).withEnableFOC(true));
-    bags.set(TalonSRXControlMode.PercentOutput, -0.25);
+    leadIntakeMotor.setControl(new DutyCycleOut(-0.5).withEnableFOC(true));
+    loaderMotor.setControl(new DutyCycleOut(-0.5).withEnableFOC(true));
+    bags.set(TalonSRXControlMode.PercentOutput, -0.5);
   }
 
   public void stop(){
