@@ -7,7 +7,6 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Robot;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 
@@ -17,7 +16,7 @@ public class RunNote extends Command {
   private final XboxController xboxController;
   private final double handoff = 17.6;
   private final double protect = 13;
-  private boolean runIntakeBackwardsUntilIntakeSensorReturnsATrueValue, deadIntake;
+  private boolean spitBack, deadIntake, sendForward;
 
   /** Creates a new RunNote. */
   public RunNote(Intake s_Intake, Shooter s_Shooter, XboxController xboxController) {
@@ -32,21 +31,19 @@ public class RunNote extends Command {
   @Override
   public void initialize() {
     s_Shooter.setWrist(protect);
-    runIntakeBackwardsUntilIntakeSensorReturnsATrueValue = false;
+    spitBack = false;
     deadIntake = false;
+    sendForward = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(RunElevator.wristSourceBool){
+    if(RunElevator.handoff){
       s_Shooter.setWrist(handoff);
       Shuffleboard.selectTab("Elevator");
     }
-    if(RunElevator.handoff && Robot.robotContainer.s_Elevator.isAtPosition()){
-      s_Shooter.setWrist(handoff);
-      Shuffleboard.selectTab("Elevator");
-    }
+
     if(RunElevator.trapStage1){
       s_Intake.intake();
       s_Shooter.setShooter(10);
@@ -75,17 +72,17 @@ public class RunNote extends Command {
     else if(RunElevator.reverse){
       s_Intake.spit();
       s_Shooter.setShooter(-10);
-      runIntakeBackwardsUntilIntakeSensorReturnsATrueValue = true;
+      spitBack = true;
       Shuffleboard.selectTab("Elevator");
     }
     else{
       //No Buttons
-      if(!runIntakeBackwardsUntilIntakeSensorReturnsATrueValue && xboxController.getLeftTriggerAxis() <= 0.3 && !xboxController.getRawButton(5) && xboxController.getRightTriggerAxis() <= 0.3){
+      if(!spitBack && xboxController.getLeftTriggerAxis() <= 0.3 && !xboxController.getRawButton(5) && xboxController.getRightTriggerAxis() <= 0.3){
         s_Intake.stop();
         Shuffleboard.selectTab("Drive");
       }
       //Intake
-      else if(xboxController.getLeftTriggerAxis() > 0.3 && !s_Intake.getShooterSensor() && !deadIntake){
+      else if(xboxController.getLeftTriggerAxis() > 0.3 && !deadIntake){
         s_Intake.intake();
         Shuffleboard.selectTab("Intake");
       }
@@ -96,16 +93,26 @@ public class RunNote extends Command {
         s_Shooter.setShooter(-10);
         Shuffleboard.selectTab("Intake");
       }
-      if(runIntakeBackwardsUntilIntakeSensorReturnsATrueValue){
+
+      if(spitBack){
         s_Intake.spitSlowly();
         s_Shooter.setShooter(-10);
       }
-      if(runIntakeBackwardsUntilIntakeSensorReturnsATrueValue && s_Intake.getIntakeSensor()){
-        runIntakeBackwardsUntilIntakeSensorReturnsATrueValue = false;
+      if(spitBack && s_Intake.getIntakeSensor()){
+        spitBack = false;
         deadIntake = true;
-        s_Intake.stop();
+        sendForward = true;
         s_Shooter.stopShooter();
       }
+
+      if(sendForward){
+        s_Intake.intakeSlowly();
+      }
+      if(sendForward && !s_Intake.getIntakeSensor()){
+        sendForward = false;
+        s_Intake.stop();
+      }
+
       //Run Shooter
       if(xboxController.getRawButton(6)){
         s_Shooter.runShooter();
@@ -123,6 +130,7 @@ public class RunNote extends Command {
         }
         Shuffleboard.selectTab("Drive");
       }
+
       //Fire Shooter
       if(s_Shooter.atSpeed() && s_Shooter.isAtPosition() && xboxController.getRightTriggerAxis() > 0.3){
         s_Intake.intake();
@@ -130,7 +138,7 @@ public class RunNote extends Command {
       }
       //Sensor Detects, Stop Intake
       else if(xboxController.getRightTriggerAxis() <= 0.3 && s_Intake.getShooterSensor()){
-        runIntakeBackwardsUntilIntakeSensorReturnsATrueValue = true;
+        spitBack = true;
       }
     }
   }
