@@ -88,6 +88,7 @@ public class Robot extends LoggedRobot {
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
     canUtil.setDouble(RobotController.getCANStatus().percentBusUtilization * 100);
+    Logger.recordOutput("CanUtil", RobotController.getCANStatus().percentBusUtilization * 100);
 
     if(DriverStation.isEStopped() && !flag){
       flag = true;
