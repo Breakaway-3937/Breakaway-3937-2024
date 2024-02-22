@@ -125,7 +125,7 @@ public class RunNote extends Command {
       else{
         s_Shooter.stopShooter();
         s_Shooter.setSpeedToZero();
-        if(s_Intake.botFull() && !s_Intake.getBabyShooterSensor()){
+        if(s_Intake.botFull() && !s_Intake.getBabyShooterSensor() && !xboxController.getRawButton(5)){
           s_Shooter.setWrist(handoff);
         }
         else if(!RunElevator.handoff){
