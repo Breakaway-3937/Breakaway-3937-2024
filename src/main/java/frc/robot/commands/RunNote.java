@@ -125,7 +125,10 @@ public class RunNote extends Command {
       else{
         s_Shooter.stopShooter();
         s_Shooter.setSpeedToZero();
-        if(!RunElevator.handoff){
+        if(s_Intake.botFull() && !s_Intake.getBabyShooterSensor()){
+          s_Shooter.setWrist(handoff);
+        }
+        else if(!RunElevator.handoff){
           s_Shooter.setWrist(protect);
         }
         Shuffleboard.selectTab("Drive");
