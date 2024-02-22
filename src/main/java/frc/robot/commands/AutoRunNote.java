@@ -12,7 +12,7 @@ public class AutoRunNote extends Command {
   private final Intake s_Intake;
   private final Shooter s_Shooter;
   private final double protect = 13;
-  private boolean runIntakeBackwardsUntilShooterSensorReturnsAFalseValue, deadIntake;
+  private boolean spitBack, deadIntake, sendForward;
 
   /** Creates a new AutoRunNote. */
   public AutoRunNote(Intake s_Intake, Shooter s_Shooter) {
@@ -26,36 +26,42 @@ public class AutoRunNote extends Command {
   @Override
   public void initialize() {
     s_Shooter.setWrist(protect);
-    runIntakeBackwardsUntilShooterSensorReturnsAFalseValue = false;
+    spitBack = false;
     deadIntake = false;
+    sendForward = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     //No Commands
-    if(!s_Intake.autoIntake() && !s_Shooter.autoFire()){
+    if(!spitBack && !s_Intake.autoIntake() && !s_Shooter.autoFire()){
       s_Intake.stop();
     }
     //Intake
-    else if(s_Intake.autoIntake() && !s_Intake.getShooterSensor() && !deadIntake){
+    else if(s_Intake.autoIntake() && !deadIntake){
       s_Intake.intake();
     }
-    //Sensor Detects, Stop Intake
-    else if(s_Intake.getShooterSensor()){
-      s_Intake.stop();
-      runIntakeBackwardsUntilShooterSensorReturnsAFalseValue = true;
-    }
-    if(runIntakeBackwardsUntilShooterSensorReturnsAFalseValue){
+
+    if(spitBack){
       s_Intake.spitSlowly();
       s_Shooter.setShooter(-10);
     }
-    if(runIntakeBackwardsUntilShooterSensorReturnsAFalseValue && s_Intake.getIntakeSensor()){
-      runIntakeBackwardsUntilShooterSensorReturnsAFalseValue = false;
+    if(spitBack && s_Intake.getIntakeSensor()){
+      spitBack = false;
       deadIntake = true;
-      s_Intake.stop();
+      sendForward = true;
       s_Shooter.stopShooter();
     }
+
+    if(sendForward){
+      s_Intake.intakeSlowly();
+    }
+    if(sendForward && !s_Intake.getIntakeSensor()){
+      sendForward = false;
+      s_Intake.stop();
+    }
+
     //Shoot
     if(s_Shooter.autoFire()){
       s_Shooter.runShooter();
@@ -69,8 +75,13 @@ public class AutoRunNote extends Command {
         s_Intake.setAutoIntake(false);
       }
     }
+    //Sensor Detects, Stop Intake
+    else if(!s_Shooter.autoFire() && s_Intake.getShooterSensor()){
+      spitBack = true;
+    }
+
     //Wrist Protect
-    else{
+    if(!s_Shooter.autoFire()){
       s_Shooter.setWrist(protect);
     }
   }
