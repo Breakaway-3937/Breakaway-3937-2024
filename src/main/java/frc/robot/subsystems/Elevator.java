@@ -17,7 +17,6 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.commands.RunElevator;
 
 public class Elevator extends SubsystemBase {
 
@@ -49,16 +48,11 @@ public class Elevator extends SubsystemBase {
   }
 
   public void runBabyShooterForward(){
-    babyShooter.set(1);
+    babyShooter.set(0.9);
   }
 
   public void runBabyShooterReverse(){
-    if(RunElevator.reverse){
-      babyShooter.set(-0.75);
-    }
-    else{
-      babyShooter.set(-1);
-    }
+    babyShooter.set(-0.9);
   }
 
   public void stopBabyShooter(){
