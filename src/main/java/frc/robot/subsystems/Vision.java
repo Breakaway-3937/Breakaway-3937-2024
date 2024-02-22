@@ -34,6 +34,7 @@ public class Vision extends SubsystemBase {
     private final PhotonPoseEstimator frontPoseEstimator, backPoseEstimator;
     private final Swerve s_Swerve;
     private double targetX, targetY, robotX, robotY;
+    private final GenericEntry distanceEntry;
 
   /** Creates a new Vision. */
   public Vision(Swerve s_Swerve) {
@@ -54,6 +55,8 @@ public class Vision extends SubsystemBase {
     backPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
 
     PPHolonomicDriveController.setRotationTargetOverride(this::getRotationTargetOverride);
+
+    distanceEntry = Shuffleboard.getTab("Shooter").add("Distance", 0).withPosition(2, 0).getEntry();
   }
 
   public Optional<Rotation2d> getRotationTargetOverride(){
@@ -144,6 +147,9 @@ public class Vision extends SubsystemBase {
         s_Swerve.updatePoseVision(pose.get(), confidenceCalculator(pose.get()));
       }
     }
+
+    distanceEntry.setDouble(getDistance());
+    Logger.recordOutput("Distance", getDistance());
     
     var alliance = DriverStation.getAlliance();
     if(alliance.isPresent()){
