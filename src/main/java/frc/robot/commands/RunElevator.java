@@ -5,7 +5,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -29,7 +28,7 @@ public class RunElevator extends Command {
   private final double elevatorSource = 52.6;
   private final double elevatorClimb = 102;
   private boolean amp, trap, source, protect, ohCrap, climb;
-  public static boolean deadShooter, trapStage1, trapStage2, startStage1, startStage2, reverse, trapScored, retracting, climbing, handoff, wristSourceBool;
+  public static boolean deadShooter, trapStage1, trapStage2, startStage1, startStage2, reverse, trapScored, retracting, climbing, handoff;
 
   /** Creates a new RunElevator. */
   public RunElevator(Elevator s_Elevator, XboxController xboxController) {
@@ -42,22 +41,8 @@ public class RunElevator extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    reset();
     protect = true;
-    amp = false;
-    trap = false;
-    source = false;
-    ohCrap = false;
-    trapStage1 = false;
-    trapStage2 = false;
-    startStage1 = false;
-    startStage2 = false;
-    reverse = false;
-    climb = false;
-    trapScored = false;
-    retracting = false;
-    climbing = false;
-    handoff = false;
-    wristSourceBool = false;
     Robot.robotContainer.s_LED.reset();
   }
 
@@ -73,57 +58,22 @@ public class RunElevator extends Command {
 
     //Extend Climb
     if(xboxController.getPOV() == Constants.Controllers.UP){
-      amp = false;
-      trap = false;
-      source = false;
-      protect = false;
-      ohCrap = false;
-      trapStage1 = false;
-      trapStage2 = false;
-      startStage1 = false;
-      startStage2 = false;
-      reverse = false;
+      reset();
       climb = true;
-      retracting = false;
       climbing = true;
-      handoff = false;
-      wristSourceBool = false;
+      trap = true;
     }
     //Retract Climb
     else if(xboxController.getPOV() == Constants.Controllers.DOWN){
-      amp = false;
-      trap = false;
-      source = false;
-      protect = false;
-      ohCrap = false;
-      trapStage1 = false;
-      trapStage2 = false;
-      startStage1 = false;
-      startStage2 = false;
-      reverse = false;
+      reset();
       climb = true;
       retracting = true;
-      climbing = false;
-      handoff = false;
-      wristSourceBool = false;
+      trap = true;
     }
     //Protect
     else if(xboxController.getRawButton(3)){
-      amp = false;
-      trap = false;
-      source = false;
+      reset();
       protect = true;
-      ohCrap = false;
-      trapStage1 = false;
-      trapStage2 = false;
-      startStage1 = false;
-      startStage2 = false;
-      reverse = false;
-      climb = false;
-      retracting = false;
-      climbing = false;
-      handoff = false;
-      wristSourceBool = false;
       trapScored = false;
       Robot.robotContainer.s_LED.reset();
       s_Elevator.setElevatorFast();
@@ -131,109 +81,48 @@ public class RunElevator extends Command {
     }
     //Oh Crap!
     else if(xboxController.getRawButton(2)){
-      amp = false;
-      trap = false;
-      source = false;
-      protect = false;
+      reset();
       ohCrap = true;
-      trapStage1 = false;
-      trapStage2 = false;
-      startStage1 = false;
-      startStage2 = false;
-      reverse = false;
-      climb = false;
-      retracting = false;
-      climbing = false;
-      wristSourceBool = false;
     }
     //Amp
     else if(xboxController.getRawButton(1)){
+      reset();
       amp = true;
-      trap = false;
-      source = false;
-      protect = false;
-      ohCrap = false;
-      trapStage1 = false;
-      trapStage2 = false;
-      startStage1 = false;
-      startStage2 = false;
-      reverse = false;
-      climb = false;
-      retracting = false;
-      climbing = false;
-      wristSourceBool = false;
     }
     //Trap
     else if(xboxController.getRawButton(4)){
-      amp = false;
+      reset();
       trap = true;
-      source = false;
-      protect = false;
-      ohCrap = false;
-      startStage1 = false;
-      startStage2 = false;
-      reverse = false;
-      climb = false;
-      retracting = false;
-      climbing = false;
-      wristSourceBool = false;
     }
     //Source
     else if(xboxController.getRawButton(7)){
-      amp = false;
-      trap = false;
+      reset();
       source = true;
-      protect = false;
-      ohCrap = false;
-      trapStage1 = false;
-      trapStage2 = false;
-      startStage1 = false;
-      startStage2 = false;
-      reverse = false;
-      climb = false;
-      retracting = false;
-      climbing = false;
-      wristSourceBool = false;
       Robot.robotContainer.s_LED.reset();
       Robot.robotContainer.s_LED.orange();
-      handoff = false;
     }
     
-    if(Robot.robotContainer.s_Shooter.isSafe() || handoff || wristSourceBool){
+    if(Robot.robotContainer.s_Shooter.isSafe() || handoff){
       if(protect){
         s_Elevator.setElevator(elevatorProtect);
         s_Elevator.setBabyWrist(wristProtect);
         handoff = false;
       }
       else if(trap){
-        if(!trapStage2){
+        if(!climb && !trapStage2){
           s_Elevator.setElevator(elevatorHandoff);
           s_Elevator.setBabyWrist(wristHandoff);
           handoff = true;
         }
-        if(!trapStage2 && Robot.robotContainer.s_Shooter.isAtPosition() && s_Elevator.isAtPosition() && !Robot.robotContainer.s_Intake.getBabyShooterSensor() && Robot.robotContainer.s_Intake.botFull()){
+        if(!climb && !trapStage2 && Robot.robotContainer.s_Shooter.isAtPosition() && s_Elevator.isAtPosition() && !Robot.robotContainer.s_Intake.getBabyShooterSensor()){
           s_Elevator.runBabyShooterForward();
           trapStage1 = true;
         }
-        if(Robot.robotContainer.s_Intake.getBabyShooterSensor() && (!Robot.robotContainer.s_Intake.getShooterSensor() && !Robot.robotContainer.s_Intake.getIntakeSensor())){
+        if(!climb && Robot.robotContainer.s_Intake.getBabyShooterSensor() && (!Robot.robotContainer.s_Intake.getShooterSensor() && !Robot.robotContainer.s_Intake.getIntakeSensor())){
           s_Elevator.stopBabyShooter();
           trapStage1 = false;
           handoff = false;
           s_Elevator.setBabyWrist(wristPreTrap);
-        }
-        if(xboxController.getRawButton(8) && Robot.robotContainer.s_Intake.getBabyShooterSensor() && (!Robot.robotContainer.s_Intake.getShooterSensor() && !Robot.robotContainer.s_Intake.getIntakeSensor())){
-          trapStage2 = true;
-        }
-        if(trapStage2){
-          s_Elevator.setElevator(elevatorTrap);
-          s_Elevator.setBabyWrist(wristTrap);
-        }
-        if(trapStage2 && s_Elevator.isAtPosition() && Robot.robotContainer.s_Intake.getBabyShooterSensor()){
-          s_Elevator.runBabyShooterForward();
-        }
-        else if(trapStage2 && s_Elevator.isAtPosition() && !Robot.robotContainer.s_Intake.getBabyShooterSensor()){
-          s_Elevator.stopBabyShooter();
-          trapScored = true;
         }
       }
       else if(amp){
@@ -271,53 +160,60 @@ public class RunElevator extends Command {
         }
       }
       else if(ohCrap){
-        if(Robot.robotContainer.s_Intake.getBabyShooterSensor() && (!Robot.robotContainer.s_Intake.getShooterSensor() && !Robot.robotContainer.s_Intake.getIntakeSensor())){
+        if(Robot.robotContainer.s_Intake.getBabyShooterSensor()){
           s_Elevator.setElevator(elevatorHandoff);
           s_Elevator.setBabyWrist(wristHandoff);
           reverse = true;
-          System.out.println("OH CRAP");
         }
-        System.out.println("ShooterIsAtPosition: " + Robot.robotContainer.s_Shooter.isAtPosition());
-        System.out.println("ElevatorIsAtPosition: " + s_Elevator.isAtPosition());
-
         if(Robot.robotContainer.s_Shooter.isAtPosition() && s_Elevator.isAtPosition() && Robot.robotContainer.s_Intake.getBabyShooterSensor()){
-          System.out.println("REVERSE");
           s_Elevator.runBabyShooterReverse();
         }
         if(!Robot.robotContainer.s_Intake.getBabyShooterSensor() && (Robot.robotContainer.s_Intake.getShooterSensor() || Robot.robotContainer.s_Intake.getIntakeSensor())){
-          System.out.println("STOP");
-          SmartDashboard.putBoolean("STOP", true);
           reverse = false;
           s_Elevator.stopBabyShooter();
           protect = true;
           Robot.robotContainer.s_LED.reset();
           ohCrap = false;
-          wristSourceBool = false;
         }
       }
       else if(source){
-        if(!Robot.robotContainer.s_Intake.botFull()){
-          s_Elevator.setElevator(elevatorSource);
-          s_Elevator.setBabyWrist(wristSource);
-          wristSourceBool = true;
-          s_Elevator.runBabyShooterReverse();
-        }
+        s_Elevator.setElevator(elevatorSource);
+        s_Elevator.setBabyWrist(wristSource);
+        s_Elevator.runBabyShooterReverse();
+
         if(Robot.robotContainer.s_Intake.getBabyShooterSensor()){
           s_Elevator.stopBabyShooter();
           ohCrap = true;
           source = false;
         }
       }
-      else if(climb){
+
+      if(climb){
         if(climbing){
           s_Elevator.setElevatorFast();
           s_Elevator.setBabyWrist(wristClimb);
           s_Elevator.setElevator(elevatorClimb);
         }
-        else if(retracting){
+        else if(retracting && !trapStage2){
           s_Elevator.setElevatorSlow();
           s_Elevator.setBabyWrist(wristTrap);
           s_Elevator.setElevator(elevatorProtect);
+        }
+
+        if(trap){
+          if(xboxController.getRawButton(8)){
+            trapStage2 = true;
+          }
+          if(trapStage2){
+            s_Elevator.setElevator(elevatorTrap);
+            s_Elevator.setBabyWrist(wristTrap);
+          }
+          if(trapStage2 && s_Elevator.isAtPosition()){
+            s_Elevator.runBabyShooterForward();
+          }
+          if(!Robot.robotContainer.s_Intake.getBabyShooterSensor()){
+            trapScored = true;
+          }
         }
       }
     }
@@ -331,5 +227,22 @@ public class RunElevator extends Command {
   @Override
   public boolean isFinished() {
     return false;
+  }
+
+  private void reset(){
+    protect = false;
+    amp = false;
+    trap = false;
+    source = false;
+    ohCrap = false;
+    trapStage1 = false;
+    trapStage2 = false;
+    startStage1 = false;
+    startStage2 = false;
+    reverse = false;
+    climb = false;
+    retracting = false;
+    climbing = false;
+    handoff = false;
   }
 }
