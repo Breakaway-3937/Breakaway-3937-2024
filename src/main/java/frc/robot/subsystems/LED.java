@@ -27,8 +27,8 @@ public class LED extends SubsystemBase {
     private final FireAnimation fire = new FireAnimation(0.5, 0.1, Constants.NUM_LEDS, 0.1, 0.1, false, 0);
     private final LarsonAnimation pocket = new LarsonAnimation(255, 0, 0, 0, 0.1, Constants.NUM_LEDS, LarsonAnimation.BounceMode.Center, 1);
     private final TwinkleOffAnimation twinkle = new TwinkleOffAnimation(0, 255, 0, 0, 0.1, Constants.NUM_LEDS, TwinkleOffPercent.Percent100, 0);
-    private final SingleFadeAnimation fade = new SingleFadeAnimation(0, 0, 0, 0, 0.1, Constants.NUM_LEDS, 0);
-    private final StrobeAnimation strobe = new StrobeAnimation(0, 0, 0, 0, 0.1, Constants.NUM_LEDS, 0);
+    private final SingleFadeAnimation fade = new SingleFadeAnimation(0, 0, 0, 0, 0.5, Constants.NUM_LEDS, 0);
+    private final StrobeAnimation strobe = new StrobeAnimation(0, 0, 0, 0, 0.5, Constants.NUM_LEDS, 0);
 
     public LED() {
         candle = new CANdle(Constants.CANDLE_ID, Constants.CANIVORE_BUS);
