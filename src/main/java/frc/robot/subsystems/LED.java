@@ -144,7 +144,8 @@ public class LED extends SubsystemBase {
                 }
             }
             else if(!Robot.robotContainer.s_Intake.botFull()){
-                candle.setLEDs(0, 0, 254, 0, 0, 17);
+                candle.clearAnimation();
+                candle.setLEDs(0, 0, 254, 0, 17, 8);
             }
             else if(green){
                 if(!flag){
