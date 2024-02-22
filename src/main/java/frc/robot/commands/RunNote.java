@@ -16,7 +16,7 @@ public class RunNote extends Command {
   private final XboxController xboxController;
   private final double handoff = 17.6;
   private final double protect = 13;
-  private boolean spitBack, deadIntake, sendForward;
+  private boolean spitBack, deadIntake, sendForward, noteGood;
 
   /** Creates a new RunNote. */
   public RunNote(Intake s_Intake, Shooter s_Shooter, XboxController xboxController) {
@@ -34,6 +34,7 @@ public class RunNote extends Command {
     spitBack = false;
     deadIntake = false;
     sendForward = false;
+    noteGood = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -53,6 +54,7 @@ public class RunNote extends Command {
       s_Intake.stop();
       s_Shooter.stopShooter();
       deadIntake = false;
+      noteGood = false;
       Shuffleboard.selectTab("Elevator");
     }
     else if(RunElevator.startStage1){
@@ -67,6 +69,7 @@ public class RunNote extends Command {
       s_Shooter.stopShooter();
       s_Shooter.setWrist(protect);
       deadIntake = false;
+      noteGood = false;
       Shuffleboard.selectTab("Elevator");
     }
     else if(RunElevator.reverse){
@@ -89,6 +92,7 @@ public class RunNote extends Command {
       //Spit
       else if(xboxController.getRawButton(5)){
         deadIntake = false;
+        noteGood = false;
         s_Intake.spit();
         s_Shooter.setShooter(-10);
         Shuffleboard.selectTab("Intake");
@@ -108,8 +112,9 @@ public class RunNote extends Command {
       if(sendForward){
         s_Intake.intakeSlowly();
       }
-      if(sendForward && !s_Intake.getIntakeSensor()){
+      if(sendForward && s_Intake.getShooterSensor()){
         sendForward = false;
+        noteGood = true;
         s_Intake.stop();
       }
 
@@ -138,9 +143,10 @@ public class RunNote extends Command {
       if(s_Shooter.atSpeed() && s_Shooter.isAtPosition() && xboxController.getRightTriggerAxis() > 0.3){
         s_Intake.intake();
         deadIntake = false;
+        noteGood = false;
       }
       //Sensor Detects, Stop Intake
-      else if(xboxController.getRightTriggerAxis() <= 0.3 && s_Intake.getShooterSensor()){
+      else if(xboxController.getRightTriggerAxis() <= 0.3 && s_Intake.getShooterSensor() && !noteGood){
         spitBack = true;
       }
     }

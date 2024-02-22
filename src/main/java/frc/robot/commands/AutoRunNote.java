@@ -12,7 +12,7 @@ public class AutoRunNote extends Command {
   private final Intake s_Intake;
   private final Shooter s_Shooter;
   private final double protect = 13;
-  private boolean spitBack, deadIntake, sendForward;
+  private boolean spitBack, deadIntake, sendForward, noteGood;
 
   /** Creates a new AutoRunNote. */
   public AutoRunNote(Intake s_Intake, Shooter s_Shooter) {
@@ -29,6 +29,7 @@ public class AutoRunNote extends Command {
     spitBack = false;
     deadIntake = false;
     sendForward = false;
+    noteGood = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -57,8 +58,9 @@ public class AutoRunNote extends Command {
     if(sendForward){
       s_Intake.intakeSlowly();
     }
-    if(sendForward && !s_Intake.getIntakeSensor()){
+    if(sendForward && s_Intake.getShooterSensor()){
       sendForward = false;
+      noteGood = true;
       s_Intake.stop();
     }
 
@@ -69,6 +71,7 @@ public class AutoRunNote extends Command {
       if(s_Shooter.atSpeed() && s_Shooter.isAtPosition()){
         s_Intake.intake();
         deadIntake = false;
+        noteGood = false;
       }
       if(!s_Intake.botFull()){
         s_Shooter.setAutoFire(false);
@@ -76,7 +79,7 @@ public class AutoRunNote extends Command {
       }
     }
     //Sensor Detects, Stop Intake
-    else if(!s_Shooter.autoFire() && s_Intake.getShooterSensor()){
+    else if(!s_Shooter.autoFire() && s_Intake.getShooterSensor() && !noteGood){
       spitBack = true;
     }
 
