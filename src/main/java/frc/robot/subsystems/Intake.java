@@ -30,8 +30,8 @@ public class Intake extends SubsystemBase {
   private final TalonSRX bags;
   private final TalonFXConfiguration motorConfig = new TalonFXConfiguration();
   private final TalonSRXConfiguration bagsConfig = new TalonSRXConfiguration();
-  private final AnalogInput intake, shooter, babyShooter;
-  private final GenericEntry intakeSensor, shooterSensor, babyShooterSensor;
+  private final AnalogInput popTart, shooter, babyShooter;
+  private final GenericEntry popTartSensor, shooterSensor, babyShooterSensor;
   private final Follower followerRequest = new Follower(Constants.Intake.LEAD_INTAKE_MOTOR_ID, true);
   private boolean flag, flag1, flag2, note;
   public boolean autoIntake;
@@ -43,10 +43,10 @@ public class Intake extends SubsystemBase {
     bags = new TalonSRX(Constants.Intake.BAGS_MOTOR_ID);
     loaderMotor = new TalonFX(Constants.Intake.LOADER_MOTOR_ID);
     configMotors();
-    intake = new AnalogInput(Constants.Intake.INTAKE_SENSOR_ID);
+    popTart = new AnalogInput(Constants.Intake.POP_TART_SENSOR_ID);
     shooter = new AnalogInput(Constants.Intake.SHOOTER_SENSOR_ID);
     babyShooter = new AnalogInput(Constants.Intake.BABY_SHOOTER_SENSOR_ID);
-    intakeSensor = Shuffleboard.getTab("Intake").add("Intake Sensor", 0).withPosition(0, 0).getEntry();
+    popTartSensor = Shuffleboard.getTab("Intake").add("Pop-Tart Sensor", 0).withPosition(0, 0).getEntry();
     shooterSensor = Shuffleboard.getTab("Intake").add("Shooter Sensor", 0).withPosition(1, 0).getEntry();
     babyShooterSensor = Shuffleboard.getTab("Intake").add("Baby Shooter Sensor", 0).withPosition(2, 0).getEntry();
   }
@@ -112,8 +112,8 @@ public class Intake extends SubsystemBase {
     bags.set(TalonSRXControlMode.PercentOutput, 0);
   }
 
-  public boolean getIntakeSensor(){
-    if(intake.getValue() > 4000){
+  public boolean getPopTartSensor(){
+    if(popTart.getValue() > 4000){
       return true;
     }
     else{
@@ -154,7 +154,7 @@ public class Intake extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    if(getIntakeSensor() || getShooterSensor() || getBabyShooterSensor()){
+    if(getPopTartSensor() || getShooterSensor() || getBabyShooterSensor()){
       note = true;
     }
     if(getShooterSensor()){
@@ -163,7 +163,7 @@ public class Intake extends SubsystemBase {
     if(getBabyShooterSensor()){
       flag1 = true;
     }
-    if(getIntakeSensor()){
+    if(getPopTartSensor()){
       flag2 = true;
     }
     if(Robot.robotContainer.s_Shooter.getSpeed() > 0 && loaderMotor.get() > 0 && flag && !getShooterSensor()){
@@ -174,15 +174,15 @@ public class Intake extends SubsystemBase {
       note = false;
       flag1 = false;
     }
-    if(leadIntakeMotor.get() < 0 && flag2 && !getIntakeSensor()){
+    if(leadIntakeMotor.get() < 0 && flag2 && !getPopTartSensor()){
       note = false;
       flag2 = false;
     }
 
-    intakeSensor.setDouble(intake.getValue());
+    popTartSensor.setDouble(popTart.getValue());
     shooterSensor.setDouble(shooter.getValue());
     babyShooterSensor.setDouble(babyShooter.getValue());
-    Logger.recordOutput("Intake", intake.getValue());
+    Logger.recordOutput("Pop-Tart", popTart.getValue());
     Logger.recordOutput("Shooter Sensor", shooter.getValue());
     Logger.recordOutput("Baby Shooter", babyShooter.getValue());
   }
