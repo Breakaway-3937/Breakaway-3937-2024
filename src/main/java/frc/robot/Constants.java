@@ -207,13 +207,6 @@ public final class Constants {
         public static final Vector<N3> MULTI_TAG_VISION_STDS = VecBuilder.fill(1, 1, Math.PI);
         public static final Vector<N3> ONE_TAG_VISION_STDS = VecBuilder.fill(1.5, 1.5, Math.PI);
 
-        public static final double APRILTAG_AMBIGUITY_THRESHOLD = 0.2;
-        public static final double POSE_AMBIGUITY_SHIFTER = 0.2;
-        public static final double POSE_AMBIGUITY_MULTIPLIER = 4;
-        public static final double NOISY_DISTANCE_METERS = 2.5;
-        public static final double DISTANCE_WEIGHT = 7;
-        public static final int TAG_PRESENCE_WEIGHT = 10;
-
         public static final double TARGET_X_BLUE = -0.04;
         public static final double TARGET_X_RED = 16.58;
         public static final double TARGET_Y_BLUE = 4.98;
