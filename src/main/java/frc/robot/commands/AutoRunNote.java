@@ -48,7 +48,7 @@ public class AutoRunNote extends Command {
       s_Intake.spitSlowly();
       s_Shooter.setShooter(-10);
     }
-    if(spitBack && s_Intake.getIntakeSensor()){
+    if(spitBack && s_Intake.getPopTartSensor()){
       spitBack = false;
       deadIntake = true;
       sendForward = true;
