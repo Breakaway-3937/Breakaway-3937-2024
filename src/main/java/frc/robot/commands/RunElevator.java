@@ -214,7 +214,7 @@ public class RunElevator extends Command {
               s_Elevator.runBabyShooterForward();
             }
           }
-          if(!Robot.robotContainer.s_Intake.getBabyShooterSensor()){
+          if(trapStage2 && !Robot.robotContainer.s_Intake.getBabyShooterSensor()){
             trapScored = true;
           }
         }
