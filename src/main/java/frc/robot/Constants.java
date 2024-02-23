@@ -204,7 +204,8 @@ public final class Constants {
         public static final String NOTE_CAMERA_NAME = "HD_USB_Camera";
         public static final Transform3d FRONT_CAMERA_TRANSFORM = new Transform3d(new Translation3d(-0.2036, -0.173749, 0.5169), new Rotation3d(0, 0.174533, 0));
         public static final Transform3d BACK_CAMERA_TRANSFORM = new Transform3d(new Translation3d(-0.2036, 0.173749, 0.5169), new Rotation3d(0, 0.174533, Math.PI));
-        public static final Vector<N3> VISION_STDS = VecBuilder.fill(1, 1, Math.PI);
+        public static final Vector<N3> MULTI_TAG_VISION_STDS = VecBuilder.fill(1, 1, Math.PI);
+        public static final Vector<N3> ONE_TAG_VISION_STDS = VecBuilder.fill(1.5, 1.5, Math.PI);
 
         public static final double APRILTAG_AMBIGUITY_THRESHOLD = 0.2;
         public static final double POSE_AMBIGUITY_SHIFTER = 0.2;
