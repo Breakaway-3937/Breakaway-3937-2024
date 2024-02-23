@@ -179,7 +179,7 @@ public final class Constants {
         public static final int FOLLOWER_INTAKE_MOTOR_ID = 16;
         public static final int BAGS_MOTOR_ID = 30;
         public static final int LOADER_MOTOR_ID = 2;
-        public static final int INTAKE_SENSOR_ID = 0;
+        public static final int POP_TART_SENSOR_ID = 0;
         public static final int SHOOTER_SENSOR_ID = 1;
         public static final int BABY_SHOOTER_SENSOR_ID = 2;
     }
