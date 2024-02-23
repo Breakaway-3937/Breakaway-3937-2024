@@ -54,7 +54,7 @@ public class Swerve extends SubsystemBase {
             new SwerveModule(3, Constants.Swerve.Mod3.CONSTANTS)
         };
 
-        poseEstimator = new SwerveDrivePoseEstimator(Constants.Swerve.SWERVE_KINEMATICS, getGyroYaw(), getModulePositions(), new Pose2d(), Constants.Swerve.STATE_STDS, Constants.Vision.VISION_STDS);
+        poseEstimator = new SwerveDrivePoseEstimator(Constants.Swerve.SWERVE_KINEMATICS, getGyroYaw(), getModulePositions(), new Pose2d(), Constants.Swerve.STATE_STDS, Constants.Vision.ONE_TAG_VISION_STDS);
 
         mod0Cancoder = Shuffleboard.getTab("Drive").add("Mod 0 Cancoder", mSwerveMods[0].getState().angle.getDegrees()).withPosition(0, 0).getEntry();
         mod1Cancoder = Shuffleboard.getTab("Drive").add("Mod 1 Cancoder", mSwerveMods[1].getState().angle.getDegrees()).withPosition(1, 0).getEntry();
