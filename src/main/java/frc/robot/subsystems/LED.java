@@ -105,6 +105,7 @@ public class LED extends SubsystemBase {
             candle.animate(rainbow);
         }
         else if(RunElevator.retracting && Robot.robotContainer.s_Elevator.isAtPosition()){
+            candle.clearAnimation(0);
             candle.setLEDs(0, 255, 0);
         }
         else if(Robot.robotContainer.s_Vision.isDead()){
