@@ -72,6 +72,8 @@ public class AutoRunNote extends Command {
         s_Intake.intake();
         deadIntake = false;
         noteGood = false;
+        sendForward = false;
+        spitBack = false;
       }
       if(!s_Intake.botFull()){
         s_Shooter.setAutoFire(false);
