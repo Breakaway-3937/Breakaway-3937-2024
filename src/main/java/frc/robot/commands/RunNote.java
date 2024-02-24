@@ -107,8 +107,14 @@ public class RunNote extends Command {
         noteGood = false;
         spitBack = false;
         sendForward = false;
-        s_Intake.spit();
-        s_Shooter.setShooter(-10);
+        if(s_Shooter.isAtPosition()){
+          s_Intake.spit();
+          s_Shooter.setShooter(-10);
+        }
+        else{
+          s_Intake.stop();
+          s_Shooter.stopShooter();
+        }
         Shuffleboard.selectTab("Intake");
       }
 
@@ -126,7 +132,7 @@ public class RunNote extends Command {
       if(sendForward){
         s_Intake.intakeSlowly();
       }
-      if(sendForward && s_Intake.getShooterSensor()){
+      if(sendForward && !s_Intake.getPopTartSensor()){
         sendForward = false;
         noteGood = true;
         s_Intake.stop();
@@ -141,9 +147,12 @@ public class RunNote extends Command {
         Shuffleboard.selectTab("Shooter");
       }
       //Stop Shooter
-      else{
+      else if(!xboxController.getRawButton(6)){
         s_Shooter.stopShooter();
         s_Shooter.setSpeedToZero();
+        if(xboxController.getRawButton(5)){
+          RunElevator.handoff = false;
+        }
         if(s_Intake.botFull() && !s_Intake.getBabyShooterSensor() && !xboxController.getRawButton(5) && noteGood){
           s_Shooter.setWrist(handoff);
           RunElevator.handoff = true;

@@ -48,17 +48,16 @@ public class Align extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(RunElevator.startStage1 || RunElevator.startStage2){
+    if(RunElevator.amp){
+      translationVal = MathUtil.applyDeadband(translationSup.getAsDouble(), Constants.Controllers.STICK_DEADBAND);
       strafeVal = MathUtil.applyDeadband(strafeSup.getAsDouble(), Constants.Controllers.STICK_DEADBAND);
       var alliance = DriverStation.getAlliance();
       if(alliance.isPresent()){
         if(alliance.get() == DriverStation.Alliance.Blue){
-          translationVal = Constants.Vision.AMP_TARGET_X_BLUE - s_Swerve.getPose().getX();
-          rotationVal = pValue * (Rotation2d.fromDegrees(270).getRadians() - (s_Swerve.getGyroYaw().getRadians() + (Math.PI * 500)) % (Math.PI * 2));
+          rotationVal = pValue * (90 - (s_Swerve.getGyroYaw().getDegrees() + 3600000) % 360);
         }
         else{
-          translationVal = Constants.Vision.AMP_TARGET_X_RED - s_Swerve.getPose().getX();
-          rotationVal = pValue * (Rotation2d.fromDegrees(90).getRadians() - (s_Swerve.getGyroYaw().getRadians() + (Math.PI * 500)) % (Math.PI * 2));
+          rotationVal = pValue * (270 - (s_Swerve.getGyroYaw().getDegrees() + 3600000) % 360);
         }
       }
       s_Swerve.drive(
