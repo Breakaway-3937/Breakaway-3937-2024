@@ -58,7 +58,7 @@ public class AutoRunNote extends Command {
     if(sendForward){
       s_Intake.intakeSlowly();
     }
-    if(sendForward && s_Intake.getShooterSensor()){
+    if(sendForward && !s_Intake.getPopTartSensor()){
       sendForward = false;
       noteGood = true;
       s_Intake.stop();
