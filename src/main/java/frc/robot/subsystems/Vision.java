@@ -55,8 +55,6 @@ public class Vision extends SubsystemBase {
 
     frontPoseEstimator = new PhotonPoseEstimator(atfl, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, frontCamera, Constants.Vision.FRONT_CAMERA_TRANSFORM);
     backPoseEstimator = new PhotonPoseEstimator(atfl, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, backCamera, Constants.Vision.BACK_CAMERA_TRANSFORM);
-    frontPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
-    backPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
 
     PPHolonomicDriveController.setRotationTargetOverride(this::getRotationTargetOverride);
 
@@ -65,7 +63,7 @@ public class Vision extends SubsystemBase {
 
   public Optional<Rotation2d> getRotationTargetOverride(){
     if(Robot.robotContainer.s_Intake.botFull()){
-        return Optional.of(PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromRadians(0))));
+        return Optional.of(PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromDegrees(0))));
     }
     else{
         return Optional.empty();
@@ -74,10 +72,10 @@ public class Vision extends SubsystemBase {
   
   public double getAprilTagRotationSpeed(){
     if(Robot.getFront()){
-      return (PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromRadians(0))).rotateBy(Rotation2d.fromDegrees(180)).getDegrees()) * 8.0 / 42.0;
+      return (PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromDegrees(0))).rotateBy(Rotation2d.fromDegrees(180)).getDegrees()) * 8.0 / 42.0;
     }
     else{
-      return PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromRadians(0))).getDegrees() * 8.0 / 42.0;
+      return PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromDegrees(0))).getDegrees() * 8.0 / 42.0;
     }
   }
 
@@ -191,8 +189,7 @@ public class Vision extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    var frontResult = frontCamera.getLatestResult();
-    if(frontResult.hasTargets()){
+    if(frontCamera.getLatestResult().hasTargets()){
       var pose = getFrontEstimatedGlobalPose();
       if(pose.isPresent()){
         s_Swerve.updatePoseVision(pose.get(), getFrontEstimationStdDevs(pose.get().estimatedPose.toPose2d()));
