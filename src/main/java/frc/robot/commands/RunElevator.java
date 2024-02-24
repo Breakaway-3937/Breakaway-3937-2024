@@ -24,8 +24,8 @@ public class RunElevator extends Command {
   private final double elevatorTrap = 102;
   private final double elevatorSource = 52.6;
   private final double elevatorClimb = 102;
-  private boolean amp, source, protect, ohCrap, climb;
-  public static boolean trap, deadShooter, trapStage1, trapStage2, startStage1, startStage2, reverse, trapScored, retracting, climbing, handoff, trapPosition;
+  private boolean source, protect, ohCrap, climb;
+  public static boolean amp, trap, deadShooter, trapStage1, trapStage2, startStage1, startStage2, reverse, trapScored, retracting, climbing, handoff, trapPosition;
 
   /** Creates a new RunElevator. */
   public RunElevator(Elevator s_Elevator, XboxController xboxController) {
