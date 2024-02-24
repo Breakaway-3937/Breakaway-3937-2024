@@ -202,8 +202,8 @@ public final class Constants {
         public static final String FRONT_CAMERA_NAME = "Front Camera";
         public static final String BACK_CAMERA_NAME = "Global_Shutter_Camera";
         public static final String NOTE_CAMERA_NAME = "HD_USB_Camera";
-        public static final Transform3d FRONT_CAMERA_TRANSFORM = new Transform3d(new Translation3d(-0.2036, -0.173749, 0.5169), new Rotation3d(0, 0.174533, 0));
-        public static final Transform3d BACK_CAMERA_TRANSFORM = new Transform3d(new Translation3d(-0.2036, 0.173749, 0.5169), new Rotation3d(0, 0.174533, Math.PI));
+        public static final Transform3d FRONT_CAMERA_TRANSFORM = new Transform3d(new Translation3d(-0.2036, -0.173749, 0.5169), new Rotation3d(0.174533, 0, 0));
+        public static final Transform3d BACK_CAMERA_TRANSFORM = new Transform3d(new Translation3d(-0.2036, 0.173749, 0.5169), new Rotation3d(0.174533, 0, Math.PI));
         public static final Vector<N3> MULTI_TAG_VISION_STDS = VecBuilder.fill(1, 1, Math.PI);
         public static final Vector<N3> ONE_TAG_VISION_STDS = VecBuilder.fill(1.5, 1.5, Math.PI);
 
@@ -212,8 +212,6 @@ public final class Constants {
         public static final double TARGET_Y_BLUE = 4.98;
         public static final double TARGET_Y_RED = 5.55;
 
-        public static final double AMP_TARGET_X_BLUE = 1.84;
-        public static final double AMP_TARGET_X_RED = 14.70;
         public static final double TRAP_CENTER_TARGET_Y_BLUE = 4.11;
         public static final double TRAP_CENTER_TARGET_Y_RED = 3.71;
         public static final double TRAP_LEFT_TARGET_Y_BLUE = 4.50;
