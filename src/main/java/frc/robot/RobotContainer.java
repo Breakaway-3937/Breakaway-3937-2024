@@ -29,7 +29,6 @@ public class RobotContainer {
     private final Joystick rotationController = new Joystick(Constants.Controllers.ROTATION_CONTROLLER.getPort());
     private final XboxController xboxController = new XboxController(Constants.Controllers.XBOX_CONTROLLER.getPort());
     private final Joystick buttons = new Joystick(Constants.Controllers.BUTTONS.getPort());
-    
 
     /* Drive Controls */
     private final int translationAxis = Constants.Controllers.TRANSLATION_AXIS;
@@ -93,6 +92,7 @@ public class RobotContainer {
         button8.whileTrue(c_Align);
         leftStick.onTrue(new InstantCommand(() -> s_Shooter.setAutoShooting()));
         rightStick.onTrue(new InstantCommand(() -> s_Shooter.setAutoShooting()));
+        leftStick.and(rightStick).onTrue(new InstantCommand(() -> Robot.restartOrangePi()));
         right.onTrue(new InstantCommand(() -> s_Shooter.setSubShooting()));
         left.onTrue(new InstantCommand(() -> s_Shooter.setPodiumShooting()));
     }
