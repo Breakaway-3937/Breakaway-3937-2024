@@ -5,7 +5,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
@@ -46,7 +45,6 @@ public class RunNote extends Command {
   public void execute() {
     if(RunElevator.handoff){
       s_Shooter.setWrist(handoff);
-      Shuffleboard.selectTab("Elevator");
     }
 
     if(RunElevator.trapStage1){
@@ -56,7 +54,6 @@ public class RunNote extends Command {
       noteGood = false;
       spitBack = false;
       sendForward = false;
-      Shuffleboard.selectTab("Elevator");
     }
     else if(RunElevator.trapStage2){
       s_Intake.stop();
@@ -65,41 +62,34 @@ public class RunNote extends Command {
       noteGood = false;
       spitBack = false;
       sendForward = false;
-      Shuffleboard.selectTab("Elevator");
     }
     else if(RunElevator.startStage1){
       if(s_Shooter.isAtPosition()){
         s_Intake.intake();
         s_Shooter.setShooter(5);
-        Shuffleboard.selectTab("Elevator");
       }
     }
     else if(RunElevator.startStage2){
       s_Intake.stop();
       s_Shooter.stopShooter();
-      s_Shooter.setWrist(protect);
       deadIntake = false;
       noteGood = false;
       sendForward = false;
       spitBack = false;
-      Shuffleboard.selectTab("Elevator");
     }
     else if(RunElevator.reverse){
       s_Intake.spit();
       s_Shooter.setShooter(-10);
       spitBack = true;
-      Shuffleboard.selectTab("Elevator");
     }
     else{
       //No Buttons
       if(!spitBack && xboxController.getLeftTriggerAxis() <= 0.3 && !xboxController.getRawButton(5) && xboxController.getRightTriggerAxis() <= 0.3){
         s_Intake.stop();
-        Shuffleboard.selectTab("Drive");
       }
       //Intake
       else if(xboxController.getLeftTriggerAxis() > 0.3 && !deadIntake){
         s_Intake.intake();
-        Shuffleboard.selectTab("Intake");
       }
       //Spit
       else if(xboxController.getRawButton(5)){
@@ -115,7 +105,6 @@ public class RunNote extends Command {
           s_Intake.stop();
           s_Shooter.stopShooter();
         }
-        Shuffleboard.selectTab("Intake");
       }
 
       if(spitBack){
@@ -144,11 +133,12 @@ public class RunNote extends Command {
         if(!RunElevator.deadShooter){
           s_Shooter.setWristShooting();
         }
-        Shuffleboard.selectTab("Shooter");
       }
       //Stop Shooter
       else if(!xboxController.getRawButton(6)){
-        s_Shooter.stopShooter();
+        if(!xboxController.getRawButton(5)){
+          s_Shooter.stopShooter();
+        }
         s_Shooter.setSpeedToZero();
         if(xboxController.getRawButton(5)){
           RunElevator.handoff = false;
@@ -161,7 +151,6 @@ public class RunNote extends Command {
           s_Shooter.setWrist(protect);
           RunElevator.handoff = false;
         }
-        Shuffleboard.selectTab("Drive");
       }
 
       //Fire Shooter
@@ -173,7 +162,7 @@ public class RunNote extends Command {
         sendForward = false;
       }
       //Sensor Detects, Stop Intake
-      else if(xboxController.getRightTriggerAxis() <= 0.3 && s_Intake.getShooterSensor() && !noteGood && !RunElevator.trap){
+      else if(xboxController.getRightTriggerAxis() <= 0.3 && s_Intake.getShooterSensor() && !noteGood){
         spitBack = true;
       }
     }
