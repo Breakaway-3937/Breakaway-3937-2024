@@ -109,6 +109,10 @@ public class Robot extends LoggedRobot {
     }
 
     Logger.recordOutput("Front", getFront());
+
+    if(!powerDistribution.getSwitchableChannel()){
+      powerDistribution.setSwitchableChannel(true);
+    }
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
