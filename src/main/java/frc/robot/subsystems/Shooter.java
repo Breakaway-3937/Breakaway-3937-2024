@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.Map;
+
 import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -21,6 +23,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -35,7 +38,7 @@ public class Shooter extends SubsystemBase {
   private SparkPIDController pid;
   private final MotionMagicVelocityVoltage request = new MotionMagicVelocityVoltage(0).withSlot(0).withEnableFOC(true);
   private final Follower followerRequest = new Follower(Constants.Shooter.SHOOTER_MOTOR_ID, true);
-  private final GenericEntry shooterEncoderEntry, wristEncoderEntry;
+  private final GenericEntry shooterEncoderEntry, wristEncoderEntry, shooterOffset, wristOffset;
   private double speed, position = 0;
   private boolean subwoofer, podium;
   private final InterpolatingDoubleTreeMap shooterMap = new InterpolatingDoubleTreeMap();
@@ -52,26 +55,28 @@ public class Shooter extends SubsystemBase {
     configWristMotor();
     shooterEncoderEntry = Shuffleboard.getTab("Shooter").add("Shooter", getShooterVelocity()).withPosition(0,0).getEntry();
     wristEncoderEntry = Shuffleboard.getTab("Shooter").add("Wrist", getWrist()).withPosition(1, 0).getEntry();
+    shooterOffset = Shuffleboard.getTab("Shooter").add("Shooter Offset", 0).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", -500, "max", 500)).withPosition(0, 1).getEntry();
+    wristOffset = Shuffleboard.getTab("Shooter").add("Wrist Offset", -0.37).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", -5, "max", 5)).withPosition(0, 2).getEntry();
 
-    wristMap.put(1.0, 17.5);
-    wristMap.put(1.9, 19.75);
-    wristMap.put(2.47, 20.75);
-    wristMap.put(2.5, 21.0);
-    wristMap.put(3.0, 21.75);
-    wristMap.put(3.5, 22.0);
-    wristMap.put(3.7, 22.0);
-    wristMap.put(4.12, 22.5);
-    wristMap.put(4.86, 22.75);
+    wristMap.put(1.24, 17.5);
+    wristMap.put(2.14, 19.75);
+    wristMap.put(2.71, 20.75);
+    wristMap.put(2.74, 21.0);
+    wristMap.put(3.24, 21.75);
+    wristMap.put(3.74, 22.0);
+    wristMap.put(3.94, 22.0);
+    wristMap.put(4.36, 22.5);
+    wristMap.put(5.1, 22.75);
 
-    shooterMap.put(1.0, 3000.0 / 60.0);
-    shooterMap.put(1.9, 3000.0 / 60.0);
-    shooterMap.put(2.47, 3000.0 / 60.0);
-    shooterMap.put(2.5, 3500.0 / 60.0);
-    shooterMap.put(3.0, 3500.0 / 60.0);
-    shooterMap.put(3.5, 3500.0 / 60.0);
-    shooterMap.put(3.7, 3500.0 / 60.0);
-    shooterMap.put(4.12, 4000.0 / 60.0);
-    shooterMap.put(4.86, 4000.0 / 60.0);
+    shooterMap.put(1.24, 3000.0 / 60.0);
+    shooterMap.put(2.14, 3000.0 / 60.0);
+    shooterMap.put(2.71, 3000.0 / 60.0);
+    shooterMap.put(2.74, 3500.0 / 60.0);
+    shooterMap.put(3.24, 3500.0 / 60.0);
+    shooterMap.put(3.74, 3500.0 / 60.0);
+    shooterMap.put(3.94, 3500.0 / 60.0);
+    shooterMap.put(4.36, 4000.0 / 60.0);
+    shooterMap.put(5.1, 4000.0 / 60.0);
   }
 
   public Pair<TalonFX, TalonFX> getShooterMotors(){
@@ -128,8 +133,8 @@ public class Shooter extends SubsystemBase {
       position = 17.5;
     }
     else{
-      speed = shooterMap.get(Robot.robotContainer.s_Vision.getDistance());
-      position = wristMap.get(Robot.robotContainer.s_Vision.getDistance());
+      speed = shooterMap.get(Robot.robotContainer.s_Vision.getDistance() + shooterOffset.getDouble(0));
+      position = wristMap.get(Robot.robotContainer.s_Vision.getDistance() + wristOffset.getDouble(0));
     }
     if(!Robot.getFront()){
       position -= 11.5;
