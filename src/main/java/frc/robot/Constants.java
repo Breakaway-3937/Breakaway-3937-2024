@@ -61,8 +61,6 @@ public final class Constants {
         public static final Vector<N3> STATE_STDS = VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5));
 
         public static final int PIGEON_ID = 20;
-        public static final boolean INVERT_GYRO = false;
-
 
         public static final COTSTalonFXSwerveConstants CHOSEN_MODULE = COTSTalonFXSwerveConstants.SDS.MK4.Falcon500(COTSTalonFXSwerveConstants.SDS.MK4.driveRatios.L2);
 
@@ -205,7 +203,7 @@ public final class Constants {
         public static final Transform3d FRONT_CAMERA_TRANSFORM = new Transform3d(new Translation3d(-0.21, -0.174, 0.455), new Rotation3d(0.174533, 0, 0));
         public static final Transform3d BACK_CAMERA_TRANSFORM = new Transform3d(new Translation3d(-0.21, 0.174, 0.455), new Rotation3d(0.174533, 0, Math.PI));
         public static final Vector<N3> MULTI_TAG_VISION_STDS = VecBuilder.fill(0.25, 0.25, Math.PI);
-        public static final Vector<N3> ONE_TAG_VISION_STDS = VecBuilder.fill(1.5, 1.5, Math.PI);
+        public static final Vector<N3> ONE_TAG_VISION_STDS = VecBuilder.fill(1, 1, Math.PI);
 
         public static final double TARGET_X_BLUE = -0.04;
         public static final double TARGET_X_RED = 16.58;
