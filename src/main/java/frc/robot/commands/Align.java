@@ -22,6 +22,7 @@ public class Align extends Command {
   private final Vision s_Vision;
   private final DoubleSupplier translationSup;
   private final DoubleSupplier strafeSup;
+  private final DoubleSupplier rotationSup;
   private final BooleanSupplier robotCentricSup;
   private final double pValue = 8.0 / 42.0;
   private boolean flag;
@@ -29,13 +30,14 @@ public class Align extends Command {
 
 
   /** Creates a new Align. */
-  public Align(Swerve s_Swerve, Vision s_Vision, DoubleSupplier translationSup, DoubleSupplier strafeSup, BooleanSupplier robotCentricSup) {
+  public Align(Swerve s_Swerve, Vision s_Vision, DoubleSupplier translationSup, DoubleSupplier strafeSup, DoubleSupplier rotationSup, BooleanSupplier robotCentricSup) {
     this.s_Swerve = s_Swerve;
     this.s_Vision = s_Vision;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(s_Swerve, s_Vision);
     this.translationSup = translationSup;
     this.strafeSup = strafeSup;
+    this.rotationSup = rotationSup;
     this.robotCentricSup = robotCentricSup;
   }
 
@@ -111,15 +113,26 @@ public class Align extends Command {
       /* Get Values, Deadband*/
       translationVal = MathUtil.applyDeadband(translationSup.getAsDouble(), Constants.Controllers.STICK_DEADBAND);
       strafeVal = MathUtil.applyDeadband(strafeSup.getAsDouble(), Constants.Controllers.STICK_DEADBAND);
+      rotationVal = MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.Controllers.STICK_DEADBAND);
 
       /* Drive */
       if(s_Swerve.getNoteTracking()){
-        s_Swerve.drive(
-            new Translation2d(translationVal, strafeVal).times(Constants.Swerve.MAX_SPEED), 
-            s_Vision.getNoteRotationSpeed(), 
-            !robotCentricSup.getAsBoolean(), 
-            true
-        );
+        if(s_Vision.getNoteTargets()){
+          s_Swerve.drive(
+              new Translation2d(translationVal, strafeVal).times(Constants.Swerve.MAX_SPEED), 
+              s_Vision.getNoteRotationSpeed(), 
+              !robotCentricSup.getAsBoolean(), 
+              true
+          );
+        }
+        else{
+          s_Swerve.drive(
+              new Translation2d(translationVal, strafeVal).times(Constants.Swerve.MAX_SPEED), 
+              rotationVal * Constants.Swerve.MAX_ANGULAR_VELOCITY, 
+              !robotCentricSup.getAsBoolean(), 
+              true
+          );
+        }
       }
       else{
         s_Swerve.drive(
