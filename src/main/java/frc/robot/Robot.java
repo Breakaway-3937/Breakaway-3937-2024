@@ -36,12 +36,18 @@ public class Robot extends LoggedRobot {
 
   private static boolean front = true;
 
+  private static boolean restart;
+
   private PowerDistribution powerDistribution;
 
   private GenericEntry canUtil = Shuffleboard.getTab("System").add("CanUtil", 0).withPosition(0, 0).getEntry();
 
   public static boolean getFront(){
     return front;
+  }
+
+  public static void restartOrangePi(){
+    restart = true;
   }
 
   /**
@@ -110,8 +116,13 @@ public class Robot extends LoggedRobot {
 
     Logger.recordOutput("Front", getFront());
 
+    if(restart){
+      powerDistribution.setSwitchableChannel(false);
+    }
+
     if(!powerDistribution.getSwitchableChannel()){
       powerDistribution.setSwitchableChannel(true);
+      restart = false;
     }
   }
 
