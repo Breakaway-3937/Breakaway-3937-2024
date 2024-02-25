@@ -182,7 +182,7 @@ public class Intake extends SubsystemBase {
     popTartSensor.setDouble(popTart.getValue());
     shooterSensor.setDouble(shooter.getValue());
     babyShooterSensor.setDouble(babyShooter.getValue());
-    Logger.recordOutput("Pop-Tart", popTart.getValue());
+    Logger.recordOutput("Pop-Tart Sensor", popTart.getValue());
     Logger.recordOutput("Shooter Sensor", shooter.getValue());
     Logger.recordOutput("Baby Shooter", babyShooter.getValue());
   }
