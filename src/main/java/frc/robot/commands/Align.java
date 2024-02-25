@@ -65,7 +65,7 @@ public class Align extends Command {
       s_Swerve.drive(
           new Translation2d(translationVal, strafeVal).times(Constants.Swerve.MAX_SPEED), 
           rotationVal, 
-          !robotCentricSup.getAsBoolean(), 
+          !robotCentricSup.getAsBoolean(),
           true
       );
     }
@@ -143,12 +143,12 @@ public class Align extends Command {
         );
       }
 
-      if(s_Swerve.getSpeed().omegaRadiansPerSecond < 0.1 && !flag){
+      if(s_Vision.getAprilTagRotationSpeed() < 0.3 && !flag){
         Robot.robotContainer.s_LED.reset();
         Robot.robotContainer.s_LED.green();
         flag = true;
       }
-      if(s_Swerve.getSpeed().omegaRadiansPerSecond >= 0.1){
+      if(s_Vision.getAprilTagRotationSpeed() >= 0.3){
         flag = false;
         Robot.robotContainer.s_LED.reset();
       }
