@@ -175,8 +175,8 @@ public final class Constants {
     }
 
     public static final class Intake {
-        public static final int LEAD_INTAKE_MOTOR_ID = 17; // Back
-        public static final int FOLLOWER_INTAKE_MOTOR_ID = 16; // Forward
+        public static final int LEAD_INTAKE_MOTOR_ID = 17; //Back
+        public static final int FOLLOWER_INTAKE_MOTOR_ID = 16; //Forward
         public static final int BAGS_MOTOR_ID = 30;
         public static final int LOADER_MOTOR_ID = 2;
         public static final int POP_TART_SENSOR_ID = 0;
@@ -202,9 +202,9 @@ public final class Constants {
         public static final String FRONT_CAMERA_NAME = "Front Camera";
         public static final String BACK_CAMERA_NAME = "Global_Shutter_Camera";
         public static final String NOTE_CAMERA_NAME = "HD_USB_Camera";
-        public static final Transform3d FRONT_CAMERA_TRANSFORM = new Transform3d(new Translation3d(-0.2036, -0.173749, 0.5169), new Rotation3d(0.174533, 0, 0));
-        public static final Transform3d BACK_CAMERA_TRANSFORM = new Transform3d(new Translation3d(-0.2036, 0.173749, 0.5169), new Rotation3d(0.174533, 0, Math.PI));
-        public static final Vector<N3> MULTI_TAG_VISION_STDS = VecBuilder.fill(1, 1, Math.PI);
+        public static final Transform3d FRONT_CAMERA_TRANSFORM = new Transform3d(new Translation3d(-0.21, -0.174, 0.455), new Rotation3d(0.174533, 0, 0));
+        public static final Transform3d BACK_CAMERA_TRANSFORM = new Transform3d(new Translation3d(-0.21, 0.174, 0.455), new Rotation3d(0.174533, 0, Math.PI));
+        public static final Vector<N3> MULTI_TAG_VISION_STDS = VecBuilder.fill(0.25, 0.25, Math.PI);
         public static final Vector<N3> ONE_TAG_VISION_STDS = VecBuilder.fill(1.5, 1.5, Math.PI);
 
         public static final double TARGET_X_BLUE = -0.04;
