@@ -39,7 +39,7 @@ public class Swerve extends SubsystemBase {
     private final ComplexWidget fieldWidget;
     private final Field2d field = new Field2d(); 
     private final SwerveDrivePoseEstimator poseEstimator;
-    private boolean noteTracking = false;
+    private boolean noteTracking;
 
     public Swerve() {
         gyro = new Pigeon2(Constants.Swerve.PIGEON_ID, Constants.CANIVORE_BUS);
