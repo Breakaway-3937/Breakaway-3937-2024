@@ -25,6 +25,7 @@ import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -56,27 +57,16 @@ public class Shooter extends SubsystemBase {
     shooterEncoderEntry = Shuffleboard.getTab("Shooter").add("Shooter", getShooterVelocity()).withPosition(0,0).getEntry();
     wristEncoderEntry = Shuffleboard.getTab("Shooter").add("Wrist", getWrist()).withPosition(1, 0).getEntry();
     shooterOffset = Shuffleboard.getTab("Shooter").add("Shooter Offset", 0).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", -500, "max", 500)).withPosition(0, 1).getEntry();
-    wristOffset = Shuffleboard.getTab("Shooter").add("Wrist Offset", -0.37).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", -5, "max", 5)).withPosition(0, 2).getEntry();
+    wristOffset = Shuffleboard.getTab("Shooter").add("Wrist Offset", 0).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", -2, "max", 2)).withPosition(0, 2).getEntry();
 
-    wristMap.put(1.24, 17.5);
-    wristMap.put(2.14, 19.75);
-    wristMap.put(2.71, 20.75);
-    wristMap.put(2.74, 21.0);
-    wristMap.put(3.24, 21.75);
-    wristMap.put(3.74, 22.0);
-    wristMap.put(3.94, 22.0);
-    wristMap.put(4.36, 22.5);
-    wristMap.put(5.1, 22.75);
+    SmartDashboard.putNumber("Shooter", 0);
+    SmartDashboard.putNumber("Wrist", 0);
 
-    shooterMap.put(1.24, 3000.0 / 60.0);
-    shooterMap.put(2.14, 3000.0 / 60.0);
-    shooterMap.put(2.71, 3000.0 / 60.0);
-    shooterMap.put(2.74, 3500.0 / 60.0);
-    shooterMap.put(3.24, 3500.0 / 60.0);
-    shooterMap.put(3.74, 3500.0 / 60.0);
-    shooterMap.put(3.94, 3500.0 / 60.0);
-    shooterMap.put(4.36, 4000.0 / 60.0);
-    shooterMap.put(5.1, 4000.0 / 60.0);
+    //TODO: get new values
+
+    wristMap.put(0.0, 0.0);
+
+    shooterMap.put(0.0, 0.0);
   }
 
   public Pair<TalonFX, TalonFX> getShooterMotors(){
@@ -133,11 +123,12 @@ public class Shooter extends SubsystemBase {
       position = 17.5;
     }
     else{
-      speed = shooterMap.get(Robot.robotContainer.s_Vision.getDistance() + shooterOffset.getDouble(0));
-      position = wristMap.get(Robot.robotContainer.s_Vision.getDistance() + wristOffset.getDouble(0));
+      /*speed = shooterMap.get(Robot.robotContainer.s_Vision.getDistance() + shooterOffset.getDouble(0));
+      position = wristMap.get(Robot.robotContainer.s_Vision.getDistance() + wristOffset.getDouble(0));*/
     }
+    //FIXME
     if(!Robot.getFront()){
-      position -= 11.5;
+      position -= 0;
     }
     if((position > 0 && position < 4) || (position > 10 && position < 23)){
       pid.setReference(position, ControlType.kSmartMotion);
@@ -191,10 +182,10 @@ public class Shooter extends SubsystemBase {
     shooterMotor.getConfigurator().apply(new TalonFXConfiguration());
     followerShooterMotor.getConfigurator().apply(new TalonFXConfiguration());
 
-    shooterMotorConfig.Slot0.kS = 0.4; // Add 0.25 V output to overcome static friction
-    shooterMotorConfig.Slot0.kV = 0.13; // A velocity target of 1 rps results in 0.12 V output
-    shooterMotorConfig.Slot0.kA = 0.1; // An acceleration of 1 rps/s requires 0.01 V output
-    shooterMotorConfig.Slot0.kP = 0.2; // An error of 1 rps results in 0.11 V output
+    shooterMotorConfig.Slot0.kS = 0.4; // Add 0.4 V output to overcome static friction
+    shooterMotorConfig.Slot0.kV = 0.13; // A velocity target of 1 rps results in 0.13 V output
+    shooterMotorConfig.Slot0.kA = 0.1; // An acceleration of 1 rps/s requires 0.1 V output
+    shooterMotorConfig.Slot0.kP = 0.2; // An error of 1 rps results in 0.2 V output
     shooterMotorConfig.Slot0.kI = 0; // no output for integrated error
     shooterMotorConfig.Slot0.kD = 0; // no output for error derivative
 
@@ -243,5 +234,8 @@ public class Shooter extends SubsystemBase {
     Logger.recordOutput("Shooter", getShooterVelocity() * 60.0);
     wristEncoderEntry.setDouble(getWrist());
     Logger.recordOutput("Wrist", getWrist());
+
+    speed = SmartDashboard.getNumber("Shooter", 0);
+    position = SmartDashboard.getNumber("Wrist", 0);
   }
 }
