@@ -120,6 +120,7 @@ public class LED extends SubsystemBase {
                 funeralFlag = false;
             }
             if(orange){
+                //FIXME
                 if(!flag){
                     timer.reset();
                     timer.start();
@@ -201,6 +202,7 @@ public class LED extends SubsystemBase {
         }
         else if(!Robot.robotContainer.s_Vision.isDead()){
             if(orange){
+                //FIXME
                 if(!flag){
                     timer.reset();
                     timer.start();
