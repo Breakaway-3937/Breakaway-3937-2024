@@ -25,7 +25,6 @@ import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -41,10 +40,10 @@ public class Shooter extends SubsystemBase {
   private final Follower followerRequest = new Follower(Constants.Shooter.SHOOTER_MOTOR_ID, true);
   private final GenericEntry shooterEncoderEntry, wristEncoderEntry, shooterOffset, wristOffset;
   private double speed, position = 0;
-  private boolean subwoofer, podium;
+  private boolean subwoofer, podium, autoFire;
   private final InterpolatingDoubleTreeMap shooterMap = new InterpolatingDoubleTreeMap();
   private final InterpolatingDoubleTreeMap wristMap = new InterpolatingDoubleTreeMap();
-  private boolean autoFire;
+  public static boolean sixMoreSmidgens, shooterSad;
 
   /** Creates a new Shooter. */
   public Shooter() {
@@ -59,14 +58,23 @@ public class Shooter extends SubsystemBase {
     shooterOffset = Shuffleboard.getTab("Shooter").add("Shooter Offset", 0).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", -500, "max", 500)).withPosition(0, 1).getEntry();
     wristOffset = Shuffleboard.getTab("Shooter").add("Wrist Offset", 0).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", -2, "max", 2)).withPosition(0, 2).getEntry();
 
-    SmartDashboard.putNumber("Shooter", 0);
-    SmartDashboard.putNumber("Wrist", 0);
+    shooterMap.put(1.88, 50.0);
+    shooterMap.put(2.4, 51.6);
+    shooterMap.put(3.0, 53.3);
+    shooterMap.put(3.5, 66.6);
+    shooterMap.put(3.9, 70.0);
+    shooterMap.put(4.36, 73.3);
+    shooterMap.put(5.0, 76.6);
+    shooterMap.put(6.3, 76.66);
 
-    //TODO: get new values
-
-    wristMap.put(0.0, 0.0);
-
-    shooterMap.put(0.0, 0.0);
+    wristMap.put(1.88, 18.75);
+    wristMap.put(2.4, 20.0);
+    wristMap.put(3.0, 20.9);
+    wristMap.put(3.5, 21.733);
+    wristMap.put(3.9, 21.9);
+    wristMap.put(4.36, 22.4);
+    wristMap.put(5.0, 22.85);
+    wristMap.put(6.3, 23.15);
   }
 
   public Pair<TalonFX, TalonFX> getShooterMotors(){
@@ -123,15 +131,21 @@ public class Shooter extends SubsystemBase {
       position = 17.5;
     }
     else{
-      /*speed = shooterMap.get(Robot.robotContainer.s_Vision.getDistance() + shooterOffset.getDouble(0));
-      position = wristMap.get(Robot.robotContainer.s_Vision.getDistance() + wristOffset.getDouble(0));*/
+      speed = shooterMap.get(Robot.robotContainer.s_Vision.getDistance() + shooterOffset.getDouble(0));
+      position = wristMap.get(Robot.robotContainer.s_Vision.getDistance() + wristOffset.getDouble(0));
     }
-    //FIXME
     if(!Robot.getFront()){
-      position -= 0;
+      position = 2 * 12.0033218 - position;
     }
-    if((position > 0 && position < 4) || (position > 10 && position < 23)){
+    if(position > 23){
+      sixMoreSmidgens = true;
+    }
+    if((position > 0 && position < 4.78) || (position > 10.16 && position < 23.5)){
       pid.setReference(position, ControlType.kSmartMotion);
+      shooterSad = false;
+    }
+    else{
+      shooterSad = true;
     }
   }
 
@@ -234,8 +248,5 @@ public class Shooter extends SubsystemBase {
     Logger.recordOutput("Shooter", getShooterVelocity() * 60.0);
     wristEncoderEntry.setDouble(getWrist());
     Logger.recordOutput("Wrist", getWrist());
-
-    speed = SmartDashboard.getNumber("Shooter", 0);
-    position = SmartDashboard.getNumber("Wrist", 0);
   }
 }
