@@ -120,7 +120,6 @@ public class LED extends SubsystemBase {
                 funeralFlag = false;
             }
             if(orange){
-                //FIXME
                 if(!flag){
                     timer.reset();
                     timer.start();
@@ -129,10 +128,10 @@ public class LED extends SubsystemBase {
                     strobe.setLedOffset(18);
                     fade.setLedOffset(18);
                     strobe.setR(255);
-                    strobe.setG(165);
+                    strobe.setG(40);
                     strobe.setB(0);
                     fade.setR(255);
-                    fade.setG(165);
+                    fade.setG(40);
                     fade.setB(0);
                 }
                 else if(timer.get() > 1){
@@ -148,6 +147,10 @@ public class LED extends SubsystemBase {
             else if(!Robot.robotContainer.s_Intake.botFull()){
                 candle.clearAnimation(0);
                 candle.setLEDs(0, 0, 254, 0, 17, 8);
+            }
+            else if(Shooter.shooterSad){
+                candle.clearAnimation(0);
+                candle.setLEDs(136, 0, 209, 0, 17, 8);
             }
             else if(green){
                 if(!flag){
@@ -202,7 +205,6 @@ public class LED extends SubsystemBase {
         }
         else if(!Robot.robotContainer.s_Vision.isDead()){
             if(orange){
-                //FIXME
                 if(!flag){
                     timer.reset();
                     timer.start();
@@ -211,10 +213,10 @@ public class LED extends SubsystemBase {
                     strobe.setLedOffset(0);
                     fade.setLedOffset(0);
                     strobe.setR(255);
-                    strobe.setG(165);
+                    strobe.setG(40);
                     strobe.setB(0);
                     fade.setR(255);
-                    fade.setG(165);
+                    fade.setG(40);
                     fade.setB(0);
                 }
                 else if(timer.get() > 1){
@@ -230,6 +232,10 @@ public class LED extends SubsystemBase {
             else if(!Robot.robotContainer.s_Intake.botFull()){
                 candle.clearAnimation(0);
                 candle.setLEDs(0, 0, 254);
+            }
+            else if(Shooter.shooterSad){
+                candle.clearAnimation(0);
+                candle.setLEDs(136, 0, 209);
             }
             else if(green){
                 if(!flag){
