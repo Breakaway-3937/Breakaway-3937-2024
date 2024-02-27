@@ -9,13 +9,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Shooter;
 
 public class RunElevator extends Command {
   private final Elevator s_Elevator;
   private final XboxController xboxController;
   private final double wristHandoff = 65;
   private final double wristProtect = 3;
-  private final double wristAmp = 40.5;
+  private final double wristSixMoreSmidgens = 6.5;
+  private final double wristAmp = 47.4;
   private final double wristPreTrap = 41.7;
   private final double wristTrap = 35;
   private final double wristSource = 65;
@@ -101,7 +103,12 @@ public class RunElevator extends Command {
     if(Robot.robotContainer.s_Shooter.isSafe() || handoff){
       if(protect){
         s_Elevator.setElevator(elevatorProtect);
-        s_Elevator.setBabyWrist(wristProtect);
+        if(Shooter.sixMoreSmidgens){
+          s_Elevator.setBabyWrist(wristSixMoreSmidgens);
+        }
+        else{
+          s_Elevator.setBabyWrist(wristProtect);
+        }
         handoff = false;
       }
       else if(trap){
