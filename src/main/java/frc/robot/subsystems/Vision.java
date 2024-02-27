@@ -18,13 +18,9 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -118,89 +114,19 @@ public class Vision extends SubsystemBase {
     }
   }
 
-  public Matrix<N3, N1> getFrontEstimationStdDevs(Pose2d estimatedPose){
-    var estStdDevs = Constants.Vision.ONE_TAG_VISION_STDS;
-    var targets = frontCamera.getLatestResult().getTargets();
-    int numTags = 0;
-    double avgDist = 0;
-    for(var tar : targets){
-        var tagPose = frontPoseEstimator.getFieldTags().getTagPose(tar.getFiducialId());
-        if(tagPose.isEmpty()){
-          continue;
-        }
-        numTags++;
-        avgDist += tagPose.get().toPose2d().getTranslation().getDistance(estimatedPose.getTranslation());
-    }
-
-    if(numTags == 0){
-      return estStdDevs;
-    }
-    avgDist /= numTags;
-
-    // Decrease std devs if multiple targets are visible
-    if(numTags > 1){
-      estStdDevs = Constants.Vision.MULTI_TAG_VISION_STDS;
-    }
-
-    // Increase std devs based on (average) distance
-    if(numTags == 1 && avgDist > 4){
-      estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
-    }
-    else{
-      estStdDevs = estStdDevs.times(1 + (avgDist * avgDist / 30.0));
-    }
-
-    return estStdDevs;
-  }
-
-  public Matrix<N3, N1> getBackEstimationStdDevs(Pose2d estimatedPose){
-    var estStdDevs = Constants.Vision.ONE_TAG_VISION_STDS;
-    var targets = backCamera.getLatestResult().getTargets();
-    int numTags = 0;
-    double avgDist = 0;
-    for(var tar : targets){
-        var tagPose = backPoseEstimator.getFieldTags().getTagPose(tar.getFiducialId());
-        if(tagPose.isEmpty()){
-          continue;
-        }
-        numTags++;
-        avgDist += tagPose.get().toPose2d().getTranslation().getDistance(estimatedPose.getTranslation());
-    }
-
-    if(numTags == 0){
-      return estStdDevs;
-    }
-    avgDist /= numTags;
-
-    // Decrease std devs if multiple targets are visible
-    if(numTags > 1){
-      estStdDevs = Constants.Vision.MULTI_TAG_VISION_STDS;
-    }
-
-    // Increase std devs based on (average) distance
-    if(numTags == 1 && avgDist > 4){
-      estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
-    }
-    else{
-      estStdDevs = estStdDevs.times(1 + (avgDist * avgDist / 30.0));
-    }
-
-    return estStdDevs;
-  }
-
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     if(frontCamera.getLatestResult().hasTargets()){
       var pose = getFrontEstimatedGlobalPose();
       if(pose.isPresent()){
-        s_Swerve.updatePoseVision(pose.get(), getFrontEstimationStdDevs(pose.get().estimatedPose.toPose2d()));
+        s_Swerve.updatePoseVision(pose.get());
       }
     }
     else if(backCamera.getLatestResult().hasTargets()){
       var pose = getBackEstimatedGlobalPose();
       if(pose.isPresent()){
-        s_Swerve.updatePoseVision(pose.get(), getBackEstimationStdDevs(pose.get().estimatedPose.toPose2d()));
+        s_Swerve.updatePoseVision(pose.get());
       }
     }
 
