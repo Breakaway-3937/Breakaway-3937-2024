@@ -200,10 +200,9 @@ public final class Constants {
         public static final String FRONT_CAMERA_NAME = "Front Camera";
         public static final String BACK_CAMERA_NAME = "Global_Shutter_Camera";
         public static final String NOTE_CAMERA_NAME = "HD_USB_Camera";
-        public static final Transform3d FRONT_CAMERA_TRANSFORM = new Transform3d(new Translation3d(-0.21, -0.174, 0.455), new Rotation3d(0.174533, 0, 0));
-        public static final Transform3d BACK_CAMERA_TRANSFORM = new Transform3d(new Translation3d(-0.21, 0.174, 0.455), new Rotation3d(0.174533, 0, Math.PI));
-        public static final Vector<N3> MULTI_TAG_VISION_STDS = VecBuilder.fill(0.25, 0.25, Math.PI);
-        public static final Vector<N3> ONE_TAG_VISION_STDS = VecBuilder.fill(1, 1, Math.PI);
+        public static final Transform3d FRONT_CAMERA_TRANSFORM = new Transform3d(new Translation3d(-0.198, -0.172, 0.29), new Rotation3d(0.174533, 0, 0));
+        public static final Transform3d BACK_CAMERA_TRANSFORM = new Transform3d(new Translation3d(-0.198, 0.172, 0.29), new Rotation3d(0.174533, 0, Math.PI));
+        public static final Vector<N3> TAG_VISION_STDS = VecBuilder.fill(0.0001, 0.0001, Units.degreesToRadians(10));
 
         public static final double TARGET_X_BLUE = -0.04;
         public static final double TARGET_X_RED = 16.58;
