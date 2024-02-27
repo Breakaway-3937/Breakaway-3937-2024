@@ -29,7 +29,7 @@ public class AutoRunNote extends Command {
     spitBack = false;
     deadIntake = false;
     sendForward = false;
-    noteGood = false;
+    noteGood = true;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -88,6 +88,7 @@ public class AutoRunNote extends Command {
     //Wrist Protect
     if(!s_Shooter.autoFire()){
       s_Shooter.setWrist(protect);
+      Shooter.sixMoreSmidgens = false;
     }
   }
 
