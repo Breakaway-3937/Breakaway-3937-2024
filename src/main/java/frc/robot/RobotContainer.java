@@ -56,7 +56,8 @@ public class RobotContainer {
 
     /* Commands */
     public final Music c_Music = new Music(s_Swerve);
-    private final Align c_Align = new Align(s_Swerve, s_Vision, () -> translationController.getRawAxis(translationAxis), () -> translationController.getRawAxis(strafeAxis), () -> rotationController.getRawAxis(rotationAxis), () -> robotRelative);
+    private final Align c_AlignField = new Align(s_Swerve, s_Vision, () -> translationController.getRawAxis(translationAxis), () -> translationController.getRawAxis(strafeAxis), () -> rotationController.getRawAxis(rotationAxis), () -> robotRelative);
+    private final Align c_AlignRobot = new Align(s_Swerve, s_Vision, () -> translationController.getRawAxis(translationAxis), () -> translationController.getRawAxis(strafeAxis), () -> rotationController.getRawAxis(rotationAxis), () -> !robotRelative);
     public final RunNote c_RunNote = new RunNote(s_Intake, s_Shooter, xboxController);
     public final AutoRunNote c_AutoRunNote = new AutoRunNote(s_Intake, s_Shooter);
     private final RunElevator c_RunElevator = new RunElevator(s_Elevator, xboxController);
@@ -87,9 +88,9 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         translationButton.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
-        rotationButton.whileTrue(c_Align);
-        button7.whileTrue(c_Align);
-        button8.whileTrue(c_Align);
+        rotationButton.whileTrue(c_AlignField);
+        button7.whileTrue(c_AlignRobot);
+        button8.whileTrue(c_AlignField);
         leftStick.onTrue(new InstantCommand(() -> s_Shooter.setAutoShooting()));
         rightStick.onTrue(new InstantCommand(() -> s_Shooter.setAutoShooting()));
         leftStick.and(rightStick).onTrue(new InstantCommand(() -> Robot.restartOrangePi()));
