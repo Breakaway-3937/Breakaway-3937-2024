@@ -13,8 +13,8 @@ import frc.robot.subsystems.Swerve;
 public class Music extends Command {
   private final Swerve s_Swerve;
   private final Orchestra orchestra;
-  private int count = 0;
-  private double time = 0;
+  private int count;
+  private double time;
   /** Creates a new Music. */
   public Music(Swerve s_Swerve) {
     this.s_Swerve = s_Swerve;
@@ -26,7 +26,7 @@ public class Music extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    count = (int) (Math.random() * 11);
+    count = (int) (Math.random() * 12);
     for(int i = 0; i < 4; i++){
       orchestra.addInstrument(s_Swerve.mSwerveMods[i].getDriveMotor());
       orchestra.addInstrument(s_Swerve.mSwerveMods[i].getAngleMotor());
@@ -104,10 +104,17 @@ public class Music extends Command {
       }
       if(count == 10){
         orchestra.loadMusic("Elves.chrp");
+        count++;
         time = 42;
         orchestra.play();
       }
-      if(count == 10){
+      if(count == 11){
+        //TODO: get chrp file and time value
+        orchestra.loadMusic("RockyTop.chrp");
+        time = 0;
+        orchestra.play();
+      }
+      if(count == 11){
         count = 0;
       }
     }
