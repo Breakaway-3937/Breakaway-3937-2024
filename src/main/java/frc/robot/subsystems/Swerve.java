@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+ package frc.robot.subsystems;
 
 import frc.robot.SwerveModule;
 import frc.robot.Constants;
@@ -170,7 +170,9 @@ public class Swerve extends SubsystemBase {
     }
 
     public void updatePoseVision(EstimatedRobotPose pose){
-        poseEstimator.addVisionMeasurement(new Pose2d(new Translation2d(pose.estimatedPose.getX(), pose.estimatedPose.getY()), getGyroYaw()), pose.timestampSeconds);
+        if(!DriverStation.isAutonomousEnabled()){
+            poseEstimator.addVisionMeasurement(new Pose2d(new Translation2d(pose.estimatedPose.getX(), pose.estimatedPose.getY()), getGyroYaw()), pose.timestampSeconds);
+        }
     }
 
     @Override
