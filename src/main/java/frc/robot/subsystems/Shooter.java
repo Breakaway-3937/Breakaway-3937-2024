@@ -39,7 +39,7 @@ public class Shooter extends SubsystemBase {
   private final MotionMagicVelocityVoltage request = new MotionMagicVelocityVoltage(0).withSlot(0).withEnableFOC(true);
   private final Follower followerRequest = new Follower(Constants.Shooter.SHOOTER_MOTOR_ID, true);
   private final GenericEntry shooterEncoderEntry, wristEncoderEntry, shooterOffset, wristOffset;
-  private double speed, position = 0;
+  private double speed, position;
   private boolean subwoofer, podium, autoFire;
   private final InterpolatingDoubleTreeMap shooterMap = new InterpolatingDoubleTreeMap();
   private final InterpolatingDoubleTreeMap wristMap = new InterpolatingDoubleTreeMap();
@@ -109,7 +109,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public boolean atSpeed(){
-    if(speed <= getShooterVelocity() + 1.67 && speed >= getShooterVelocity() - 1.67){
+    if(speed <= getShooterVelocity() + 0.833 && speed >= getShooterVelocity() - 0.833){
       return true;
     }
     else{
@@ -159,7 +159,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public boolean isSafe(){
-    if(getWrist() > 12.8 && getWrist() < 13.2){
+    if(getWrist() > 12.9 && getWrist() < 13.1){
       return true;
     }
     else{
@@ -168,7 +168,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public boolean isAtPosition(){
-    if(getWrist() > position - 0.2 && getWrist() < position + 0.2){
+    if(getWrist() > position - 0.1 && getWrist() < position + 0.1){
       return true;
     }
     else{
