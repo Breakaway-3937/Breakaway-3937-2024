@@ -76,7 +76,6 @@ public class Robot extends LoggedRobot {
     CommandScheduler.getInstance().setPeriod(0.025);
     ComplexWidget pdh = Shuffleboard.getTab("System").add("PDH", powerDistribution).withPosition(1, 0);
     pdh.hashCode();
-    Robot.robotContainer.s_Shooter.setDefaultCommand(Robot.robotContainer.c_AutoRunNote);
   }
 
   /**
@@ -107,11 +106,24 @@ public class Robot extends LoggedRobot {
       teleop = true;
     }
 
-    if((Robot.robotContainer.s_Swerve.getHeading().getDegrees() + 3600000) % 360 < 90 || (Robot.robotContainer.s_Swerve.getHeading().getDegrees() + 3600000) % 360 > 270){
-      front = false;
+    var alliance = DriverStation.getAlliance();
+    if(alliance.isPresent()){
+      if(DriverStation.isAutonomousEnabled() && alliance.get() == DriverStation.Alliance.Red){
+        if((Robot.robotContainer.s_Swerve.getHeading().getDegrees() + 3600000) % 360 < 90 || (Robot.robotContainer.s_Swerve.getHeading().getDegrees() + 3600000) % 360 > 270){
+          front = true;
+        }
+        else{
+          front = false;
+        }
+      }
     }
     else{
-      front = true;
+      if((Robot.robotContainer.s_Swerve.getHeading().getDegrees() + 3600000) % 360 < 90 || (Robot.robotContainer.s_Swerve.getHeading().getDegrees() + 3600000) % 360 > 270){
+        front = false;
+      }
+      else{
+        front = true;
+      }
     }
 
     Logger.recordOutput("Front", getFront());
@@ -142,6 +154,11 @@ public class Robot extends LoggedRobot {
   public void autonomousInit() {
     autonomousCommand = robotContainer.getAutonomousCommand();
 
+    if(Robot.robotContainer.s_Shooter.getDefaultCommand() != null){
+      Robot.robotContainer.s_Shooter.getDefaultCommand().cancel();
+    }
+    Robot.robotContainer.s_Shooter.setDefaultCommand(Robot.robotContainer.c_AutoRunNote);
+
     // schedule the autonomous command (example)
     if(autonomousCommand != null){
       autonomousCommand.schedule();
@@ -160,6 +177,9 @@ public class Robot extends LoggedRobot {
     // this line or comment it out.
     if(autonomousCommand != null){
       autonomousCommand.cancel();
+    }
+    if(Robot.robotContainer.s_Shooter.getDefaultCommand() != null){
+      Robot.robotContainer.s_Shooter.getDefaultCommand().cancel();
     }
     Robot.robotContainer.s_Shooter.setDefaultCommand(Robot.robotContainer.c_RunNote);
     Shuffleboard.selectTab("Drive");
