@@ -56,7 +56,7 @@ public class Shooter extends SubsystemBase {
     shooterEncoderEntry = Shuffleboard.getTab("Shooter").add("Shooter", getShooterVelocity()).withPosition(0,0).getEntry();
     wristEncoderEntry = Shuffleboard.getTab("Shooter").add("Wrist", getWrist()).withPosition(1, 0).getEntry();
     shooterOffset = Shuffleboard.getTab("Shooter").add("Shooter Offset", 0).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", -500, "max", 500)).withPosition(0, 1).getEntry();
-    wristOffset = Shuffleboard.getTab("Shooter").add("Wrist Offset", 0).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", -2, "max", 2)).withPosition(0, 2).getEntry();
+    wristOffset = Shuffleboard.getTab("Shooter").add("Wrist Offset", -0.2).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", -2, "max", 2)).withPosition(0, 2).getEntry();
 
     shooterMap.put(1.88, 50.0);
     shooterMap.put(2.4, 51.6);
@@ -132,7 +132,7 @@ public class Shooter extends SubsystemBase {
     }
     else{
       speed = shooterMap.get(Robot.robotContainer.s_Vision.getDistance() + shooterOffset.getDouble(0));
-      position = wristMap.get(Robot.robotContainer.s_Vision.getDistance() + wristOffset.getDouble(0));
+      position = wristMap.get(Robot.robotContainer.s_Vision.getDistance() + wristOffset.getDouble(-0.2));
     }
     if(!Robot.getFront()){
       position = 2 * 12.0033218 - position;
@@ -206,7 +206,7 @@ public class Shooter extends SubsystemBase {
     shooterMotorConfig.MotionMagic.MotionMagicAcceleration = 2500;
     shooterMotorConfig.MotionMagic.MotionMagicJerk = 4000;
 
-    shooterMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+    shooterMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
     shooterMotorConfig.Audio.AllowMusicDurDisable = true;
 
