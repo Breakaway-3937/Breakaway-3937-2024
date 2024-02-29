@@ -135,6 +135,11 @@ public class Swerve extends SubsystemBase {
         gyro.setYaw(0);
     }
 
+    public void heading180(){
+        poseEstimator.resetPosition(Rotation2d.fromDegrees(getGyroYaw().getDegrees() + 180), getModulePositions(), new Pose2d(getPose().getTranslation(), new Rotation2d()));
+        gyro.setYaw(gyro.getAngle() + 180);
+    }
+
     public Rotation2d getGyroYaw() {
         return Rotation2d.fromDegrees(gyro.getYaw().getValue());
     }
