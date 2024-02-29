@@ -22,7 +22,7 @@ public class LED extends SubsystemBase {
     private final Timer timer, funeralTimer;
     private boolean green, orange, flag, flag1, funeralFlag, autoFlag = false; 
     private final CANdleConfiguration config = new CANdleConfiguration();
-    private final ColorFlowAnimation flow = new ColorFlowAnimation(0, 0, 0, 0, 0.01, Constants.NUM_LEDS, ColorFlowAnimation.Direction.Backward, 0);
+    private final ColorFlowAnimation flow = new ColorFlowAnimation(0, 0, 0, 0, 0.01, Constants.NUM_LEDS, ColorFlowAnimation.Direction.Forward, 0);
     private final RainbowAnimation rainbow = new RainbowAnimation(0.5, 0.1, Constants.NUM_LEDS, false, 0);
     private final FireAnimation fire = new FireAnimation(0.5, 0.1, Constants.NUM_LEDS, 0.1, 0.1, false, 0);
     private final LarsonAnimation pocket = new LarsonAnimation(255, 0, 0, 0, 0.1, Constants.NUM_LEDS, LarsonAnimation.BounceMode.Center, 1);
@@ -89,9 +89,8 @@ public class LED extends SubsystemBase {
             }
         }
         else if(DriverStation.isAutonomousEnabled()){
-            var alliance = DriverStation.getAlliance();
-            if(alliance.isPresent() && !autoFlag){
-                if(alliance.get() == DriverStation.Alliance.Blue){
+            if(!autoFlag){
+                if(!Robot.getRedAlliance()){
                     candle.setLEDs(0, 0, 254);
                 }
                 else{

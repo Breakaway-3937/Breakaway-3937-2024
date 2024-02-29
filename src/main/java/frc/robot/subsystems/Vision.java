@@ -22,7 +22,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -133,16 +132,13 @@ public class Vision extends SubsystemBase {
     distanceEntry.setDouble(getDistance());
     Logger.recordOutput("Distance", getDistance());
     
-    var alliance = DriverStation.getAlliance();
-    if(alliance.isPresent()){
-      if(alliance.get() == DriverStation.Alliance.Blue){
-        targetX = Constants.Vision.TARGET_X_BLUE;
-        targetY = Constants.Vision.TARGET_Y_BLUE;
-      }
-      else{
-        targetX = Constants.Vision.TARGET_X_RED;
-        targetY = Constants.Vision.TARGET_Y_RED;
-      }
+    if(!Robot.getRedAlliance()){
+      targetX = Constants.Vision.TARGET_X_BLUE;
+      targetY = Constants.Vision.TARGET_Y_BLUE;
+    }
+    else{
+      targetX = Constants.Vision.TARGET_X_RED;
+      targetY = Constants.Vision.TARGET_Y_RED;
     }
   }
 }

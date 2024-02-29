@@ -1,6 +1,7 @@
 package frc.lib.math;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.robot.Robot;
 
 public class Conversions {
     
@@ -32,15 +33,8 @@ public class Conversions {
      */
     public static double rotationsToMeters(double wheelRotations, double circumference){
         double wheelMeters = wheelRotations * circumference;
-        var alliance = DriverStation.getAlliance();
-        if(alliance.isPresent()){
-            if(alliance.get() == DriverStation.Alliance.Red && DriverStation.isTeleopEnabled()){
-                return -wheelMeters;
-
-            }
-            else{
-                return wheelMeters;
-            }
+        if(Robot.getRedAlliance() && DriverStation.isTeleopEnabled()){
+            return -wheelMeters;
         }
         else{
             return wheelMeters;
