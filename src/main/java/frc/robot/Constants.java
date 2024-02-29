@@ -209,6 +209,14 @@ public final class Constants {
         public static final double TARGET_Y_BLUE = 4.98;
         public static final double TARGET_Y_RED = 5.55;
 
+        //FIXME get actual values with offset
+        public static final double TRAP_CENTER_TARGET_X_BLUE = 0;
+        public static final double TRAP_CENTER_TARGET_X_RED = 0;
+        public static final double TRAP_LEFT_TARGET_X_BLUE = 0;
+        public static final double TRAP_LEFT_TARGET_X_RED = 0;
+        public static final double TRAP_RIGHT_TARGET_X_BLUE = 0;
+        public static final double TRAP_RIGHT_TARGET_X_RED = 0;
+
         public static final double TRAP_CENTER_TARGET_Y_BLUE = 4.11;
         public static final double TRAP_CENTER_TARGET_Y_RED = 3.71;
         public static final double TRAP_LEFT_TARGET_Y_BLUE = 4.50;
