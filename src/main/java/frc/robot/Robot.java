@@ -36,7 +36,7 @@ public class Robot extends LoggedRobot {
 
   private static boolean front = true;
 
-  private static boolean restart;
+  private static boolean restart, redAlliance;
 
   private PowerDistribution powerDistribution;
 
@@ -44,6 +44,10 @@ public class Robot extends LoggedRobot {
 
   public static boolean getFront(){
     return front;
+  }
+
+  public static boolean getRedAlliance(){
+    return redAlliance;
   }
 
   public static void restartOrangePi(){
@@ -57,7 +61,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
-    // autonomous chooser on the dashboard.
+    // autonomous chooser on the dashboard.    
     Logger.recordMetadata("ProjectName", "MyProject");
     if(isReal()){
       Logger.addDataReceiver(new WPILOGWriter());
@@ -102,23 +106,33 @@ public class Robot extends LoggedRobot {
       Shuffleboard.selectTab("Death");
     }
 
-    if(DriverStation.isFMSAttached() && DriverStation.isTeleop()){
+    if(DriverStation.isFMSAttached() && DriverStation.isTeleopEnabled()){
       teleop = true;
     }
 
     var alliance = DriverStation.getAlliance();
     if(alliance.isPresent()){
-      if(DriverStation.isAutonomousEnabled() && alliance.get() == DriverStation.Alliance.Red){
-        if((Robot.robotContainer.s_Swerve.getHeading().getDegrees() + 3600000) % 360 < 90 || (Robot.robotContainer.s_Swerve.getHeading().getDegrees() + 3600000) % 360 > 270){
-          front = true;
-        }
-        else{
-          front = false;
-        }
+      if(alliance.get() == DriverStation.Alliance.Red){
+        redAlliance = true;
+      }
+      else{
+        redAlliance = false;
       }
     }
     else{
-      if((Robot.robotContainer.s_Swerve.getHeading().getDegrees() + 3600000) % 360 < 90 || (Robot.robotContainer.s_Swerve.getHeading().getDegrees() + 3600000) % 360 > 270){
+      redAlliance = false;
+    }
+
+    if(DriverStation.isAutonomousEnabled() && redAlliance){
+      if((robotContainer.s_Swerve.getHeading().getDegrees() + 3600000) % 360 < 90 || (robotContainer.s_Swerve.getHeading().getDegrees() + 3600000) % 360 > 270){
+        front = true;
+      }
+      else{
+        front = false;
+      }
+    }
+    else{
+      if((robotContainer.s_Swerve.getHeading().getDegrees() + 3600000) % 360 < 90 || (robotContainer.s_Swerve.getHeading().getDegrees() + 3600000) % 360 > 270){
         front = false;
       }
       else{
@@ -154,10 +168,10 @@ public class Robot extends LoggedRobot {
   public void autonomousInit() {
     autonomousCommand = robotContainer.getAutonomousCommand();
 
-    if(Robot.robotContainer.s_Shooter.getDefaultCommand() != null){
-      Robot.robotContainer.s_Shooter.getDefaultCommand().cancel();
+    if(robotContainer.s_Shooter.getDefaultCommand() != null){
+      robotContainer.s_Shooter.getDefaultCommand().cancel();
     }
-    Robot.robotContainer.s_Shooter.setDefaultCommand(Robot.robotContainer.c_AutoRunNote);
+    robotContainer.s_Shooter.setDefaultCommand(robotContainer.c_AutoRunNote);
 
     // schedule the autonomous command (example)
     if(autonomousCommand != null){
@@ -178,10 +192,15 @@ public class Robot extends LoggedRobot {
     if(autonomousCommand != null){
       autonomousCommand.cancel();
     }
-    if(Robot.robotContainer.s_Shooter.getDefaultCommand() != null){
-      Robot.robotContainer.s_Shooter.getDefaultCommand().cancel();
+    if(robotContainer.s_Shooter.getDefaultCommand() != null){
+      robotContainer.s_Shooter.getDefaultCommand().cancel();
     }
-    Robot.robotContainer.s_Shooter.setDefaultCommand(Robot.robotContainer.c_RunNote);
+    robotContainer.s_Shooter.setDefaultCommand(robotContainer.c_RunNote);
+
+    if(redAlliance){
+      robotContainer.s_Swerve.heading180();
+    }
+    
     Shuffleboard.selectTab("Drive");
   }
 
