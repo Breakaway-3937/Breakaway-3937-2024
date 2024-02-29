@@ -109,9 +109,9 @@ public class Music extends Command {
         orchestra.play();
       }
       if(count == 11){
-        //TODO: get chrp file and time value
+        //By Request of RoboRandy
         orchestra.loadMusic("RockyTop.chrp");
-        time = 0;
+        time = 86;
         orchestra.play();
       }
       if(count == 11){
