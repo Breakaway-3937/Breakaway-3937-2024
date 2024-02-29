@@ -151,6 +151,7 @@ public class RunNote extends Command {
         else if(!RunElevator.handoff){
           s_Shooter.setWrist(protect);
           Shooter.sixMoreSmidgens = false;
+          Shooter.shooterSad = false;
           RunElevator.handoff = false;
         }
       }
