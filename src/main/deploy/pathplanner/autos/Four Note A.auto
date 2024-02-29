@@ -14,25 +14,25 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 3.0
+            "waitTime": 1.5
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Two Note R #1"
+            "pathName": "Four Note A #1"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "FindNote"
+            "name": "Shoot"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Two Note R #2"
+            "pathName": "Four Note A #2"
           }
         },
         {
