@@ -76,6 +76,7 @@ public class RunNote extends Command {
       noteGood = false;
       sendForward = false;
       spitBack = false;
+      s_Shooter.setWrist(protect);
     }
     else if(RunElevator.reverse){
       s_Intake.spit();
@@ -150,6 +151,7 @@ public class RunNote extends Command {
         else if(!RunElevator.handoff){
           s_Shooter.setWrist(protect);
           Shooter.sixMoreSmidgens = false;
+          Shooter.shooterSad = false;
           RunElevator.handoff = false;
         }
       }

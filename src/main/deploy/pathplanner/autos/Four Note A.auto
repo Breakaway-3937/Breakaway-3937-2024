@@ -12,33 +12,15 @@
           }
         },
         {
-          "type": "path",
+          "type": "wait",
           "data": {
-            "pathName": "Five Note L #1"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "FindNote"
+            "waitTime": 1.5
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Six Note L #1"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "FindNote"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Six Note L #2"
+            "pathName": "Four Note A #1"
           }
         },
         {
@@ -50,7 +32,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Four Note L"
+            "pathName": "Four Note A #2"
           }
         },
         {

@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+ package frc.robot.subsystems;
 
 import frc.robot.SwerveModule;
 import frc.robot.Constants;
@@ -135,6 +135,11 @@ public class Swerve extends SubsystemBase {
         gyro.setYaw(0);
     }
 
+    public void heading180(){
+        poseEstimator.resetPosition(Rotation2d.fromDegrees(getGyroYaw().getDegrees() + 180), getModulePositions(), new Pose2d(getPose().getTranslation(), new Rotation2d()));
+        gyro.setYaw(gyro.getAngle() + 180);
+    }
+
     public Rotation2d getGyroYaw() {
         return Rotation2d.fromDegrees(gyro.getYaw().getValue());
     }
@@ -170,7 +175,9 @@ public class Swerve extends SubsystemBase {
     }
 
     public void updatePoseVision(EstimatedRobotPose pose){
-        poseEstimator.addVisionMeasurement(new Pose2d(new Translation2d(pose.estimatedPose.getX(), pose.estimatedPose.getY()), getGyroYaw()), pose.timestampSeconds);
+        if(!DriverStation.isAutonomousEnabled()){
+            poseEstimator.addVisionMeasurement(new Pose2d(new Translation2d(pose.estimatedPose.getX(), pose.estimatedPose.getY()), getGyroYaw()), pose.timestampSeconds);
+        }
     }
 
     @Override

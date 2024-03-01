@@ -12,9 +12,15 @@
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.5
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "Five Note L #1"
+            "pathName": "Five Note A #1"
           }
         },
         {
@@ -26,7 +32,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Five Note L #2"
+            "pathName": "Five Note A #2"
           }
         },
         {
@@ -38,7 +44,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Four Note L"
+            "pathName": "Four Note A #2"
           }
         },
         {

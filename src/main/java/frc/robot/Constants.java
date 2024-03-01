@@ -173,8 +173,8 @@ public final class Constants {
     }
 
     public static final class Intake {
-        public static final int LEAD_INTAKE_MOTOR_ID = 17; //Back
-        public static final int FOLLOWER_INTAKE_MOTOR_ID = 16; //Forward
+        public static final int LEAD_INTAKE_MOTOR_ID = 17;
+        public static final int FOLLOWER_INTAKE_MOTOR_ID = 16;
         public static final int BAGS_MOTOR_ID = 30;
         public static final int LOADER_MOTOR_ID = 2;
         public static final int POP_TART_SENSOR_ID = 0;
@@ -208,6 +208,14 @@ public final class Constants {
         public static final double TARGET_X_RED = 16.58;
         public static final double TARGET_Y_BLUE = 4.98;
         public static final double TARGET_Y_RED = 5.55;
+
+        //FIXME get actual values with offset
+        public static final double TRAP_CENTER_TARGET_X_BLUE = 0;
+        public static final double TRAP_CENTER_TARGET_X_RED = 0;
+        public static final double TRAP_LEFT_TARGET_X_BLUE = 0;
+        public static final double TRAP_LEFT_TARGET_X_RED = 0;
+        public static final double TRAP_RIGHT_TARGET_X_BLUE = 0;
+        public static final double TRAP_RIGHT_TARGET_X_RED = 0;
 
         public static final double TRAP_CENTER_TARGET_Y_BLUE = 4.11;
         public static final double TRAP_CENTER_TARGET_Y_RED = 3.71;

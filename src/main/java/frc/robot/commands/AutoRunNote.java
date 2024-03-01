@@ -88,6 +88,8 @@ public class AutoRunNote extends Command {
     //Wrist Protect
     if(!s_Shooter.autoFire()){
       s_Shooter.setWrist(protect);
+      s_Shooter.stopShooter();
+      s_Shooter.setSpeedToZero();
       Shooter.sixMoreSmidgens = false;
     }
   }

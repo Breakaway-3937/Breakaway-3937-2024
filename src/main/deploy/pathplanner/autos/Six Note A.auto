@@ -12,9 +12,15 @@
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.5
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "Two Note R #1"
+            "pathName": "Five Note A #1"
           }
         },
         {
@@ -26,7 +32,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Two Note R #2"
+            "pathName": "Six Note A #1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "FindNote"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Six Note A #2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Four Note A #2"
           }
         },
         {
