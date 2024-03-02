@@ -15,9 +15,8 @@ public class AutoNoteAlign extends Command {
   private final Swerve s_Swerve;
   private final Vision s_Vision;
   private final Timer timer;
-  private boolean done = false;
-  private double lastRotationSpeed = 0;
-  private double translationXValue = 1;
+  private boolean done;
+  private double translationXValue;
 
   /** Creates a new AutoNoteAlign. */
   public AutoNoteAlign(Swerve s_Swerve, Vision s_Vision) {
@@ -25,7 +24,6 @@ public class AutoNoteAlign extends Command {
     this.s_Vision = s_Vision;
     timer = new Timer();
     timer.reset();
-    done = false;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(s_Swerve, s_Vision);
   }
@@ -33,8 +31,7 @@ public class AutoNoteAlign extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    lastRotationSpeed = 0;
-    translationXValue = 0;
+    translationXValue = 3;
     timer.reset();
     done = false;
   }
@@ -42,16 +39,13 @@ public class AutoNoteAlign extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    translationXValue = 1;
-
-    if(s_Vision.getNoteTargets()){
+    if(s_Vision.getNoteTargets() && s_Vision.getNoteLatency() != 0){
       s_Swerve.drive(new Translation2d(translationXValue, 0), s_Vision.getNoteRotationSpeed(), false, false);
     }
     else{
-      lastRotationSpeed = s_Vision.getNoteRotationSpeed();
       timer.start();
-      if(timer.get() < 3){
-        s_Swerve.drive(new Translation2d(translationXValue, 0), lastRotationSpeed, false, false);
+      if(timer.get() < 1){
+        s_Swerve.drive(new Translation2d(translationXValue, 0), 0, false, false);
       }
       else{
         done = true;
