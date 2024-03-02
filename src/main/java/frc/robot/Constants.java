@@ -68,7 +68,7 @@ public final class Constants {
         public static final double DRIVE_BASE_RADIUS = 0.3804;
         public static final double TRACK_WIDTH = 0.57;
         public static final double WHEEL_BASE = 0.57;
-        public static final double WHEEL_DIAMETER = Units.inchesToMeters(3.9);
+        public static final double WHEEL_DIAMETER = Units.inchesToMeters(3.84);
         public static final double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI;
 
         public static final SwerveDriveKinematics SWERVE_KINEMATICS = new SwerveDriveKinematics(
