@@ -95,6 +95,10 @@ public class Vision extends SubsystemBase {
   public boolean getNoteTargets(){
     return noteCamera.getLatestResult().hasTargets();
   }
+  
+  public double getNoteLatency(){
+    return noteCamera.getLatestResult().getLatencyMillis();
+  }
 
   public Optional<EstimatedRobotPose> getFrontEstimatedGlobalPose(){
     return frontPoseEstimator.update();
