@@ -34,6 +34,7 @@ public class Vision extends SubsystemBase {
     private final Swerve s_Swerve;
     private double targetX, targetY, robotX, robotY;
     private final GenericEntry distanceEntry;
+    private boolean blue;
 
   /** Creates a new Vision. */
   public Vision(Swerve s_Swerve) {
@@ -68,11 +69,39 @@ public class Vision extends SubsystemBase {
   }
   
   public double getAprilTagRotationSpeed(){
-    if(Robot.getFront()){
-      return (PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromDegrees(0))).rotateBy(Rotation2d.fromDegrees(180)).getDegrees()) * 8.0 / 42.0;
+    if(frontCamera.getLatestResult().hasTargets() && Robot.getFront() || backCamera.getLatestResult().hasTargets() && !Robot.getFront()){
+      if(Robot.getFront()){
+        var result = frontCamera.getLatestResult();
+        if(result.hasTargets() && blue){
+          return -result.getTargets().get(0).getYaw() * 0.8 / 9.0;
+        }
+        else if(result.hasTargets() && !blue){
+          return -result.getTargets().get(result.getTargets().size() == 1 ? 0 : 1).getYaw() * 0.8 / 9.0;
+        }
+        else{
+          return 0;
+        }
+      }
+      else{
+        var result = backCamera.getLatestResult();
+        if(result.hasTargets() && blue){
+          return -result.getTargets().get(0).getYaw() * 0.8 / 9.0;
+        }
+        else if(result.hasTargets() && !blue){
+          return -result.getTargets().get(result.getTargets().size() == 1 ? 0 : 1).getYaw() * 0.8 / 9.0;
+        }
+        else{
+          return 0;
+        }
+      }
     }
     else{
-      return PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromDegrees(0))).getDegrees() * 8.0 / 42.0;
+      if(Robot.getFront()){
+        return (PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromDegrees(0))).rotateBy(Rotation2d.fromDegrees(180)).getDegrees()) * 8.0 / 42.0;
+      }
+      else{
+        return PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromDegrees(0))).getDegrees() * 8.0 / 42.0;
+      }
     }
   }
 
@@ -139,10 +168,12 @@ public class Vision extends SubsystemBase {
     if(!Robot.getRedAlliance()){
       targetX = Constants.Vision.TARGET_X_BLUE;
       targetY = Constants.Vision.TARGET_Y_BLUE;
+      blue = true;
     }
     else{
       targetX = Constants.Vision.TARGET_X_RED;
       targetY = Constants.Vision.TARGET_Y_RED;
+      blue = false;
     }
   }
 }
