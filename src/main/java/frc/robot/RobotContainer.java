@@ -93,7 +93,6 @@ public class RobotContainer {
         button8.whileTrue(c_AlignField);
         leftStick.onTrue(new InstantCommand(() -> s_Shooter.setAutoShooting()));
         rightStick.onTrue(new InstantCommand(() -> s_Shooter.setAutoShooting()));
-        leftStick.and(rightStick).onTrue(new InstantCommand(() -> Robot.restartOrangePi()));
         right.onTrue(new InstantCommand(() -> s_Shooter.setSubShooting()));
         left.onTrue(new InstantCommand(() -> s_Shooter.setPodiumShooting()));
     }
