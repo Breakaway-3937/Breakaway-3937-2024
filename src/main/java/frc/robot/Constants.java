@@ -206,22 +206,21 @@ public final class Constants {
 
         public static final double TARGET_X_BLUE = -0.04;
         public static final double TARGET_X_RED = 16.58;
-        public static final double TARGET_Y_BLUE = 4.98;
+        public static final double TARGET_Y_BLUE = 5.55;
         public static final double TARGET_Y_RED = 5.55;
 
-        //FIXME get actual values with offset
-        public static final double TRAP_CENTER_TARGET_X_BLUE = 0;
-        public static final double TRAP_CENTER_TARGET_X_RED = 0;
-        public static final double TRAP_LEFT_TARGET_X_BLUE = 0;
-        public static final double TRAP_LEFT_TARGET_X_RED = 0;
-        public static final double TRAP_RIGHT_TARGET_X_BLUE = 0;
-        public static final double TRAP_RIGHT_TARGET_X_RED = 0;
+        public static final double TRAP_CENTER_TARGET_X_BLUE = 6.35;
+        public static final double TRAP_CENTER_TARGET_X_RED = 10.25;
+        public static final double TRAP_LEFT_TARGET_X_BLUE = 4.20;
+        public static final double TRAP_LEFT_TARGET_X_RED = 12.50;
+        public static final double TRAP_RIGHT_TARGET_X_BLUE = 4.20;
+        public static final double TRAP_RIGHT_TARGET_X_RED = 12.50;
 
-        public static final double TRAP_CENTER_TARGET_Y_BLUE = 4.11;
-        public static final double TRAP_CENTER_TARGET_Y_RED = 3.71;
-        public static final double TRAP_LEFT_TARGET_Y_BLUE = 4.50;
-        public static final double TRAP_LEFT_TARGET_Y_RED = 4.50;
-        public static final double TRAP_RIGHT_TARGET_Y_BLUE = 3.71;
-        public static final double TRAP_RIGHT_TARGET_Y_RED = 4.11;
+        public static final double TRAP_CENTER_TARGET_Y_BLUE = 4.10;
+        public static final double TRAP_CENTER_TARGET_Y_RED = 4.10;
+        public static final double TRAP_LEFT_TARGET_Y_BLUE = 5.35;
+        public static final double TRAP_LEFT_TARGET_Y_RED = 2.80;
+        public static final double TRAP_RIGHT_TARGET_Y_BLUE = 2.80;
+        public static final double TRAP_RIGHT_TARGET_Y_RED = 5.35;
     }
 }
