@@ -36,7 +36,7 @@ public class Robot extends LoggedRobot {
 
   private static boolean front = true;
 
-  private static boolean restart, redAlliance;
+  private static boolean redAlliance;
 
   private PowerDistribution powerDistribution;
 
@@ -48,10 +48,6 @@ public class Robot extends LoggedRobot {
 
   public static boolean getRedAlliance(){
     return redAlliance;
-  }
-
-  public static void restartOrangePi(){
-    restart = true;
   }
 
   /**
@@ -141,15 +137,6 @@ public class Robot extends LoggedRobot {
     }
 
     Logger.recordOutput("Front", getFront());
-
-    if(restart){
-      powerDistribution.setSwitchableChannel(false);
-    }
-
-    if(!powerDistribution.getSwitchableChannel()){
-      powerDistribution.setSwitchableChannel(true);
-      restart = false;
-    }
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
