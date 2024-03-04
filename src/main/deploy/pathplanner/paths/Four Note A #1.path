@@ -105,7 +105,7 @@
       "minWaypointRelativePos": 0.55,
       "maxWaypointRelativePos": 2.25,
       "constraints": {
-        "maxVelocity": 0.5,
+        "maxVelocity": 1.5,
         "maxAcceleration": 4.5,
         "maxAngularVelocity": 690.0,
         "maxAngularAcceleration": 690.0
@@ -116,7 +116,7 @@
       "minWaypointRelativePos": 3.1,
       "maxWaypointRelativePos": 3.95,
       "constraints": {
-        "maxVelocity": 0.5,
+        "maxVelocity": 1.5,
         "maxAcceleration": 4.5,
         "maxAngularVelocity": 690.0,
         "maxAngularAcceleration": 690.0
@@ -153,6 +153,12 @@
               "data": {
                 "name": "Shoot"
               }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "VisionOn"
+              }
             }
           ]
         }
@@ -187,6 +193,12 @@
               "data": {
                 "name": "Shoot"
               }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "VisionOn"
+              }
             }
           ]
         }
@@ -220,6 +232,12 @@
               "type": "named",
               "data": {
                 "name": "Shoot"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "VisionOn"
               }
             }
           ]

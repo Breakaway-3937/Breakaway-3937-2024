@@ -57,7 +57,7 @@
       "minWaypointRelativePos": 1.0,
       "maxWaypointRelativePos": 1.4,
       "constraints": {
-        "maxVelocity": 0.5,
+        "maxVelocity": 1.5,
         "maxAcceleration": 4.5,
         "maxAngularVelocity": 690.0,
         "maxAngularAcceleration": 690.0
@@ -93,6 +93,12 @@
               "type": "named",
               "data": {
                 "name": "Shoot"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "VisionOn"
               }
             }
           ]

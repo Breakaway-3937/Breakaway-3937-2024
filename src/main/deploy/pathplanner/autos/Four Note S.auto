@@ -20,7 +20,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Five Note A #1"
+            "pathName": "Three Note S #1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake"
           }
         },
         {
@@ -32,7 +38,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Six Note A #1"
+            "pathName": "Three Note S #2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake"
           }
         },
         {
@@ -44,19 +56,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Six Note A #2"
+            "pathName": "Four Note S #3"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "Intake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "FindNote"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Four Note A #2"
+            "pathName": "Four Note S #4"
           }
         },
         {

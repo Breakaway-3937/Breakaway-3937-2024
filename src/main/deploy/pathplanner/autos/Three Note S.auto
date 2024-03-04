@@ -6,9 +6,21 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.5
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "Three Note S p1"
+            "pathName": "Three Note S #1"
           }
         },
         {
@@ -26,7 +38,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Three Note S p2"
+            "pathName": "Three Note S #2"
           }
         },
         {
@@ -44,7 +56,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Three Note S p3"
+            "pathName": "Three Note S #3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
           }
         }
       ]
