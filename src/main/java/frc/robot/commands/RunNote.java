@@ -137,6 +137,8 @@ public class RunNote extends Command {
       }
       //Stop Shooter
       else if(!xboxController.getRawButton(6)){
+        Shooter.sixMoreSmidgens = false;
+        Shooter.shooterSad = false;
         if(!xboxController.getRawButton(5)){
           s_Shooter.stopShooter();
         }
@@ -150,8 +152,6 @@ public class RunNote extends Command {
         }
         else if(!RunElevator.handoff){
           s_Shooter.setWrist(protect);
-          Shooter.sixMoreSmidgens = false;
-          Shooter.shooterSad = false;
           RunElevator.handoff = false;
         }
       }
