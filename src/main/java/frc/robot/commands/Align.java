@@ -32,7 +32,7 @@ public class Align extends Command {
   private double translationVal, strafeVal, rotationVal;
   private Pose2d trapPose = new Pose2d();
   private final PathConstraints constraints = new PathConstraints(Constants.Swerve.MAX_SPEED, 4.5, 12.0428, 12.0428);
-
+  private Command command;
 
   /** Creates a new Align. */
   public Align(Swerve s_Swerve, Vision s_Vision, DoubleSupplier translationSup, DoubleSupplier strafeSup, DoubleSupplier rotationSup, BooleanSupplier robotCentricSup) {
@@ -77,27 +77,36 @@ public class Align extends Command {
         if((Robot.robotContainer.s_Swerve.getHeading().getDegrees() + 3600000) % 360 > 90 || (Robot.robotContainer.s_Swerve.getHeading().getDegrees() + 3600000) % 360 < 270){
           trapPose = new Pose2d(new Translation2d(Constants.Vision.TRAP_CENTER_TARGET_X_BLUE, Constants.Vision.TRAP_CENTER_TARGET_Y_BLUE), Rotation2d.fromDegrees(0));
         }
-        else if((Robot.robotContainer.s_Swerve.getHeading().getDegrees() + 3600000) % 360 > 300){
-          trapPose = new Pose2d(new Translation2d(Constants.Vision.TRAP_LEFT_TARGET_X_BLUE, Constants.Vision.TRAP_LEFT_TARGET_Y_BLUE), Rotation2d.fromDegrees(120));
+        else if((Robot.robotContainer.s_Swerve.getHeading().getDegrees() + 3600000) % 360 > 270){
+          trapPose = new Pose2d(new Translation2d(Constants.Vision.TRAP_LEFT_TARGET_X_BLUE, Constants.Vision.TRAP_LEFT_TARGET_Y_BLUE), Rotation2d.fromDegrees(300));
         }
-        else if((Robot.robotContainer.s_Swerve.getHeading().getDegrees() + 3600000) % 360 < 60){
-          trapPose = new Pose2d(new Translation2d(Constants.Vision.TRAP_RIGHT_TARGET_X_BLUE, Constants.Vision.TRAP_RIGHT_TARGET_Y_BLUE), Rotation2d.fromDegrees(240));
+        else if((Robot.robotContainer.s_Swerve.getHeading().getDegrees() + 3600000) % 360 < 90){
+          trapPose = new Pose2d(new Translation2d(Constants.Vision.TRAP_RIGHT_TARGET_X_BLUE, Constants.Vision.TRAP_RIGHT_TARGET_Y_BLUE), Rotation2d.fromDegrees(60));
         }
       }
       else{
         if((Robot.robotContainer.s_Swerve.getHeading().getDegrees() + 3600000) % 360 > 90 || (Robot.robotContainer.s_Swerve.getHeading().getDegrees() + 3600000) % 360 < 270){
           trapPose = new Pose2d(new Translation2d(Constants.Vision.TRAP_CENTER_TARGET_X_RED, Constants.Vision.TRAP_CENTER_TARGET_Y_RED), Rotation2d.fromDegrees(0));
         }
-        else if((Robot.robotContainer.s_Swerve.getHeading().getDegrees() + 3600000) % 360 > 300){
-          trapPose = new Pose2d(new Translation2d(Constants.Vision.TRAP_LEFT_TARGET_X_RED, Constants.Vision.TRAP_LEFT_TARGET_Y_RED), Rotation2d.fromDegrees(120));
+        else if((Robot.robotContainer.s_Swerve.getHeading().getDegrees() + 3600000) % 360 > 270){
+          trapPose = new Pose2d(new Translation2d(Constants.Vision.TRAP_LEFT_TARGET_X_RED, Constants.Vision.TRAP_LEFT_TARGET_Y_RED), Rotation2d.fromDegrees(300));
         }
-        else if((Robot.robotContainer.s_Swerve.getHeading().getDegrees() + 3600000) % 360 < 60){
-          trapPose = new Pose2d(new Translation2d(Constants.Vision.TRAP_RIGHT_TARGET_X_RED, Constants.Vision.TRAP_RIGHT_TARGET_Y_RED), Rotation2d.fromDegrees(240));
+        else if((Robot.robotContainer.s_Swerve.getHeading().getDegrees() + 3600000) % 360 < 90){
+          trapPose = new Pose2d(new Translation2d(Constants.Vision.TRAP_RIGHT_TARGET_X_RED, Constants.Vision.TRAP_RIGHT_TARGET_Y_RED), Rotation2d.fromDegrees(60));
         }
       }
       if(!scheduled){
-        AutoBuilder.pathfindToPose(trapPose, constraints, 0, 0).schedule();
+        command = AutoBuilder.pathfindToPose(trapPose, constraints, 0, 0);
+        command.schedule();
         scheduled = true;
+      }
+      if(scheduled && command.isFinished()){
+        s_Swerve.drive(
+              new Translation2d(translationVal, 0).times(Constants.Swerve.MAX_SPEED), 
+              0, 
+              robotCentricSup.getAsBoolean(), 
+              true
+          );
       }
     }
     else if(!RunElevator.deadShooter){
@@ -105,6 +114,11 @@ public class Align extends Command {
       translationVal = MathUtil.applyDeadband(translationSup.getAsDouble(), Constants.Controllers.STICK_DEADBAND);
       strafeVal = MathUtil.applyDeadband(strafeSup.getAsDouble(), Constants.Controllers.STICK_DEADBAND);
       rotationVal = MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.Controllers.STICK_DEADBAND);
+
+      if(robotCentricSup.getAsBoolean()){
+        translationVal *= -1;
+        strafeVal *= -1;
+      }
 
       /* Drive */
       if(s_Swerve.getNoteTracking()){
