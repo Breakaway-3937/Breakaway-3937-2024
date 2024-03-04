@@ -8,6 +8,7 @@ package frc.robot.commands;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Robot;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Vision;
 
@@ -16,14 +17,13 @@ public class AutoNoteAlign extends Command {
   private final Vision s_Vision;
   private final Timer timer;
   private boolean done;
-  private double translationXValue;
+  private final double translationXValue = -3;
 
   /** Creates a new AutoNoteAlign. */
   public AutoNoteAlign(Swerve s_Swerve, Vision s_Vision) {
     this.s_Swerve = s_Swerve;
     this.s_Vision = s_Vision;
     timer = new Timer();
-    timer.reset();
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(s_Swerve, s_Vision);
   }
@@ -31,7 +31,7 @@ public class AutoNoteAlign extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    translationXValue = 3;
+    timer.stop();
     timer.reset();
     done = false;
   }
@@ -44,12 +44,13 @@ public class AutoNoteAlign extends Command {
     }
     else{
       timer.start();
-      if(timer.get() < 1){
-        s_Swerve.drive(new Translation2d(translationXValue, 0), 0, false, false);
-      }
-      else{
-        done = true;
-      }
+    }
+
+    if(timer.get() < 1 && (s_Swerve.getPose().getX() < 8.6 && !Robot.getRedAlliance() || s_Swerve.getPose().getX() > 7.9 && Robot.getRedAlliance())){
+      s_Swerve.drive(new Translation2d(translationXValue, 0), 0, false, false);
+    }
+    else{
+      done = true;
     }
   }
 
