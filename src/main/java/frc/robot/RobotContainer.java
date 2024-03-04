@@ -70,6 +70,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("FindNote", c_AutoNoteAlign);
         NamedCommands.registerCommand("Shoot", new InstantCommand(() -> s_Shooter.setAutoFire(true)));
         NamedCommands.registerCommand("Intake", new InstantCommand(() -> s_Intake.setAutoIntake(true)));
+        NamedCommands.registerCommand("VisionOn", new InstantCommand(() -> Swerve.setAddVisionMeasurement(true)));
         s_Swerve.setDefaultCommand(new TeleopSwerve(s_Swerve, () -> translationController.getRawAxis(translationAxis), () -> translationController.getRawAxis(strafeAxis), () -> rotationController.getRawAxis(rotationAxis), () -> robotRelative));
         s_Elevator.setDefaultCommand(c_RunElevator);
         autoChooser = AutoBuilder.buildAutoChooser("DO NOTHING");
@@ -91,10 +92,11 @@ public class RobotContainer {
         rotationButton.whileTrue(c_AlignField);
         button7.whileTrue(c_AlignRobot);
         button8.whileTrue(c_AlignField);
-        leftStick.onTrue(new InstantCommand(() -> s_Shooter.setAutoShooting()));
-        rightStick.onTrue(new InstantCommand(() -> s_Shooter.setAutoShooting()));
+        leftStick.onTrue(new InstantCommand(() -> RunElevator.setHighClimb()));
+        rightStick.onTrue(new InstantCommand(() -> RunElevator.setLowClimb()));
         right.onTrue(new InstantCommand(() -> s_Shooter.setSubShooting()));
         left.onTrue(new InstantCommand(() -> s_Shooter.setPodiumShooting()));
+        leftStick.and(rightStick).onTrue(new InstantCommand(() -> s_Shooter.setAutoShooting()));
     }
 
     /**
