@@ -36,7 +36,8 @@ public class Swerve extends SubsystemBase {
     private final ComplexWidget fieldWidget;
     private final Field2d field = new Field2d(); 
     private final SwerveDrivePoseEstimator poseEstimator;
-    private boolean noteTracking, addVisionMeasurement;
+    private boolean noteTracking;
+    public static boolean addVisionMeasurement;
 
     public Swerve() {
         gyro = new Pigeon2(Constants.Swerve.PIGEON_ID, Constants.CANIVORE_BUS);
@@ -174,8 +175,8 @@ public class Swerve extends SubsystemBase {
             this);
     }
 
-    public void setAddVisionMeasurement(boolean addVisionMeasurement){
-        this.addVisionMeasurement = addVisionMeasurement;
+    public static void setAddVisionMeasurement(boolean newAddVisionMeasurement){
+        addVisionMeasurement = newAddVisionMeasurement;
     }
 
     public void updatePoseVision(EstimatedRobotPose pose){
