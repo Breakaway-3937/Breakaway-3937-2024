@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 
@@ -78,6 +79,7 @@ public class AutoRunNote extends Command {
       if(!s_Intake.botFull()){
         s_Shooter.setAutoFire(false);
         s_Intake.setAutoIntake(false);
+        Swerve.setAddVisionMeasurement(false);
       }
     }
     //Sensor Detects, Stop Intake
