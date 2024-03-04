@@ -184,9 +184,9 @@ public class LED extends SubsystemBase {
                     flag1 = false;
                     strobe.setLedOffset(18);
                     fade.setLedOffset(18);
-                    strobe.setR(0);
+                    strobe.setR(255);
                     strobe.setG(0);
-                    strobe.setB(254);
+                    strobe.setB(0);
                     fade.setR(255);
                     fade.setG(0);
                     fade.setB(0);
@@ -269,9 +269,9 @@ public class LED extends SubsystemBase {
                     flag1 = false;
                     strobe.setLedOffset(0);
                     fade.setLedOffset(0);
-                    strobe.setR(0);
+                    strobe.setR(255);
                     strobe.setG(0);
-                    strobe.setB(254);
+                    strobe.setB(0);
                     fade.setR(255);
                     fade.setG(0);
                     fade.setB(0);
