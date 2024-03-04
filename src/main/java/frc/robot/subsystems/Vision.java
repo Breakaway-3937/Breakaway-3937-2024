@@ -61,10 +61,15 @@ public class Vision extends SubsystemBase {
 
   public Optional<Rotation2d> getRotationTargetOverride(){
     if(Robot.robotContainer.s_Intake.botFull()){
-        return Optional.of(PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromDegrees(0))));
+      if(Robot.getRedAlliance()){
+        return Optional.of(PhotonUtils.getYawToPose(new Pose2d(s_Swerve.getPose().getX(), s_Swerve.getPose().getY(), Rotation2d.fromDegrees(180)), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromDegrees(180))));
+      }
+      else{
+        return Optional.of(PhotonUtils.getYawToPose(new Pose2d(s_Swerve.getPose().getX(), s_Swerve.getPose().getY(), Rotation2d.fromDegrees(0)), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromDegrees(0))));
+      }
     }
     else{
-        return Optional.empty();
+      return Optional.empty();
     }
   }
   
