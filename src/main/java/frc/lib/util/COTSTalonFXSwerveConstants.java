@@ -233,14 +233,14 @@ public class COTSTalonFXSwerveConstants {
 
             /** Swerve Drive Specialties - MK4 Module (Kraken X60)*/
             public static final COTSTalonFXSwerveConstants KrakenX60(double driveGearRatio){
-                double wheelDiameter = Units.inchesToMeters(4.0);
+                double wheelDiameter = Units.inchesToMeters(3.84);
         
                 /** 12.8 : 1 */
                 double angleGearRatio = (12.8 / 1.0);
         
-                double angleKP = 1.0;
+                double angleKP = 185;
                 double angleKI = 0.0;
-                double angleKD = 0.0;
+                double angleKD = 2;
         
                 InvertedValue driveMotorInvert = InvertedValue.CounterClockwise_Positive;
                 InvertedValue angleMotorInvert = InvertedValue.CounterClockwise_Positive;
