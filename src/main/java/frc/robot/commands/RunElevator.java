@@ -27,8 +27,11 @@ public class RunElevator extends Command {
   private final double elevatorTrap = 102;
   private final double elevatorSource = 52.6;
   private final double elevatorClimb = 102;
+  //FIXME get value
+  private final double elevatorHighClimb = 0;
   private boolean trap, source, protect, ohCrap, climb;
   public static boolean amp, deadShooter, trapStage1, trapStage2, startStage1, startStage2, reverse, trapScored, retracting, climbing, handoff, trapPosition;
+  public static boolean lowClimb = true;
 
   /** Creates a new RunElevator. */
   public RunElevator(Elevator s_Elevator, XboxController xboxController) {
@@ -132,15 +135,10 @@ public class RunElevator extends Command {
         }
         if(trapStage2 && s_Elevator.isAtPosition()){
           trapPosition = true;
-          if(trapPosition){
-            s_Elevator.setBabyWrist(wristTrap);
-            if(s_Elevator.isAtPosition()){
-              s_Elevator.runBabyShooterForward();
-            }
+          s_Elevator.setBabyWrist(wristTrap);
+          if(s_Elevator.isAtPosition()){
+            s_Elevator.runBabyShooterForward();
           }
-        }
-        else{
-          trapPosition = false;
         }
         if(trapStage2 && !Robot.robotContainer.s_Intake.getBabyShooterSensor()){
           trapScored = true;
@@ -197,7 +195,6 @@ public class RunElevator extends Command {
           handoff = false;
           s_Elevator.stopBabyShooter();
           protect = true;
-          Robot.robotContainer.s_LED.reset();
           ohCrap = false;
         }
       }
@@ -208,20 +205,35 @@ public class RunElevator extends Command {
 
         if(Robot.robotContainer.s_Intake.getBabyShooterSensor()){
           s_Elevator.stopBabyShooter();
+          Robot.robotContainer.s_LED.reset();
           ohCrap = true;
           source = false;
         }
       }
       else if(climb){
-        if(climbing){
-          s_Elevator.setElevatorFast();
-          s_Elevator.setBabyWrist(wristHandoff);
-          s_Elevator.setElevator(elevatorClimb);
+        if(lowClimb){
+          if(climbing){
+            s_Elevator.setElevatorFast();
+            s_Elevator.setBabyWrist(wristHandoff);
+            s_Elevator.setElevator(elevatorClimb);
+          }
+          else if(retracting){
+            s_Elevator.setElevatorSlow();
+            s_Elevator.setBabyWrist(wristPreTrap);
+            s_Elevator.setElevator(elevatorProtect);
+          }
         }
-        else if(retracting){
-          s_Elevator.setElevatorSlow();
-          s_Elevator.setBabyWrist(wristPreTrap);
-          s_Elevator.setElevator(elevatorProtect);
+        else{
+          if(climbing){
+            s_Elevator.setElevatorFast();
+            s_Elevator.setBabyWrist(wristHandoff);
+            s_Elevator.setElevator(elevatorClimb);
+          }
+          else if(retracting){
+            s_Elevator.setElevatorSlow();
+            s_Elevator.setBabyWrist(wristPreTrap);
+            s_Elevator.setElevator(elevatorHighClimb);
+          }
         }
       }
     }
@@ -235,6 +247,14 @@ public class RunElevator extends Command {
   @Override
   public boolean isFinished() {
     return false;
+  }
+
+  public static void setHighClimb(){
+    lowClimb = false;
+  }
+
+  public static void setLowClimb(){
+    lowClimb = true;
   }
 
   private void reset(){
