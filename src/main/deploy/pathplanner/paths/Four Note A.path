@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.6394493981970424,
-        "y": 6.933049158328894
+        "x": 1.8393265357959288,
+        "y": 6.856925142421713
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.2778345454909745,
-        "y": 6.966413118576873
+        "x": 3.1316129807832143,
+        "y": 6.984469683225081
       },
       "prevControl": {
-        "x": 2.887309741642482,
-        "y": 7.0019153734721895
+        "x": 2.6113066511847305,
+        "y": 6.964331071519285
       },
       "nextControl": {
-        "x": 3.5732008505092994,
-        "y": 6.93956163630248
+        "x": 3.250476349030255,
+        "y": 6.989070325352609
       },
       "isLocked": false,
       "linkedName": null
@@ -36,12 +36,12 @@
         "y": 6.277082884954575
       },
       "prevControl": {
-        "x": 1.6217748484542989,
-        "y": 7.52600944298049
+        "x": 1.589416632614843,
+        "y": 7.152856189335687
       },
       "nextControl": {
-        "x": 1.5753977563934778,
-        "y": 5.253531932000251
+        "x": 1.6043760658949888,
+        "y": 5.245836205958126
       },
       "isLocked": false,
       "linkedName": null
@@ -52,12 +52,12 @@
         "y": 5.535530663936646
       },
       "prevControl": {
-        "x": 2.337838772369657,
-        "y": 5.556419458894899
+        "x": 2.0138611705794838,
+        "y": 5.514351028702057
       },
       "nextControl": {
-        "x": 3.316319152842958,
-        "y": 5.530669975198231
+        "x": 3.316349936946631,
+        "y": 5.539031138111835
       },
       "isLocked": false,
       "linkedName": null
@@ -68,12 +68,12 @@
         "y": 4.992421995022108
       },
       "prevControl": {
-        "x": 1.5336201664769746,
-        "y": 5.827973793352168
+        "x": 1.6399788114966303,
+        "y": 5.721978553182421
       },
       "nextControl": {
-        "x": 1.6869521766297007,
-        "y": 3.7835469913158226
+        "x": 1.5238216190718097,
+        "y": 3.782430422003701
       },
       "isLocked": false,
       "linkedName": null
@@ -84,24 +84,24 @@
         "y": 4.1046482092964185
       },
       "prevControl": {
-        "x": 2.090880274138767,
-        "y": 4.1758432730083515
+        "x": 1.9601582060306977,
+        "y": 4.111361079865017
       },
       "nextControl": {
-        "x": 3.079390993387586,
-        "y": 4.062870619379916
+        "x": 2.795086191564004,
+        "y": 4.103924539340225
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.2751723874949024,
-        "y": 4.626868083252706
+        "x": 1.9400195943249028,
+        "y": 4.447004608294931
       },
       "prevControl": {
-        "x": 2.9749470185963274,
-        "y": 4.292647363920683
+        "x": 2.517326463224355,
+        "y": 4.272469973511376
       },
       "nextControl": null,
       "isLocked": false,
@@ -110,12 +110,12 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.7,
+      "waypointRelativePos": 0.44999999999999996,
       "rotationDegrees": 180.0,
       "rotateFast": true
     },
     {
-      "waypointRelativePos": 4.949999999999999,
+      "waypointRelativePos": 5.05,
       "rotationDegrees": 180.0,
       "rotateFast": true
     }
@@ -124,7 +124,7 @@
     {
       "name": "Shoot",
       "minWaypointRelativePos": 0.55,
-      "maxWaypointRelativePos": 2.25,
+      "maxWaypointRelativePos": 2.45,
       "constraints": {
         "maxVelocity": 1.5,
         "maxAcceleration": 4.5,
@@ -135,7 +135,7 @@
     {
       "name": "Shoot",
       "minWaypointRelativePos": 3.1,
-      "maxWaypointRelativePos": 3.95,
+      "maxWaypointRelativePos": 4.050000000000001,
       "constraints": {
         "maxVelocity": 1.5,
         "maxAcceleration": 4.5,
@@ -178,7 +178,7 @@
             {
               "type": "named",
               "data": {
-                "name": "VisionOn"
+                "name": "Vision"
               }
             }
           ]
@@ -218,7 +218,7 @@
             {
               "type": "named",
               "data": {
-                "name": "VisionOn"
+                "name": "Vision"
               }
             }
           ]
@@ -251,8 +251,8 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 160.55996517182382,
-    "rotateFast": false
+    "rotation": 153.7117378750997,
+    "rotateFast": true
   },
   "reversed": false,
   "folder": null,
