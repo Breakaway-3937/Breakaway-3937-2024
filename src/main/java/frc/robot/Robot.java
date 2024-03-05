@@ -34,9 +34,7 @@ public class Robot extends LoggedRobot {
 
   private boolean flag, teleop;
 
-  private static boolean front = true;
-
-  private static boolean redAlliance;
+  private static boolean front, redAlliance;
 
   private PowerDistribution powerDistribution;
 
@@ -73,7 +71,6 @@ public class Robot extends LoggedRobot {
     robotContainer = new RobotContainer();
     powerDistribution.setSwitchableChannel(true);
     powerDistribution.clearStickyFaults();
-    CommandScheduler.getInstance().setPeriod(0.025);
     ComplexWidget pdh = Shuffleboard.getTab("System").add("PDH", powerDistribution).withPosition(1, 0);
     pdh.hashCode();
   }
