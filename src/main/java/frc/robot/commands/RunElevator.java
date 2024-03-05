@@ -27,8 +27,7 @@ public class RunElevator extends Command {
   private final double elevatorTrap = 102;
   private final double elevatorSource = 52.6;
   private final double elevatorClimb = 102;
-  //FIXME get value
-  private final double elevatorHighClimb = 0;
+  private final double elevatorHighClimb = 10;
   private boolean trap, source, protect, ohCrap, climb;
   public static boolean amp, deadShooter, trapStage1, trapStage2, startStage1, startStage2, reverse, trapScored, retracting, climbing, handoff, trapPosition;
   public static boolean lowClimb = true;

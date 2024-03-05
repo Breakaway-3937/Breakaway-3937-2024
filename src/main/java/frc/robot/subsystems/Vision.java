@@ -62,10 +62,10 @@ public class Vision extends SubsystemBase {
   public Optional<Rotation2d> getRotationTargetOverride(){
     if(Robot.robotContainer.s_Intake.botFull()){
       if(Robot.getRedAlliance()){
-        return Optional.of(PhotonUtils.getYawToPose(new Pose2d(s_Swerve.getPose().getX(), s_Swerve.getPose().getY(), Rotation2d.fromDegrees(180)), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromDegrees(180))));
+        return Optional.of(PhotonUtils.getYawToPose(new Pose2d(s_Swerve.getPose().getX(), s_Swerve.getPose().getY(), Rotation2d.fromDegrees(0)), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromDegrees(180))));
       }
       else{
-        return Optional.of(PhotonUtils.getYawToPose(new Pose2d(s_Swerve.getPose().getX(), s_Swerve.getPose().getY(), Rotation2d.fromDegrees(0)), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromDegrees(0))));
+        return Optional.of(PhotonUtils.getYawToPose(new Pose2d(s_Swerve.getPose().getX(), s_Swerve.getPose().getY(), Rotation2d.fromDegrees(180)), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromDegrees(0))));
       }
     }
     else{
@@ -81,6 +81,22 @@ public class Vision extends SubsystemBase {
           return -result.getTargets().get(0).getYaw() * 0.8 / 9.0;
         }
         else if(result.hasTargets() && !blue){
+          /*double velocityCompAngle = 0.04;
+          double resultVector = 
+          if(s_Swerve.getSpeed().vxMetersPerSecond !=0){
+            double robotVelocityX = s_Swerve.getSpeed().vxMetersPerSecond;
+          }
+
+          double xFlyAngle = (Constants.Vision.TARGET_X_RED - s_Swerve.getPose().getX()) - (s_Swerve.getSpeed().vxMetersPerSecond * velocityCompAngle);
+          double yFlyAngle = (Constants.Vision.TARGET_Y_RED - s_Swerve.getPose().getY()) - (s_Swerve.getSpeed().vyMetersPerSecond * velocityCompAngle);
+          double velocityAngleOffset = Math.toDegrees(Math.atan2(yFlyAngle, xFlyAngle));
+
+          double velocityCompWrist = 0.01;
+          double xFlyWrist = (Constants.Vision.TARGET_X_RED - s_Swerve.getPose().getX()) - (s_Swerve.getSpeed().vxMetersPerSecond * velocityCompWrist);
+          double yFlyWrist = (Constants.Vision.TARGET_Y_RED - s_Swerve.getPose().getY()) - (s_Swerve.getSpeed().vyMetersPerSecond * velocityCompWrist);
+
+          double velocityWristOffset = Math.sqrt(Math.pow(xFlyWrist, 2) + Math.pow(yFlyWrist, 2));*/
+
           return -result.getTargets().get(result.getTargets().size() == 1 ? 0 : 1).getYaw() * 0.8 / 9.0;
         }
         else{

@@ -69,14 +69,14 @@ public class AutoRunNote extends Command {
     if(s_Shooter.autoFire()){
       s_Shooter.runShooter();
       s_Shooter.setWristShooting();
-      if(s_Shooter.atSpeed() && s_Shooter.isAtPosition()){
+      if(s_Shooter.atSpeed() && s_Shooter.isAtPosition() && noteGood){
         s_Intake.intake();
         deadIntake = false;
-        noteGood = false;
         sendForward = false;
         spitBack = false;
       }
       if(!s_Intake.botFull()){
+        noteGood = false;
         s_Shooter.setAutoFire(false);
         s_Intake.setAutoIntake(false);
         Swerve.setAddVisionMeasurement(false);

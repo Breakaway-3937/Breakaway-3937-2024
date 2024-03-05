@@ -20,43 +20,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Three Note S #1"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "FindNote"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Three Note S #2"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "FindNote"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Three Note S #3"
+            "pathName": "Three Note S"
           }
         },
         {

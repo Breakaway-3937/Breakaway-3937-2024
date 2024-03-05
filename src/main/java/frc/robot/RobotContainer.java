@@ -71,6 +71,8 @@ public class RobotContainer {
         NamedCommands.registerCommand("Shoot", new InstantCommand(() -> s_Shooter.setAutoFire(true)));
         NamedCommands.registerCommand("Intake", new InstantCommand(() -> s_Intake.setAutoIntake(true)));
         NamedCommands.registerCommand("VisionOn", new InstantCommand(() -> Swerve.setAddVisionMeasurement(true)));
+        NamedCommands.registerCommand("Subwoofer", new InstantCommand(() -> s_Shooter.setSubShooting()));
+        NamedCommands.registerCommand("Auto", new InstantCommand(() -> s_Shooter.setAutoShooting()));
         s_Swerve.setDefaultCommand(new TeleopSwerve(s_Swerve, () -> translationController.getRawAxis(translationAxis), () -> translationController.getRawAxis(strafeAxis), () -> rotationController.getRawAxis(rotationAxis), () -> robotRelative));
         s_Elevator.setDefaultCommand(c_RunElevator);
         autoChooser = AutoBuilder.buildAutoChooser("DO NOTHING");

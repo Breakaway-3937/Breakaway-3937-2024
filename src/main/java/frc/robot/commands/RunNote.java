@@ -37,7 +37,7 @@ public class RunNote extends Command {
     spitBack = false;
     deadIntake = false;
     sendForward = false;
-    noteGood = false;
+    noteGood = true;
   }
 
   // Called every time the scheduler runs while the command is scheduled.

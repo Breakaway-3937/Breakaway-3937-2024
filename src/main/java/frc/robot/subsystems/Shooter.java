@@ -134,8 +134,11 @@ public class Shooter extends SubsystemBase {
       speed = shooterMap.get(Robot.robotContainer.s_Vision.getDistance() + shooterOffset.getDouble(0));
       position = wristMap.get(Robot.robotContainer.s_Vision.getDistance() + wristOffset.getDouble(-0.2));
     }
-    if(!Robot.getFront()){
+    if(!Robot.getFront() && !Constants.PRACTICE_BOT){
       position = 2 * 12.0033218 - position;
+    }
+    else if(!Robot.getFront() && Constants.PRACTICE_BOT){
+      position = 2 * 11.9730104 - position;
     }
     if(position > 23){
       sixMoreSmidgens = true;

@@ -46,7 +46,7 @@ public class AutoNoteAlign extends Command {
       timer.start();
     }
 
-    if(timer.get() < 1 && (s_Swerve.getPose().getX() < 8.6 && !Robot.getRedAlliance() || s_Swerve.getPose().getX() > 7.9 && Robot.getRedAlliance())){
+    if(timer.get() < 1 && (s_Swerve.getPose().getX() < 8.6 && !Robot.getRedAlliance() || s_Swerve.getPose().getX() > 8.6 && Robot.getRedAlliance())){
       s_Swerve.drive(new Translation2d(translationXValue, 0), 0, false, false);
     }
     else{
