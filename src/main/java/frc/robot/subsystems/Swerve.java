@@ -27,7 +27,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Swerve extends SubsystemBase {
@@ -205,9 +204,6 @@ public class Swerve extends SubsystemBase {
         mod1Cancoder.setDouble(mSwerveMods[1].getCANcoder().getDegrees());
         mod2Cancoder.setDouble(mSwerveMods[2].getCANcoder().getDegrees());
         mod3Cancoder.setDouble(mSwerveMods[3].getCANcoder().getDegrees());
-
-        SmartDashboard.putNumber("Speeds X", getSpeed().vxMetersPerSecond);
-        SmartDashboard.putNumber("Speeds Y", getSpeed().vyMetersPerSecond);
 
         yaw.setDouble(gyro.getYaw().getValue());
 
