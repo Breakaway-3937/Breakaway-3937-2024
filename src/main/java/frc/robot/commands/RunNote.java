@@ -37,7 +37,12 @@ public class RunNote extends Command {
     spitBack = false;
     deadIntake = false;
     sendForward = false;
-    noteGood = true;
+    if(s_Intake.botFull()){
+      noteGood = true;
+    }
+    else{
+      noteGood = false;
+    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
