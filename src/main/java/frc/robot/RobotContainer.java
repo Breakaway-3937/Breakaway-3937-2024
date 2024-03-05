@@ -61,16 +61,14 @@ public class RobotContainer {
     public final RunNote c_RunNote = new RunNote(s_Intake, s_Shooter, xboxController);
     public final AutoRunNote c_AutoRunNote = new AutoRunNote(s_Intake, s_Shooter);
     private final RunElevator c_RunElevator = new RunElevator(s_Elevator, xboxController);
-    private final AutoNoteAlign c_AutoNoteAlign = new AutoNoteAlign(s_Swerve, s_Vision);
 
     private final SendableChooser<Command> autoChooser;
 
     /** The container for the robot. Contains subsystems, IO devices, and commands. */
     public RobotContainer() {
-        NamedCommands.registerCommand("FindNote", c_AutoNoteAlign);
         NamedCommands.registerCommand("Shoot", new InstantCommand(() -> s_Shooter.setAutoFire(true)));
         NamedCommands.registerCommand("Intake", new InstantCommand(() -> s_Intake.setAutoIntake(true)));
-        NamedCommands.registerCommand("VisionOn", new InstantCommand(() -> Swerve.setAddVisionMeasurement(true)));
+        NamedCommands.registerCommand("Vision", new InstantCommand(() -> Swerve.setAddVisionMeasurement(true)));
         NamedCommands.registerCommand("Subwoofer", new InstantCommand(() -> s_Shooter.setSubShooting()));
         NamedCommands.registerCommand("Auto", new InstantCommand(() -> s_Shooter.setAutoShooting()));
         s_Swerve.setDefaultCommand(new TeleopSwerve(s_Swerve, () -> translationController.getRawAxis(translationAxis), () -> translationController.getRawAxis(strafeAxis), () -> rotationController.getRawAxis(rotationAxis), () -> robotRelative));
