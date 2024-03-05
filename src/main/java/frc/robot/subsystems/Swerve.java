@@ -206,8 +206,8 @@ public class Swerve extends SubsystemBase {
         mod2Cancoder.setDouble(mSwerveMods[2].getCANcoder().getDegrees());
         mod3Cancoder.setDouble(mSwerveMods[3].getCANcoder().getDegrees());
 
-        SmartDashboard.putNumber("Speeds X", Constants.Swerve.SWERVE_KINEMATICS.toChassisSpeeds(getModuleStates()).vxMetersPerSecond);
-        SmartDashboard.putNumber("Speeds Y", Constants.Swerve.SWERVE_KINEMATICS.toChassisSpeeds(getModuleStates()).vyMetersPerSecond);
+        SmartDashboard.putNumber("Speeds X", getSpeed().vxMetersPerSecond);
+        SmartDashboard.putNumber("Speeds Y", getSpeed().vyMetersPerSecond);
 
         yaw.setDouble(gyro.getYaw().getValue());
 
