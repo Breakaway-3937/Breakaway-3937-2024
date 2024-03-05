@@ -223,7 +223,7 @@ public class RunElevator extends Command {
                 s_Elevator.runBabyShooterForward();
               }
             }
-            if(!Robot.robotContainer.s_Intake.getBabyShooterSensor()){
+            if(trapPosition && !Robot.robotContainer.s_Intake.getBabyShooterSensor()){
               trapScored = true;
               s_Elevator.stopBabyShooter();
               s_Elevator.setBabyWrist(wristHandoff);
