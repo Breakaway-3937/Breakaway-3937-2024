@@ -17,7 +17,6 @@ public class TeleopSwerve extends Command {
     private final DoubleSupplier strafeSup;
     private final DoubleSupplier rotationSup;
     private final BooleanSupplier robotCentricSup;
-    private double lastHeading;
 
     public TeleopSwerve(Swerve s_Swerve, DoubleSupplier translationSup, DoubleSupplier strafeSup, DoubleSupplier rotationSup, BooleanSupplier robotCentricSup) {
         this.s_Swerve = s_Swerve;
@@ -35,13 +34,6 @@ public class TeleopSwerve extends Command {
         double translationVal = MathUtil.applyDeadband(translationSup.getAsDouble(), Constants.Controllers.STICK_DEADBAND);
         double strafeVal = MathUtil.applyDeadband(strafeSup.getAsDouble(), Constants.Controllers.STICK_DEADBAND);
         double rotationVal = MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.Controllers.STICK_DEADBAND);
-
-        /*if(Math.abs(rotationVal) > 0){
-            lastHeading = s_Swerve.getHeading().getDegrees();
-        }
-        else{
-            rotationVal = ((lastHeading + 3600000) % 360 - (s_Swerve.getHeading().getDegrees() + 3600000) % 360) * (8.0 / 275.0) / Constants.Swerve.MAX_ANGULAR_VELOCITY;
-        }*/
 
         /* Drive */
         s_Swerve.drive(
