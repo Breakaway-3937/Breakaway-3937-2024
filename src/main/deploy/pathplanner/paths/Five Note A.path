@@ -139,10 +139,10 @@
   "constraintZones": [
     {
       "name": "Shoot",
-      "minWaypointRelativePos": 1.1,
-      "maxWaypointRelativePos": 1.4,
+      "minWaypointRelativePos": 1.2,
+      "maxWaypointRelativePos": 1.4500000000000002,
       "constraints": {
-        "maxVelocity": 0.5,
+        "maxVelocity": 1.0,
         "maxAcceleration": 4.5,
         "maxAngularVelocity": 690.0,
         "maxAngularAcceleration": 690.0
@@ -150,8 +150,8 @@
     },
     {
       "name": "Shoot",
-      "minWaypointRelativePos": 2.8,
-      "maxWaypointRelativePos": 3.6500000000000004,
+      "minWaypointRelativePos": 2.65,
+      "maxWaypointRelativePos": 3.0,
       "constraints": {
         "maxVelocity": 1.5,
         "maxAcceleration": 4.5,
@@ -191,7 +191,7 @@
     },
     {
       "name": "Shoot",
-      "waypointRelativePos": 1.1,
+      "waypointRelativePos": 1.25,
       "command": {
         "type": "parallel",
         "data": {
@@ -200,12 +200,6 @@
               "type": "named",
               "data": {
                 "name": "Shoot"
-              }
-            },
-            {
-              "type": "named",
-              "data": {
-                "name": "Vision"
               }
             }
           ]
@@ -248,7 +242,7 @@
     },
     {
       "name": "Shoot",
-      "waypointRelativePos": 4.55,
+      "waypointRelativePos": 4.6,
       "command": {
         "type": "parallel",
         "data": {
@@ -288,7 +282,7 @@
     },
     {
       "name": "Shoot",
-      "waypointRelativePos": 2.75,
+      "waypointRelativePos": 2.65,
       "command": {
         "type": "parallel",
         "data": {
