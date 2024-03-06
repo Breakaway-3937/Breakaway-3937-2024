@@ -109,7 +109,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public boolean atSpeed(){
-    if(speed <= getShooterVelocity() + 0.833 && speed >= getShooterVelocity() - 0.833){
+    if(speed <= getShooterVelocity() + 1.25 && speed >= getShooterVelocity() - 1.25){
       return true;
     }
     else{
@@ -159,7 +159,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public boolean isSafe(){
-    if(getWrist() > 12.9 && getWrist() < 13.1){
+    if(getWrist() > 12.7 && getWrist() < 13.3){
       return true;
     }
     else{
@@ -168,7 +168,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public boolean isAtPosition(){
-    if(getWrist() > position - 0.1 && getWrist() < position + 0.1){
+    if(getWrist() > position - 0.3 && getWrist() < position + 0.3){
       return true;
     }
     else{
@@ -190,6 +190,18 @@ public class Shooter extends SubsystemBase {
 
   public void setAutoFire(boolean autoFire){
     this.autoFire = autoFire;
+  }
+
+  public void setCoastMode(){
+    shooterMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+    shooterMotor.getConfigurator().apply(shooterMotorConfig);
+    followerShooterMotor.getConfigurator().apply(shooterMotorConfig);
+  }
+
+  public void setBrakeMode(){
+    shooterMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    shooterMotor.getConfigurator().apply(shooterMotorConfig);
+    followerShooterMotor.getConfigurator().apply(shooterMotorConfig);
   }
 
   private void configShooterMotors(){
