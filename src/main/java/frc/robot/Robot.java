@@ -152,6 +152,8 @@ public class Robot extends LoggedRobot {
   public void autonomousInit() {
     autonomousCommand = robotContainer.getAutonomousCommand();
 
+    robotContainer.s_Shooter.setBrakeMode();
+
     if(robotContainer.s_Shooter.getDefaultCommand() != null){
       robotContainer.s_Shooter.getDefaultCommand().cancel();
     }
@@ -184,6 +186,8 @@ public class Robot extends LoggedRobot {
     if(redAlliance){
       robotContainer.s_Swerve.heading180();
     }
+
+    robotContainer.s_Shooter.setCoastMode();
     
     Shuffleboard.selectTab("Drive");
   }
