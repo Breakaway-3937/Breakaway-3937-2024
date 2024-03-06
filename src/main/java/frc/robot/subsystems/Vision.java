@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.Optional;
 
 import org.littletonrobotics.junction.Logger;
@@ -21,9 +22,10 @@ import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -34,11 +36,11 @@ public class Vision extends SubsystemBase {
     private final PhotonPoseEstimator frontPoseEstimator, backPoseEstimator;
     private final Swerve s_Swerve;
     private double targetX, targetY, robotX, robotY;
-    private final GenericEntry distanceEntry;
-    private double robotRelVelocityVector, fieldRelVelocityX, fieldRelVelocityY;
+    private final GenericEntry distanceEntry, compAngleEntry, compWristEntry;
+    private double fieldRelVelocityX, fieldRelVelocityY;
     private double xFlyAngle, yFlyAngle, originalAngle, xFlyWrist, yFlyWrist, velocityAngleOffset;
-    private double velocityCompAngle = 0.04;
-    private double velocityCompWrist = 0.01;
+    private double velocityCompAngle = 0.05;
+    private double velocityCompWrist = 0.1;
 
 
   /** Creates a new Vision. */
@@ -63,8 +65,8 @@ public class Vision extends SubsystemBase {
 
     distanceEntry = Shuffleboard.getTab("Shooter").add("Distance", 0).withPosition(2, 0).getEntry();
 
-    SmartDashboard.putNumber("Comp Angle", velocityCompAngle);
-    SmartDashboard.putNumber("Comp Wrist", velocityCompWrist);
+    compAngleEntry = Shuffleboard.getTab("Shooter").add("Comp Angle Offset", velocityCompAngle).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1)).withPosition(0, 3).getEntry();
+    compWristEntry = Shuffleboard.getTab("Shooter").add("Comp Wrist Offset", velocityCompWrist).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1)).withPosition(0, 4).getEntry();
   }
 
   public Optional<Rotation2d> getRotationTargetOverride(){
@@ -88,7 +90,6 @@ public class Vision extends SubsystemBase {
           velocityAngleOffset = Math.toDegrees(Math.atan2(yFlyAngle, xFlyAngle)) - originalAngle;
 
           return velocityAngleOffset - result.getTargets().get(result.getTargets().size() == 1 ? 0 : 1).getYaw() * 0.8 / 9.0;
-          //return -result.getTargets().get(0).getYaw() * 0.8 / 9.0;
         }
         else if(result.hasTargets() && Robot.getRedAlliance()){
           xFlyAngle = (targetX - robotX) - (fieldRelVelocityX * velocityCompAngle);
@@ -98,7 +99,6 @@ public class Vision extends SubsystemBase {
           velocityAngleOffset = Math.toDegrees(Math.atan2(yFlyAngle, xFlyAngle)) - originalAngle;
           
           return velocityAngleOffset - result.getTargets().get(result.getTargets().size() == 1 ? 0 : 1).getYaw() * 0.8 / 9.0;
-          //return -result.getTargets().get(result.getTargets().size() == 1 ? 0 : 1).getYaw() * 0.8 / 9.0;
         }
         else{
           return 0;
@@ -114,7 +114,6 @@ public class Vision extends SubsystemBase {
           velocityAngleOffset = Math.toDegrees(Math.atan2(yFlyAngle, xFlyAngle)) - originalAngle;
 
           return velocityAngleOffset - result.getTargets().get(result.getTargets().size() == 1 ? 0 : 1).getYaw() * 0.8 / 9.0;
-          //return -result.getTargets().get(0).getYaw() * 0.8 / 9.0;
         }
         else if(result.hasTargets() && Robot.getRedAlliance()){
           xFlyAngle = (targetX - robotX) - (fieldRelVelocityX * velocityCompAngle);
@@ -124,7 +123,6 @@ public class Vision extends SubsystemBase {
           velocityAngleOffset = Math.toDegrees(Math.atan2(yFlyAngle, xFlyAngle)) - originalAngle;
           
           return velocityAngleOffset - result.getTargets().get(result.getTargets().size() == 1 ? 0 : 1).getYaw() * 0.8 / 9.0;
-          //return -result.getTargets().get(result.getTargets().size() == 1 ? 0 : 1).getYaw() * 0.8 / 9.0;
         }
         else{
           return 0;
@@ -138,6 +136,16 @@ public class Vision extends SubsystemBase {
       else{
         return PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromDegrees(0))).getDegrees() * 8.0 / 42.0;
       }
+    }
+  }
+
+  public double getAprilTagStrafeSpeed(){
+    var result = frontCamera.getLatestResult();
+    if(result.hasTargets()){
+      return -result.getBestTarget().getYaw() * 8.0 / 148.0;
+    }
+    else{
+      return 0;
     }
   }
 
@@ -157,7 +165,6 @@ public class Vision extends SubsystemBase {
     }
 
     return Math.sqrt(Math.pow(xFlyWrist, 2) + Math.pow(yFlyWrist, 2));
-    //return Math.sqrt(Math.pow(targetX - robotX, 2) + Math.pow(targetY - robotY, 2));
   }
 
   public double getNoteRotationSpeed(){
@@ -211,12 +218,11 @@ public class Vision extends SubsystemBase {
       }
     }
 
-    robotRelVelocityVector = Math.sqrt(Math.pow(s_Swerve.getSpeed().vxMetersPerSecond, 2) + Math.pow(s_Swerve.getSpeed().vyMetersPerSecond, 2));
-    fieldRelVelocityX = robotRelVelocityVector * Math.cos(s_Swerve.getGyroYaw().getRadians() + Math.PI) * Math.signum(s_Swerve.getSpeed().vxMetersPerSecond);
-    fieldRelVelocityY = robotRelVelocityVector * Math.sin(s_Swerve.getGyroYaw().getRadians() + Math.PI) * Math.signum(s_Swerve.getSpeed().vyMetersPerSecond);
+    fieldRelVelocityX = ChassisSpeeds.fromRobotRelativeSpeeds(s_Swerve.getSpeed(), Rotation2d.fromDegrees(s_Swerve.getGyroYaw().getDegrees() + 180)).vxMetersPerSecond;
+    fieldRelVelocityY = ChassisSpeeds.fromRobotRelativeSpeeds(s_Swerve.getSpeed(), Rotation2d.fromDegrees(s_Swerve.getGyroYaw().getDegrees() + 180)).vyMetersPerSecond;
 
-    velocityCompAngle = SmartDashboard.getNumber("Comp Angle", velocityCompAngle);
-    velocityCompWrist = SmartDashboard.getNumber("Comp Wrist", velocityCompWrist);
+    velocityCompAngle = compAngleEntry.getDouble(velocityCompAngle);
+    velocityCompWrist = compWristEntry.getDouble(velocityCompWrist);
 
     distanceEntry.setDouble(getDistance());
     Logger.recordOutput("Distance", getDistance());
