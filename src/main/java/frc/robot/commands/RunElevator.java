@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
@@ -18,8 +19,8 @@ public class RunElevator extends Command {
   private final double wristProtect = 3;
   private final double wristSixMoreSmidgens = 6.5;
   private final double wristAmp = 47.4;
-  private final double wristPreTrap = 41.7;
-  private final double wristTrap = 35;
+  private final double wristPreTrap = 51;
+  private final double wristTrap = 37.15;
   private final double wristSource = 65;
   private final double elevatorHandoff = 28.2;
   private final double elevatorProtect = 0;
@@ -31,12 +32,14 @@ public class RunElevator extends Command {
   private boolean trap, source, protect, ohCrap, climb;
   public static boolean amp, deadShooter, trapStage1, trapStage2, startStage1, startStage2, reverse, trapScored, retracting, climbing, handoff, trapPosition;
   private static boolean lowClimb = true;
+  private final Timer timer;
 
   /** Creates a new RunElevator. */
   public RunElevator(Elevator s_Elevator, XboxController xboxController) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.s_Elevator = s_Elevator;
     this.xboxController = xboxController;
+    timer = new Timer();
     addRequirements(s_Elevator);
   }
 
@@ -195,7 +198,8 @@ public class RunElevator extends Command {
           source = false;
         }
       }
-      else if(climb){
+      
+      if(climb){
         if(lowClimb){
           if(climbing){
             s_Elevator.setElevatorFast();
@@ -214,16 +218,17 @@ public class RunElevator extends Command {
             }
             if(trapStage2 && !trapPosition){
               s_Elevator.setElevator(elevatorTrap);
-              s_Elevator.setBabyWrist(wristHandoff);
+              //s_Elevator.setBabyWrist(wristHandoff);
             }
             if(trapStage2 && s_Elevator.isAtPosition()){
               s_Elevator.setBabyWrist(wristTrap);
               trapPosition = true;
               if(s_Elevator.isAtPosition()){
                 s_Elevator.runBabyShooterForward();
+                timer.start();
               }
             }
-            if(trapPosition && !Robot.robotContainer.s_Intake.getBabyShooterSensor()){
+            if(trapPosition && !Robot.robotContainer.s_Intake.getBabyShooterSensor() && timer.get() > 2){
               trapScored = true;
               s_Elevator.stopBabyShooter();
               s_Elevator.setBabyWrist(wristHandoff);
@@ -280,5 +285,7 @@ public class RunElevator extends Command {
     climbing = false;
     handoff = false;
     trapPosition = false;
+    timer.stop();
+    timer.reset();
   }
 }
