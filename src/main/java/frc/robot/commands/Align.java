@@ -7,12 +7,7 @@ package frc.robot.commands;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.PathConstraints;
-
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
@@ -28,11 +23,8 @@ public class Align extends Command {
   private final DoubleSupplier rotationSup;
   private final BooleanSupplier robotCentricSup;
   private final double pValue = 8.0 / 42.0;
-  private boolean flag, scheduled;
+  private boolean flag;
   private double translationVal, strafeVal, rotationVal;
-  private Pose2d trapPose = new Pose2d();
-  private final PathConstraints constraints = new PathConstraints(Constants.Swerve.MAX_SPEED, 4.5, 12.0428, 12.0428);
-  private Command command;
 
   /** Creates a new Align. */
   public Align(Swerve s_Swerve, Vision s_Vision, DoubleSupplier translationSup, DoubleSupplier strafeSup, DoubleSupplier rotationSup, BooleanSupplier robotCentricSup) {
@@ -50,7 +42,6 @@ public class Align extends Command {
   @Override
   public void initialize() {
     flag = false;
-    scheduled = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -73,41 +64,23 @@ public class Align extends Command {
       );
     }
     else if(RunElevator.climbing){
-      if(!Robot.getRedAlliance()){
-        if((Robot.robotContainer.s_Swerve.getHeading().getDegrees() + 3600000) % 360 > 90 || (Robot.robotContainer.s_Swerve.getHeading().getDegrees() + 3600000) % 360 < 270){
-          trapPose = new Pose2d(new Translation2d(Constants.Vision.TRAP_CENTER_TARGET_X_BLUE, Constants.Vision.TRAP_CENTER_TARGET_Y_BLUE), Rotation2d.fromDegrees(0));
-        }
-        else if((Robot.robotContainer.s_Swerve.getHeading().getDegrees() + 3600000) % 360 > 270){
-          trapPose = new Pose2d(new Translation2d(Constants.Vision.TRAP_LEFT_TARGET_X_BLUE, Constants.Vision.TRAP_LEFT_TARGET_Y_BLUE), Rotation2d.fromDegrees(300));
-        }
-        else if((Robot.robotContainer.s_Swerve.getHeading().getDegrees() + 3600000) % 360 < 90){
-          trapPose = new Pose2d(new Translation2d(Constants.Vision.TRAP_RIGHT_TARGET_X_BLUE, Constants.Vision.TRAP_RIGHT_TARGET_Y_BLUE), Rotation2d.fromDegrees(60));
-        }
+      translationVal = MathUtil.applyDeadband(translationSup.getAsDouble(), Constants.Controllers.STICK_DEADBAND);
+      strafeVal = s_Vision.getAprilTagStrafeSpeed();
+      if((Robot.robotContainer.s_Swerve.getHeading().getDegrees() + 3600000) % 360 > 90 && (Robot.robotContainer.s_Swerve.getHeading().getDegrees() + 3600000) % 360 < 270){
+        rotationVal = pValue * (180 - (s_Swerve.getGyroYaw().getDegrees() + 3600000) % 360);
       }
-      else{
-        if((Robot.robotContainer.s_Swerve.getHeading().getDegrees() + 3600000) % 360 > 90 || (Robot.robotContainer.s_Swerve.getHeading().getDegrees() + 3600000) % 360 < 270){
-          trapPose = new Pose2d(new Translation2d(Constants.Vision.TRAP_CENTER_TARGET_X_RED, Constants.Vision.TRAP_CENTER_TARGET_Y_RED), Rotation2d.fromDegrees(0));
-        }
-        else if((Robot.robotContainer.s_Swerve.getHeading().getDegrees() + 3600000) % 360 > 270){
-          trapPose = new Pose2d(new Translation2d(Constants.Vision.TRAP_LEFT_TARGET_X_RED, Constants.Vision.TRAP_LEFT_TARGET_Y_RED), Rotation2d.fromDegrees(300));
-        }
-        else if((Robot.robotContainer.s_Swerve.getHeading().getDegrees() + 3600000) % 360 < 90){
-          trapPose = new Pose2d(new Translation2d(Constants.Vision.TRAP_RIGHT_TARGET_X_RED, Constants.Vision.TRAP_RIGHT_TARGET_Y_RED), Rotation2d.fromDegrees(60));
-        }
+      else if((Robot.robotContainer.s_Swerve.getHeading().getDegrees() + 3600000) % 360 > 270){
+        rotationVal = pValue * (300 - (s_Swerve.getGyroYaw().getDegrees() + 3600000) % 360);
       }
-      if(!scheduled){
-        command = AutoBuilder.pathfindToPose(trapPose, constraints, 0, 0);
-        command.schedule();
-        scheduled = true;
+      else if((Robot.robotContainer.s_Swerve.getHeading().getDegrees() + 3600000) % 360 < 90){
+        rotationVal = pValue * (60 - (s_Swerve.getGyroYaw().getDegrees() + 3600000) % 360);
       }
-      if(scheduled && command.isFinished()){
-        s_Swerve.drive(
-              new Translation2d(translationVal, 0).times(Constants.Swerve.MAX_SPEED), 
-              0, 
-              robotCentricSup.getAsBoolean(), 
-              true
-          );
-      }
+      s_Swerve.drive(
+            new Translation2d(translationVal, strafeVal).times(Constants.Swerve.MAX_SPEED), 
+            rotationVal, 
+            false, 
+            true
+        );
     }
     else if(!RunElevator.deadShooter){
       /* Get Values, Deadband*/
