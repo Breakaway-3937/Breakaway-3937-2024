@@ -14,6 +14,7 @@ import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonUtils;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
@@ -36,11 +37,12 @@ public class Vision extends SubsystemBase {
     private final PhotonPoseEstimator frontPoseEstimator, backPoseEstimator;
     private final Swerve s_Swerve;
     private double targetX, targetY, robotX, robotY;
-    private final GenericEntry distanceEntry, compAngleEntry, compWristEntry;
+    private final GenericEntry distanceEntry, targetID, compAngleEntry, compWristEntry;
     private double fieldRelVelocityX, fieldRelVelocityY;
     private double xFlyAngle, yFlyAngle, originalAngle, xFlyWrist, yFlyWrist, velocityAngleOffset;
     private double velocityCompAngle = 0.05;
-    private double velocityCompWrist = 0.1;
+    private double velocityCompWrist = 0.075;
+    private PhotonTrackedTarget target;
 
 
   /** Creates a new Vision. */
@@ -64,9 +66,10 @@ public class Vision extends SubsystemBase {
     PPHolonomicDriveController.setRotationTargetOverride(this::getRotationTargetOverride);
 
     distanceEntry = Shuffleboard.getTab("Shooter").add("Distance", 0).withPosition(2, 0).getEntry();
+    targetID = Shuffleboard.getTab("Shooter").add("Target ID", 0).withPosition(3, 0).getEntry();
 
-    compAngleEntry = Shuffleboard.getTab("Shooter").add("Comp Angle Offset", velocityCompAngle).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1)).withPosition(0, 3).getEntry();
-    compWristEntry = Shuffleboard.getTab("Shooter").add("Comp Wrist Offset", velocityCompWrist).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1)).withPosition(0, 4).getEntry();
+    compAngleEntry = Shuffleboard.getTab("Shooter").add("Comp Angle Offset", velocityCompAngle).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1)).withPosition(0, 2).getEntry();
+    compWristEntry = Shuffleboard.getTab("Shooter").add("Comp Wrist Offset", velocityCompWrist).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1)).withPosition(2, 2).getEntry();
   }
 
   public Optional<Rotation2d> getRotationTargetOverride(){
@@ -83,22 +86,44 @@ public class Vision extends SubsystemBase {
       if(Robot.getFront()){
         var result = frontCamera.getLatestResult();
         if(result.hasTargets() && !Robot.getRedAlliance()){
+          for(int i = 0; i < result.getTargets().size(); i++){
+            if(result.getTargets().get(i).getFiducialId() == 7){
+              target = result.getTargets().get(i);
+              break;
+            }
+          }
           xFlyAngle = (robotX - targetX) - (fieldRelVelocityX * velocityCompAngle);
           yFlyAngle = (robotY - targetY) - (fieldRelVelocityY * velocityCompAngle);
           originalAngle = Math.toDegrees(Math.atan2(robotY - targetY, robotX - targetX));
 
           velocityAngleOffset = Math.toDegrees(Math.atan2(yFlyAngle, xFlyAngle)) - originalAngle;
 
-          return velocityAngleOffset - result.getTargets().get(result.getTargets().size() == 1 ? 0 : 1).getYaw() * 0.8 / 9.0;
+          if(target != null){
+            return velocityAngleOffset - target.getYaw() * 0.8 / 9.0;
+          }
+          else{
+            return 0;
+          }
         }
         else if(result.hasTargets() && Robot.getRedAlliance()){
+          for(int i = 0; i < result.getTargets().size(); i++){
+            if(result.getTargets().get(i).getFiducialId() == 4){
+              target = result.getTargets().get(i);
+              break;
+            }
+          }
           xFlyAngle = (targetX - robotX) - (fieldRelVelocityX * velocityCompAngle);
           yFlyAngle = (targetY - robotY) - (fieldRelVelocityY * velocityCompAngle);
           originalAngle = Math.toDegrees(Math.atan2(targetY - robotY, targetX - robotX));
       
           velocityAngleOffset = Math.toDegrees(Math.atan2(yFlyAngle, xFlyAngle)) - originalAngle;
           
-          return velocityAngleOffset - result.getTargets().get(result.getTargets().size() == 1 ? 0 : 1).getYaw() * 0.8 / 9.0;
+          if(target != null){
+            return velocityAngleOffset - target.getYaw() * 0.8 / 9.0;
+          }
+          else{
+            return 0;
+          }
         }
         else{
           return 0;
@@ -107,22 +132,44 @@ public class Vision extends SubsystemBase {
       else{
         var result = backCamera.getLatestResult();
         if(result.hasTargets() && !Robot.getRedAlliance()){
+          for(int i = 0; i < result.getTargets().size(); i++){
+            if(result.getTargets().get(i).getFiducialId() == 7){
+              target = result.getTargets().get(i);
+              break;
+            }
+          }
           xFlyAngle = (robotX - targetX) - (fieldRelVelocityX * velocityCompAngle);
           yFlyAngle = (robotY - targetY) - (fieldRelVelocityY * velocityCompAngle);
           originalAngle = Math.toDegrees(Math.atan2(robotY - targetY, robotX - targetX));
 
           velocityAngleOffset = Math.toDegrees(Math.atan2(yFlyAngle, xFlyAngle)) - originalAngle;
 
-          return velocityAngleOffset - result.getTargets().get(result.getTargets().size() == 1 ? 0 : 1).getYaw() * 0.8 / 9.0;
+          if(target != null){
+            return velocityAngleOffset - target.getYaw() * 0.8 / 9.0;
+          }
+          else{
+            return 0;
+          }
         }
         else if(result.hasTargets() && Robot.getRedAlliance()){
+          for(int i = 0; i < result.getTargets().size(); i++){
+            if(result.getTargets().get(i).getFiducialId() == 4){
+              target = result.getTargets().get(i);
+              break;
+            }
+          }
           xFlyAngle = (targetX - robotX) - (fieldRelVelocityX * velocityCompAngle);
           yFlyAngle = (targetY - robotY) - (fieldRelVelocityY * velocityCompAngle);
           originalAngle = Math.toDegrees(Math.atan2(targetY - robotY, targetX - robotX));
       
           velocityAngleOffset = Math.toDegrees(Math.atan2(yFlyAngle, xFlyAngle)) - originalAngle;
           
-          return velocityAngleOffset - result.getTargets().get(result.getTargets().size() == 1 ? 0 : 1).getYaw() * 0.8 / 9.0;
+          if(target != null){
+            return velocityAngleOffset - target.getYaw() * 0.8 / 9.0;
+          }
+          else{
+            return 0;
+          }
         }
         else{
           return 0;
@@ -216,6 +263,11 @@ public class Vision extends SubsystemBase {
       if(pose.isPresent()){
         s_Swerve.updatePoseVision(pose.get());
       }
+    }
+
+    if(target != null){
+      Logger.recordOutput("Target ID", target.getFiducialId());
+      targetID.setDouble(target.getFiducialId());
     }
 
     fieldRelVelocityX = ChassisSpeeds.fromRobotRelativeSpeeds(s_Swerve.getSpeed(), Rotation2d.fromDegrees(s_Swerve.getGyroYaw().getDegrees() + 180)).vxMetersPerSecond;
