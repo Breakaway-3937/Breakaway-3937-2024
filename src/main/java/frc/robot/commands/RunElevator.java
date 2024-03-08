@@ -15,11 +15,11 @@ import frc.robot.subsystems.Shooter;
 public class RunElevator extends Command {
   private final Elevator s_Elevator;
   private final XboxController xboxController;
-  private final double wristHandoff = 65;
+  private final double wristHandoff = 65.6;
   private final double wristProtect = 3;
   private final double wristSixMoreSmidgens = 6.5;
   private final double wristAmp = 47.4;
-  private final double wristPreTrap = 51;
+  private final double wristPreTrap = 56.4;
   private final double wristTrap = 37.15;
   private final double wristSource = 65;
   private final double elevatorHandoff = 28.2;
@@ -218,7 +218,6 @@ public class RunElevator extends Command {
             }
             if(trapStage2 && !trapPosition){
               s_Elevator.setElevator(elevatorTrap);
-              //s_Elevator.setBabyWrist(wristHandoff);
             }
             if(trapStage2 && s_Elevator.isAtPosition()){
               s_Elevator.setBabyWrist(wristTrap);
