@@ -13,7 +13,7 @@ public class RunNote extends Command {
   private final Intake s_Intake;
   private final Shooter s_Shooter;
   private final XboxController xboxController;
-  private final double handoff = 17.6;
+  private final double handoff = 18.3;
   private final double protect = 13;
   /**
    * Formerly runIntakeBackwardsUntilShooterSensorReturnsAFalseValue and runIntakeBackwardsUntilIntakeSensorReturnsATrueValue
