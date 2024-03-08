@@ -19,7 +19,7 @@ public class RunElevator extends Command {
   private final double wristProtect = 3;
   private final double wristSixMoreSmidgens = 6.5;
   private final double wristAmp = 47.4;
-  private final double wristPreTrap = 56.4;
+  private final double wristPreTrap = 51;
   private final double wristTrap = 37.15;
   private final double wristSource = 65;
   private final double elevatorHandoff = 28.2;

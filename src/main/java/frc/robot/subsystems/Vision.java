@@ -256,12 +256,14 @@ public class Vision extends SubsystemBase {
       var pose = getFrontEstimatedGlobalPose();
       if(pose.isPresent()){
         s_Swerve.updatePoseVision(pose.get());
+        Logger.recordOutput("Front Cam Used Tag", pose.get().targetsUsed.get(0).getFiducialId());
       }
     }
-    else if(backCamera.getLatestResult().hasTargets()){
+    if(backCamera.getLatestResult().hasTargets()){
       var pose = getBackEstimatedGlobalPose();
       if(pose.isPresent()){
         s_Swerve.updatePoseVision(pose.get());
+        Logger.recordOutput("Back Cam Used Tag", pose.get().targetsUsed.get(0).getFiducialId());
       }
     }
 

@@ -105,7 +105,7 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        Logger.recordOutput("Auto", autoChooser.getSelected().toString());
+        Logger.recordOutput("Auto", autoChooser.getSelected().getName());
         return autoChooser.getSelected();
     }
 }
