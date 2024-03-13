@@ -25,6 +25,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -41,8 +42,9 @@ public class Vision extends SubsystemBase {
     private double fieldRelVelocityX, fieldRelVelocityY;
     private double xFlyAngle, yFlyAngle, originalAngle, xFlyWrist, yFlyWrist, velocityAngleOffset;
     private double velocityCompAngle = 0.05;
-    private double velocityCompWrist = 0.075;
+    private double velocityCompWrist = 0.1;
     private PhotonTrackedTarget target;
+    private boolean poseBad = false;
 
 
   /** Creates a new Vision. */
@@ -228,10 +230,6 @@ public class Vision extends SubsystemBase {
     return noteCamera.getLatestResult().hasTargets();
   }
   
-  public double getNoteLatency(){
-    return noteCamera.getLatestResult().getLatencyMillis();
-  }
-
   public Optional<EstimatedRobotPose> getFrontEstimatedGlobalPose(){
     return frontPoseEstimator.update();
   }
@@ -255,17 +253,33 @@ public class Vision extends SubsystemBase {
     if(frontCamera.getLatestResult().hasTargets()){
       var pose = getFrontEstimatedGlobalPose();
       if(pose.isPresent()){
-        s_Swerve.updatePoseVision(pose.get());
+        for(int i = 0; i < pose.get().targetsUsed.size(); i++){
+          if(Math.abs(pose.get().targetsUsed.get(i).getBestCameraToTarget().getTranslation().getX()) > 5){
+            poseBad = true;
+          }
+        }
+        if(!poseBad){
+          s_Swerve.updatePoseVision(pose.get());
+        }
         Logger.recordOutput("Front Cam Used Tag", pose.get().targetsUsed.get(0).getFiducialId());
       }
     }
-    if(backCamera.getLatestResult().hasTargets()){
+    if(backCamera.getLatestResult().hasTargets() && DriverStation.isTeleopEnabled()){
       var pose = getBackEstimatedGlobalPose();
       if(pose.isPresent()){
-        s_Swerve.updatePoseVision(pose.get());
+        for(int i = 0; i < pose.get().targetsUsed.size(); i++){
+          if(Math.abs(pose.get().targetsUsed.get(i).getBestCameraToTarget().getTranslation().getX()) > 5){
+            poseBad = true;
+          }
+        }
+        if(!poseBad){
+          s_Swerve.updatePoseVision(pose.get());
+        }
         Logger.recordOutput("Back Cam Used Tag", pose.get().targetsUsed.get(0).getFiducialId());
       }
     }
+
+    Logger.recordOutput("Pose Bad", poseBad);
 
     if(target != null){
       Logger.recordOutput("Target ID", target.getFiducialId());
@@ -289,5 +303,7 @@ public class Vision extends SubsystemBase {
       targetX = Constants.Vision.TARGET_X_RED;
       targetY = Constants.Vision.TARGET_Y_RED;
     }
+
+    poseBad = false;
   }
 }
