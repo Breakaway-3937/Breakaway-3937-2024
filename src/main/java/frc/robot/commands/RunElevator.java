@@ -19,7 +19,7 @@ public class RunElevator extends Command {
   private final double wristProtect = 3;
   private final double wristSixMoreSmidgens = 6.5;
   private final double wristAmp = 47.4;
-  private final double wristPreTrap = 51;
+  private final double wristPreTrap = 51;//57.75;//51
   private final double wristTrap = 37.15;
   private final double wristSource = 65;
   private final double elevatorHandoff = 28.2;
@@ -29,8 +29,8 @@ public class RunElevator extends Command {
   private final double elevatorSource = 52.6;
   private final double elevatorClimb = 102;
   private final double elevatorHighClimb = 10;
-  private boolean trap, source, protect, ohCrap, climb;
-  public static boolean amp, deadShooter, trapStage1, trapStage2, startStage1, startStage2, reverse, trapScored, retracting, climbing, handoff, trapPosition;
+  private boolean source, protect, ohCrap, climb;
+  public static boolean trap, amp, deadShooter, trapStage1, trapStage2, startStage1, startStage2, reverse, trapScored, retracting, climbing, handoff, trapPosition;
   private static boolean lowClimb = true;
   private final Timer timer;
 
@@ -66,14 +66,14 @@ public class RunElevator extends Command {
       reset();
       climb = true;
       climbing = true;
-      trap = true;
+      //trap = true;
     }
     //Retract Climb
     else if(xboxController.getPOV() == Constants.Controllers.DOWN){
       reset();
       climb = true;
       retracting = true;
-      trap = true;
+      //trap = true;
     }
     //Protect
     else if(xboxController.getRawButton(3)){
@@ -119,19 +119,41 @@ public class RunElevator extends Command {
         handoff = false;
       }
       else if(trap){
-        if(!climb && !trapStage2){
-          s_Elevator.setElevator(elevatorHandoff);
-          s_Elevator.setBabyWrist(wristHandoff);
+        if(/*!climb && */!trapStage2){
+          s_Elevator.setElevator(61);
+        }
+        if(!trapStage2 && s_Elevator.isAtPosition()){
+          s_Elevator.setBabyWrist(72.2);
           handoff = true;
         }
-        if(!climb && !trapStage2 && Robot.robotContainer.s_Shooter.isAtPosition() && s_Elevator.isAtPosition() && !Robot.robotContainer.s_Intake.getBabyShooterSensor()){
+        if(/*!climb && */!trapStage2 && handoff && !Robot.robotContainer.s_Shooter.isSafe() && Robot.robotContainer.s_Shooter.isAtPosition() && s_Elevator.isAtPosition() && !Robot.robotContainer.s_Intake.getBabyShooterSensor()){
           s_Elevator.runBabyShooterForward();
           trapStage1 = true;
         }
-        if(!climb && !trapStage2 && Robot.robotContainer.s_Intake.getBabyShooterSensor()){
+        if(/*!climb && */!trapStage2 && Robot.robotContainer.s_Intake.getBabyShooterSensor()){
           s_Elevator.stopBabyShooter();
           trapStage1 = false;
           trapStage2 = true;
+        }
+        if(xboxController.getRawButton(8)){
+          trapStage2 = true;
+        }
+        if(trapStage2 && !trapPosition){
+          s_Elevator.setElevator(elevatorTrap);
+          handoff = false;
+        }
+        if(trapStage2 && s_Elevator.isAtPosition()){
+          s_Elevator.setBabyWrist(wristTrap);
+          trapPosition = true;
+          if(s_Elevator.isAtPosition()){
+            s_Elevator.runBabyShooterForward();
+            timer.start();
+          }
+        }
+        if(trapPosition && !Robot.robotContainer.s_Intake.getBabyShooterSensor() && timer.get() > 2){
+          trapScored = true;
+          s_Elevator.stopBabyShooter();
+          s_Elevator.setBabyWrist(wristHandoff);
         }
       }
       else if(amp){
@@ -200,19 +222,20 @@ public class RunElevator extends Command {
       }
       
       if(climb){
+        handoff = false;
         if(lowClimb){
           if(climbing){
             s_Elevator.setElevatorFast();
             s_Elevator.setBabyWrist(wristHandoff);
             s_Elevator.setElevator(elevatorClimb);
           }
-          else if(retracting && !trapStage2){
+          else if(retracting/*&& !trapStage2*/){
             s_Elevator.setElevatorSlow();
             s_Elevator.setBabyWrist(wristPreTrap);
             s_Elevator.setElevator(elevatorProtect);
           }
 
-          if(trap){
+          /*if(trap){
             if(xboxController.getRawButton(8)){
               trapStage2 = true;
             }
@@ -232,7 +255,7 @@ public class RunElevator extends Command {
               s_Elevator.stopBabyShooter();
               s_Elevator.setBabyWrist(wristHandoff);
             }
-          }
+          }*/
         }
         else{
           if(climbing){

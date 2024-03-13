@@ -14,6 +14,7 @@ public class RunNote extends Command {
   private final Shooter s_Shooter;
   private final XboxController xboxController;
   private final double handoff = 18.3;
+  private final double trapHandoff = 15.67;
   private final double protect = 13;
   /**
    * Formerly runIntakeBackwardsUntilShooterSensorReturnsAFalseValue and runIntakeBackwardsUntilIntakeSensorReturnsATrueValue
@@ -151,8 +152,13 @@ public class RunNote extends Command {
         if(xboxController.getRawButton(5)){
           RunElevator.handoff = false;
         }
-        if(s_Intake.botFull() && !s_Intake.getBabyShooterSensor() && !xboxController.getRawButton(5) && noteGood){
-          s_Shooter.setWrist(handoff);
+        if(RunElevator.handoff || !RunElevator.deadShooter && s_Intake.botFull() && !s_Intake.getBabyShooterSensor() && !xboxController.getRawButton(5) && noteGood){
+          if(RunElevator.trap){
+            s_Shooter.setWrist(trapHandoff);
+          }
+          else{
+            s_Shooter.setWrist(handoff);
+          }
           RunElevator.handoff = true;
         }
         else if(!RunElevator.handoff){
