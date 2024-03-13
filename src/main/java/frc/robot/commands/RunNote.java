@@ -51,12 +51,7 @@ public class RunNote extends Command {
   @Override
   public void execute() {
     if(RunElevator.handoff){
-      if(Robot.getFront()){
-        s_Shooter.setWrist(handoff);
-      }
-      else if(!Robot.getFront()){
-        s_Shooter.setWrist(handoffBackwards);
-      }
+      s_Shooter.setWrist(handoff);
     }
 
     if(RunElevator.trapStage1){
@@ -162,11 +157,12 @@ public class RunNote extends Command {
         if(s_Intake.botFull() && !s_Intake.getBabyShooterSensor() && !xboxController.getRawButton(5) && noteGood){
           if(Robot.getFront()){
             s_Shooter.setWrist(handoff);
+            RunElevator.handoff = true;
           }
           else if(!Robot.getFront()){
             s_Shooter.setWrist(handoffBackwards);
+            RunElevator.handoff = false;
           }
-          RunElevator.handoff = true;
         }
         else if(!RunElevator.handoff){
           s_Shooter.setWrist(protect);
