@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Robot;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 
@@ -14,6 +15,7 @@ public class RunNote extends Command {
   private final Shooter s_Shooter;
   private final XboxController xboxController;
   private final double handoff = 18.3;
+  private final double handoffBackwards = 7.7;
   private final double protect = 13;
   /**
    * Formerly runIntakeBackwardsUntilShooterSensorReturnsAFalseValue and runIntakeBackwardsUntilIntakeSensorReturnsATrueValue
@@ -49,7 +51,12 @@ public class RunNote extends Command {
   @Override
   public void execute() {
     if(RunElevator.handoff){
-      s_Shooter.setWrist(handoff);
+      if(Robot.getFront()){
+        s_Shooter.setWrist(handoff);
+      }
+      else if(!Robot.getFront()){
+        s_Shooter.setWrist(handoffBackwards);
+      }
     }
 
     if(RunElevator.trapStage1){
@@ -151,8 +158,14 @@ public class RunNote extends Command {
         if(xboxController.getRawButton(5)){
           RunElevator.handoff = false;
         }
+        //Goes forward after gets note
         if(s_Intake.botFull() && !s_Intake.getBabyShooterSensor() && !xboxController.getRawButton(5) && noteGood){
-          s_Shooter.setWrist(handoff);
+          if(Robot.getFront()){
+            s_Shooter.setWrist(handoff);
+          }
+          else if(!Robot.getFront()){
+            s_Shooter.setWrist(handoffBackwards);
+          }
           RunElevator.handoff = true;
         }
         else if(!RunElevator.handoff){
