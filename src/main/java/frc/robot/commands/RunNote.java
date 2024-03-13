@@ -15,7 +15,7 @@ public class RunNote extends Command {
   private final Shooter s_Shooter;
   private final XboxController xboxController;
   private final double handoff = 18.3;
-  private final double handoffBackwards = 7.7;
+  private final double handoffBackwards = 5.7066436;
   private final double trapHandoff = 15.67;
   private final double protect = 13;
   /**
@@ -154,25 +154,31 @@ public class RunNote extends Command {
         if(xboxController.getRawButton(5)){
           RunElevator.handoff = false;
         }
+        
         //Goes forward after it gets note
         if(RunElevator.handoff || !RunElevator.deadShooter && s_Intake.botFull() && !s_Intake.getBabyShooterSensor() && !xboxController.getRawButton(5) && noteGood){
-          if(Robot.getFront()){
-            if(RunElevator.trap){
+          System.out.println("DEAD SHOOTER: " + RunElevator.deadShooter);
+          if(RunElevator.trap){
             s_Shooter.setWrist(trapHandoff);
           }
-          else{
+          if(RunElevator.handoff || Robot.getFront()){
             s_Shooter.setWrist(handoff);
-            }
-          RunElevator.handoff = true;
+            System.out.println("SET WRIST");
+            RunElevator.handoff = true;
           }
-          else if(!Robot.getFront()){
+          else if(Robot.robotContainer.s_Elevator.getElevator() < 15){
             s_Shooter.setWrist(handoffBackwards);
+            System.out.println("BACKWARDS");
+            RunElevator.handoff = false;
+          }
+          else if(Robot.robotContainer.s_Elevator.getElevator() > 15){
+            s_Shooter.setWrist(protect);
             RunElevator.handoff = false;
           }
         }
         else if(!RunElevator.handoff){
           s_Shooter.setWrist(protect);
-          RunElevator.handoff = false;
+
         }
       }
 
@@ -189,6 +195,8 @@ public class RunNote extends Command {
         spitBack = true;
       }
     }
+
+    System.out.println(RunElevator.handoff);
   }
 
   // Called once the command ends or is interrupted.

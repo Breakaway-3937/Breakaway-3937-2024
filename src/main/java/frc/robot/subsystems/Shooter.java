@@ -245,12 +245,12 @@ public class Shooter extends SubsystemBase {
     pid.setFeedbackDevice(wristEncoder);
     wristEncoder.setPosition(0);
     pid.setOutputRange(-1, 1);
-    pid.setSmartMotionMaxVelocity(4250, 0);
-    pid.setSmartMotionMaxAccel(4000, 0);
+    pid.setSmartMotionMaxVelocity(6000, 0);
+    pid.setSmartMotionMaxAccel(5400, 0);
     pid.setP(0);
     pid.setI(0);
     pid.setD(0);
-    pid.setFF(0.0002);
+    pid.setFF(0.00025);
   }
 
   @Override

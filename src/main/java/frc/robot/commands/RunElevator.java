@@ -125,6 +125,7 @@ public class RunElevator extends Command {
         if(!trapStage2 && s_Elevator.isAtPosition()){
           s_Elevator.setBabyWrist(72.2);
           handoff = true;
+          System.out.println("TRAP");
         }
         if(/*!climb && */!trapStage2 && handoff && !Robot.robotContainer.s_Shooter.isSafe() && Robot.robotContainer.s_Shooter.isAtPosition() && s_Elevator.isAtPosition() && !Robot.robotContainer.s_Intake.getBabyShooterSensor()){
           s_Elevator.runBabyShooterForward();
@@ -161,6 +162,7 @@ public class RunElevator extends Command {
           s_Elevator.setElevator(elevatorHandoff);
           s_Elevator.setBabyWrist(wristHandoff);
           handoff = true;
+          System.out.println("AMP");
         }
         if(xboxController.getRawButton(8) && !startStage2){
           s_Elevator.runBabyShooterForward();
@@ -196,6 +198,7 @@ public class RunElevator extends Command {
           s_Elevator.setBabyWrist(wristHandoff);
           reverse = true;
           handoff = true;
+          System.out.println("OH CRAP");
         }
         if(Robot.robotContainer.s_Shooter.isAtPosition() && s_Elevator.isAtPosition() && Robot.robotContainer.s_Intake.getBabyShooterSensor()){
           s_Elevator.runBabyShooterReverse();
