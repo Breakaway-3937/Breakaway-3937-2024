@@ -15,8 +15,7 @@ public class RunNote extends Command {
   private final Shooter s_Shooter;
   private final XboxController xboxController;
   private final double handoff = 18.3;
-  private final double handoffBackwards = 5.7066436;
-  private final double trapHandoff = 15.67;
+  private final double stageBackwards = 4;
   private final double protect = 13;
   /**
    * Formerly runIntakeBackwardsUntilShooterSensorReturnsAFalseValue and runIntakeBackwardsUntilIntakeSensorReturnsATrueValue
@@ -155,30 +154,19 @@ public class RunNote extends Command {
           RunElevator.handoff = false;
         }
         
-        //Goes forward after it gets note
-        if(RunElevator.handoff || !RunElevator.deadShooter && s_Intake.botFull() && !s_Intake.getBabyShooterSensor() && !xboxController.getRawButton(5) && noteGood){
-          System.out.println("DEAD SHOOTER: " + RunElevator.deadShooter);
-          if(RunElevator.trap){
-            s_Shooter.setWrist(trapHandoff);
-          }
-          if(RunElevator.handoff || Robot.getFront()){
+        //Pre-Stages after it gets note
+        if(!RunElevator.deadShooter && s_Intake.botFull() && !s_Intake.getBabyShooterSensor() && !xboxController.getRawButton(5) && noteGood){
+          if(Robot.getFront()){
             s_Shooter.setWrist(handoff);
-            System.out.println("SET WRIST");
             RunElevator.handoff = true;
           }
-          else if(Robot.robotContainer.s_Elevator.getElevator() < 15){
-            s_Shooter.setWrist(handoffBackwards);
-            System.out.println("BACKWARDS");
-            RunElevator.handoff = false;
-          }
-          else if(Robot.robotContainer.s_Elevator.getElevator() > 15){
-            s_Shooter.setWrist(protect);
+          else{
+            s_Shooter.setWrist(stageBackwards);
             RunElevator.handoff = false;
           }
         }
         else if(!RunElevator.handoff){
           s_Shooter.setWrist(protect);
-
         }
       }
 
