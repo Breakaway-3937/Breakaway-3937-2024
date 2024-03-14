@@ -203,6 +203,12 @@
               "data": {
                 "name": "Shoot"
               }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "Vision"
+              }
             }
           ]
         }
@@ -219,6 +225,23 @@
               "type": "named",
               "data": {
                 "name": "Intake"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Vision",
+      "waypointRelativePos": 1.85,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Vision"
               }
             }
           ]
