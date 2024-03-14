@@ -121,12 +121,12 @@ public class Align extends Command {
         );
       }
 
-      if(s_Vision.getAprilTagRotationSpeed() < 0.3 && !flag){
+      if(Math.abs(s_Vision.getAprilTagRotationSpeed()) < 0.15 && !flag){
         Robot.robotContainer.s_LED.reset();
         Robot.robotContainer.s_LED.green();
         flag = true;
       }
-      if(s_Vision.getAprilTagRotationSpeed() >= 0.3){
+      if(Math.abs(s_Vision.getAprilTagRotationSpeed()) >= 0.15){
         flag = false;
         Robot.robotContainer.s_LED.reset();
       }

@@ -63,12 +63,28 @@ public class LED extends SubsystemBase {
         flag = false;
         green = false;
         orange = false;
+        funeralFlag = false;
+        funeralTimer.reset();
+        funeralTimer.start();
     }
 
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
-        if(DriverStation.isDisabled() && !Robot.robotContainer.s_Vision.isDead()){
+        if(DriverStation.isDisabled() && Robot.robotContainer.s_Vision.isDead()){
+            candle.clearAnimation(0);
+            if(funeralTimer.get() < 0.2 && !funeralFlag){
+                candle.setLEDs(12, 237, 54, 0, 0, 17);
+                funeralTimer.reset();
+                funeralFlag = true;
+            }
+            else if(funeralTimer.get() < 0.2 && funeralFlag){
+                candle.setLEDs(179, 83, 97, 0, 0, 17);
+                funeralTimer.reset();
+                funeralFlag = false;
+            }
+        }
+        else if(DriverStation.isDisabled() && !Robot.robotContainer.s_Vision.isDead()){
             if(timer.get() < 10){
                 candle.animate(fire);
             }
