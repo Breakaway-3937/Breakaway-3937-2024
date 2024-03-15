@@ -40,7 +40,7 @@ public class Shooter extends SubsystemBase {
   private final Follower followerRequest = new Follower(Constants.Shooter.SHOOTER_MOTOR_ID, true);
   private final GenericEntry shooterEncoderEntry, wristEncoderEntry, shooterOffset, wristOffset;
   private double speed, position;
-  private boolean subwoofer, podium, autoFire;
+  private boolean subwoofer, podium, longShooting, autoFire;
   private final InterpolatingDoubleTreeMap shooterMap = new InterpolatingDoubleTreeMap();
   private final InterpolatingDoubleTreeMap wristMap = new InterpolatingDoubleTreeMap();
   public static boolean sixMoreSmidgens, shooterSad;
@@ -84,16 +84,25 @@ public class Shooter extends SubsystemBase {
   public void setSubShooting(){
     subwoofer = true;
     podium = false;
+    longShooting = false;
   }
 
   public void setPodiumShooting(){
     subwoofer = false;
     podium = true;
+    longShooting = false;
+  }
+
+  public void setLongShooting(){
+    subwoofer = false;
+    podium = false;
+    longShooting = true;
   }
 
   public void setAutoShooting(){
     subwoofer = false;
     podium = false;
+    longShooting = false;
   }
 
   public void runShooter(){
@@ -129,6 +138,11 @@ public class Shooter extends SubsystemBase {
     else if(subwoofer){
       speed = 3000.0 / 60.0;
       position = 17.5;
+    }
+    else if(longShooting){
+      //FIXME
+      speed = 0;
+      position = 0;
     }
     else{
       speed = shooterMap.get(Robot.robotContainer.s_Vision.getDistance() + shooterOffset.getDouble(0));

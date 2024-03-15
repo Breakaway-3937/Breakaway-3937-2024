@@ -20,14 +20,14 @@ import com.ctre.phoenix.led.TwinkleOffAnimation.TwinkleOffPercent;
 public class LED extends SubsystemBase {
     private final CANdle candle;
     private final Timer timer, funeralTimer;
-    private boolean green, orange, flag, flag1, funeralFlag, autoFlag = false; 
+    private boolean green, orange, flag, flag1, funeralFlag = false; 
     private final CANdleConfiguration config = new CANdleConfiguration();
-    private final ColorFlowAnimation flow = new ColorFlowAnimation(0, 0, 0, 0, 0.01, Constants.NUM_LEDS, ColorFlowAnimation.Direction.Forward, 0);
+    private final ColorFlowAnimation flow = new ColorFlowAnimation(0, 0, 0, 0, 0.1, Constants.NUM_LEDS, ColorFlowAnimation.Direction.Forward, 0);
     private final RainbowAnimation rainbow = new RainbowAnimation(0.5, 0.1, Constants.NUM_LEDS, false, 0);
     private final FireAnimation fire = new FireAnimation(0.5, 0.1, Constants.NUM_LEDS, 0.1, 0.1, false, 0);
     private final LarsonAnimation pocket = new LarsonAnimation(255, 0, 0, 0, 0.1, Constants.NUM_LEDS, LarsonAnimation.BounceMode.Center, 1);
     private final TwinkleOffAnimation twinkle = new TwinkleOffAnimation(0, 255, 0, 0, 0.1, Constants.NUM_LEDS, TwinkleOffPercent.Percent100, 0);
-    private final SingleFadeAnimation fade = new SingleFadeAnimation(0, 0, 0, 0, 0.5, Constants.NUM_LEDS, 0);
+    private final SingleFadeAnimation fade = new SingleFadeAnimation(0, 0, 0, 0, 1, Constants.NUM_LEDS, 0);
     private final StrobeAnimation strobe = new StrobeAnimation(0, 0, 0, 0, 0.5, Constants.NUM_LEDS, 0);
 
     public LED() {
@@ -71,20 +71,7 @@ public class LED extends SubsystemBase {
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
-        if(DriverStation.isDisabled() && Robot.robotContainer.s_Vision.isDead()){
-            candle.clearAnimation(0);
-            if(funeralTimer.get() < 0.2 && !funeralFlag){
-                candle.setLEDs(12, 237, 54, 0, 0, 17);
-                funeralTimer.reset();
-                funeralFlag = true;
-            }
-            else if(funeralTimer.get() < 0.2 && funeralFlag){
-                candle.setLEDs(179, 83, 97, 0, 0, 17);
-                funeralTimer.reset();
-                funeralFlag = false;
-            }
-        }
-        else if(DriverStation.isDisabled() && !Robot.robotContainer.s_Vision.isDead()){
+        if(DriverStation.isDisabled() && !Robot.robotContainer.s_Vision.isDead()){
             if(timer.get() < 10){
                 candle.animate(fire);
             }
@@ -105,14 +92,13 @@ public class LED extends SubsystemBase {
             }
         }
         else if(DriverStation.isAutonomousEnabled()){
-            if(!autoFlag){
-                if(!Robot.getRedAlliance()){
-                    candle.setLEDs(0, 0, 254);
-                }
-                else{
-                    candle.setLEDs(255, 0, 0);
-                }
-                autoFlag = true;
+            if(!Robot.getRedAlliance()){
+                flow.setR(0);
+                flow.setB(254);
+            }
+            else{
+                flow.setR(255);
+                flow.setB(0);
             }
             candle.animate(flow);
         }
@@ -162,10 +148,12 @@ public class LED extends SubsystemBase {
             else if(!Robot.robotContainer.s_Intake.botFull()){
                 candle.clearAnimation(0);
                 candle.setLEDs(0, 0, 254, 0, 17, 8);
+                flag = false;
             }
             else if(Shooter.shooterSad){
                 candle.clearAnimation(0);
                 candle.setLEDs(136, 0, 209, 0, 17, 8);
+                flag = false;
             }
             else if(green){
                 if(!flag){
@@ -247,10 +235,12 @@ public class LED extends SubsystemBase {
             else if(!Robot.robotContainer.s_Intake.botFull()){
                 candle.clearAnimation(0);
                 candle.setLEDs(0, 0, 254);
+                flag = false;
             }
             else if(Shooter.shooterSad){
                 candle.clearAnimation(0);
                 candle.setLEDs(136, 0, 209);
+                flag = false;
             }
             else if(green){
                 if(!flag){

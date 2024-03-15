@@ -92,11 +92,10 @@ public class RobotContainer {
         rotationButton.whileTrue(c_AlignField);
         button7.whileTrue(c_AlignRobot);
         button8.whileTrue(c_AlignField);
-        leftStick.onTrue(new InstantCommand(() -> RunElevator.setHighClimb()));
-        rightStick.onTrue(new InstantCommand(() -> RunElevator.setLowClimb()));
+        leftStick.onTrue(new InstantCommand(() -> s_Shooter.setLongShooting()));
+        rightStick.onTrue(new InstantCommand(() -> s_Shooter.setAutoShooting()));
         right.onTrue(new InstantCommand(() -> s_Shooter.setSubShooting()));
         left.onTrue(new InstantCommand(() -> s_Shooter.setPodiumShooting()));
-        leftStick.and(rightStick).onTrue(new InstantCommand(() -> s_Shooter.setAutoShooting()));
     }
 
     /**
