@@ -183,8 +183,6 @@ public class RunNote extends Command {
         spitBack = true;
       }
     }
-
-    System.out.println(RunElevator.handoff);
   }
 
   // Called once the command ends or is interrupted.
