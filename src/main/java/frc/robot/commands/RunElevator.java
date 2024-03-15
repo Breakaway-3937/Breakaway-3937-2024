@@ -18,7 +18,7 @@ public class RunElevator extends Command {
   private final double wristHandoff = 65.6;
   private final double wristProtect = 3;
   private final double wristSixMoreSmidgens = 6.5;
-  private final double wristAmp = 47.4;
+  private final double wristAmp = 45.5;
   private final double wristPreTrap = 51;
   private final double wristTrap = 37.15;
   private final double wristSource = 65;
@@ -221,9 +221,14 @@ public class RunElevator extends Command {
               s_Elevator.setElevator(elevatorTrap);
             }
             if(trapStage2 && s_Elevator.isAtPosition()){
-              s_Elevator.setBabyWrist(wristTrap);
-              trapPosition = true;
+              if(!trapPosition){
+                s_Elevator.setBabyWrist(74.2);
+              }
               if(s_Elevator.isAtPosition()){
+                s_Elevator.setBabyWrist(wristTrap);
+                trapPosition = true;
+              }
+              if(s_Elevator.isAtPosition() && trapPosition){
                 s_Elevator.runBabyShooterForward();
                 timer.start();
               }

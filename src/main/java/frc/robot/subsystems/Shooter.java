@@ -25,6 +25,7 @@ import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -57,6 +58,9 @@ public class Shooter extends SubsystemBase {
     wristEncoderEntry = Shuffleboard.getTab("Shooter").add("Wrist", getWrist()).withPosition(1, 0).getEntry();
     shooterOffset = Shuffleboard.getTab("Shooter").add("Shooter Offset", 0).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", -500, "max", 500)).withPosition(0, 1).getEntry();
     wristOffset = Shuffleboard.getTab("Shooter").add("Wrist Offset", 0).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", -2, "max", 2)).withPosition(2, 1).getEntry();
+
+    //SmartDashboard.putNumber("rpm", 0);
+    //SmartDashboard.putNumber("pos", 0);
 
     shooterMap.put(1.88, 50.0);
     shooterMap.put(2.4, 51.6);
@@ -131,8 +135,8 @@ public class Shooter extends SubsystemBase {
       position = 17.5;
     }
     else{
-      speed = shooterMap.get(Robot.robotContainer.s_Vision.getDistance() + shooterOffset.getDouble(0));
-      position = wristMap.get(Robot.robotContainer.s_Vision.getDistance() + wristOffset.getDouble(0));
+        speed = shooterMap.get(Robot.robotContainer.s_Vision.getDistance() + shooterOffset.getDouble(0));
+        position = wristMap.get(Robot.robotContainer.s_Vision.getDistance() + wristOffset.getDouble(0));
     }
     if(!Robot.getFront()){
       position = 2 * 12.0033218 - position;
@@ -147,6 +151,9 @@ public class Shooter extends SubsystemBase {
     else{
       shooterSad = true;
     }
+
+    //Across Field Shot
+    //RPM = 3000, Position = 21
   }
 
   public void setWrist(double position){
@@ -260,5 +267,8 @@ public class Shooter extends SubsystemBase {
     Logger.recordOutput("Shooter", getShooterVelocity() * 60.0);
     wristEncoderEntry.setDouble(getWrist());
     Logger.recordOutput("Wrist", getWrist());
+
+    //speed = (SmartDashboard.getNumber("rpm", 0)/60.0);
+    //position = SmartDashboard.getNumber("pos", 0);
   }
 }
