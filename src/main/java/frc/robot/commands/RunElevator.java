@@ -20,6 +20,7 @@ public class RunElevator extends Command {
   private final double wristSixMoreSmidgens = 6.5;
   private final double wristAmp = 45.5;
   private final double wristPreTrap = 51;
+  private final double wristSlamDunk = 74.2;
   private final double wristTrap = 37.15;
   private final double wristSource = 65;
   private final double elevatorHandoff = 28.2;
@@ -136,7 +137,9 @@ public class RunElevator extends Command {
         if(!startStage1 && !startStage2){
           s_Elevator.setElevator(elevatorHandoff);
           s_Elevator.setBabyWrist(wristHandoff);
-          handoff = true;
+          if(Robot.robotContainer.s_Intake.botFull()){
+            handoff = true;
+          }
         }
         if(xboxController.getRawButton(8) && !startStage2){
           s_Elevator.runBabyShooterForward();
@@ -209,44 +212,31 @@ public class RunElevator extends Command {
           s_Elevator.setElevator(elevatorProtect);
         }
 
-          if(trap){
-            if(xboxController.getRawButton(8)){
-              trapStage2 = true;
-              s_Elevator.setElevatorEvenSlower();
+        if(trap){
+          if(xboxController.getRawButton(8)){
+            trapStage2 = true;
+            s_Elevator.setElevatorEvenSlower();
+          }
+          if(trapStage2 && !trapPosition){
+            s_Elevator.setElevator(elevatorTrap);
+          }
+          if(trapStage2 && s_Elevator.isAtPosition()){
+            if(!trapPosition){
+              s_Elevator.setBabyWrist(wristSlamDunk);
             }
-            if(trapStage2 && !trapPosition){
-              s_Elevator.setElevator(elevatorTrap);
+            if(s_Elevator.isAtPosition()){
+              s_Elevator.setBabyWrist(wristTrap);
+              trapPosition = true;
             }
-            if(trapStage2 && s_Elevator.isAtPosition()){
-              if(!trapPosition){
-                s_Elevator.setBabyWrist(74.2);
-              }
-              if(s_Elevator.isAtPosition()){
-                s_Elevator.setBabyWrist(wristTrap);
-                trapPosition = true;
-              }
-              if(s_Elevator.isAtPosition() && trapPosition){
-                s_Elevator.runBabyShooterForward();
-                timer.start();
-              }
-            }
-            if(trapPosition && !Robot.robotContainer.s_Intake.getBabyShooterSensor() && timer.get() > 2){
-              trapScored = true;
-              s_Elevator.stopBabyShooter();
-              s_Elevator.setBabyWrist(wristHandoff);
+            if(s_Elevator.isAtPosition() && trapPosition){
+              s_Elevator.runBabyShooterForward();
+              timer.start();
             }
           }
-        }
-        else{
-          if(climbing){
-            s_Elevator.setElevatorFast();
+          if(trapPosition && !Robot.robotContainer.s_Intake.getBabyShooterSensor() && timer.get() > 2){
+            trapScored = true;
+            s_Elevator.stopBabyShooter();
             s_Elevator.setBabyWrist(wristHandoff);
-            s_Elevator.setElevator(elevatorClimb);
-          }
-          else if(retracting){
-            s_Elevator.setElevatorSlow();
-            s_Elevator.setBabyWrist(wristPreTrap);
-            s_Elevator.setElevator(elevatorHighClimb);
           }
         }
       }
