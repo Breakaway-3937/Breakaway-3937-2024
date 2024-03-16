@@ -6,21 +6,21 @@
     "data": {
       "commands": [
         {
-          "type": "path",
-          "data": {
-            "pathName": "Four Note M"
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "Shoot"
           }
         },
         {
-          "type": "named",
+          "type": "wait",
           "data": {
-            "name": "Vision"
+            "waitTime": 1.5
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Three Note S1"
           }
         }
       ]

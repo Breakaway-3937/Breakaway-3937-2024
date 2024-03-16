@@ -8,12 +8,6 @@
         {
           "type": "named",
           "data": {
-            "name": "Subwoofer"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "Shoot"
           }
         },
@@ -24,21 +18,21 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "Auto"
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "Back Three Note A"
+            "pathName": "Three Note S2"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Vision"
           }
         }
       ]
