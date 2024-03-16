@@ -19,25 +19,23 @@ import com.ctre.phoenix.led.TwinkleOffAnimation.TwinkleOffPercent;
 
 public class LED extends SubsystemBase {
     private final CANdle candle;
-    private final Timer timer, funeralTimer;
-    private boolean green, orange, flag, flag1, funeralFlag = false; 
+    private final Timer timer;
+    private boolean green, orange, flag, flag1 = false; 
     private final CANdleConfiguration config = new CANdleConfiguration();
     private final ColorFlowAnimation flow = new ColorFlowAnimation(0, 0, 0, 0, 0.1, Constants.NUM_LEDS, ColorFlowAnimation.Direction.Forward, 0);
-    private final RainbowAnimation rainbow = new RainbowAnimation(0.5, 0.1, Constants.NUM_LEDS, false, 0);
-    private final FireAnimation fire = new FireAnimation(0.5, 0.1, Constants.NUM_LEDS, 0.1, 0.1, false, 0);
+    private final RainbowAnimation rainbow = new RainbowAnimation(1, 0.1, Constants.NUM_LEDS, false, 0);
+    private final FireAnimation fire = new FireAnimation(1, 0.1, Constants.NUM_LEDS, 0.1, 0.1, false, 0);
     private final LarsonAnimation pocket = new LarsonAnimation(255, 0, 0, 0, 0.1, Constants.NUM_LEDS, LarsonAnimation.BounceMode.Center, 1);
     private final TwinkleOffAnimation twinkle = new TwinkleOffAnimation(0, 255, 0, 0, 0.1, Constants.NUM_LEDS, TwinkleOffPercent.Percent100, 0);
     private final SingleFadeAnimation fade = new SingleFadeAnimation(0, 0, 0, 0, 1, Constants.NUM_LEDS, 0);
     private final StrobeAnimation strobe = new StrobeAnimation(0, 0, 0, 0, 0.5, Constants.NUM_LEDS, 0);
+    private final LarsonAnimation bad = new LarsonAnimation(179, 83, 97, 0, 0.1, Constants.NUM_LEDS, LarsonAnimation.BounceMode.Center, 1, 0);
 
     public LED() {
         candle = new CANdle(Constants.CANDLE_ID, Constants.CANIVORE_BUS);
         timer = new Timer();
-        funeralTimer = new Timer();
         timer.reset();
         timer.start();
-        funeralTimer.reset();
-        funeralTimer.start();
         candle.configAllSettings(new CANdleConfiguration());
         config.statusLedOffWhenActive = false;
         config.disableWhenLOS = false;
@@ -63,15 +61,16 @@ public class LED extends SubsystemBase {
         flag = false;
         green = false;
         orange = false;
-        funeralFlag = false;
-        funeralTimer.reset();
-        funeralTimer.start();
     }
 
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
-        if(DriverStation.isDisabled() && !Robot.robotContainer.s_Vision.isDead()){
+        if(DriverStation.isDisabled() && Robot.robotContainer.s_Vision.isDead()){
+            bad.setNumLed(Constants.NUM_LEDS);
+            candle.animate(bad);
+        }
+        else if(DriverStation.isDisabled() && !Robot.robotContainer.s_Vision.isDead()){
             if(timer.get() < 10){
                 candle.animate(fire);
             }
@@ -83,6 +82,7 @@ public class LED extends SubsystemBase {
             }
             else{
                 timer.reset();
+                timer.start();
                 twinkle.setR((int) (Math.random() * 255));
                 twinkle.setG((int) (Math.random() * 255));
                 twinkle.setB((int) (Math.random() * 255));
@@ -110,16 +110,8 @@ public class LED extends SubsystemBase {
             candle.setLEDs(0, 255, 0);
         }
         else if(Robot.robotContainer.s_Vision.isDead()){
-            if(funeralTimer.get() < 0.2 && !funeralFlag){
-                candle.setLEDs(12, 237, 54, 0, 0, 17);
-                funeralTimer.reset();
-                funeralFlag = true;
-            }
-            else if(funeralTimer.get() < 0.2 && funeralFlag){
-                candle.setLEDs(179, 83, 97, 0, 0, 17);
-                funeralTimer.reset();
-                funeralFlag = false;
-            }
+            bad.setNumLed(Constants.NUM_LEDS - 9);
+            candle.animate(bad, 0);
             if(orange){
                 if(!flag){
                     timer.reset();
@@ -139,19 +131,19 @@ public class LED extends SubsystemBase {
                     flag1 = true;
                 }
                 if(!flag1){
-                    candle.animate(strobe);
+                    candle.animate(strobe, 1);
                 }
                 else{
-                    candle.animate(fade);
+                    candle.animate(fade, 1);
                 }
             }
             else if(!Robot.robotContainer.s_Intake.botFull()){
-                candle.clearAnimation(0);
+                candle.clearAnimation(1);
                 candle.setLEDs(0, 0, 254, 0, 17, 8);
                 flag = false;
             }
             else if(Shooter.shooterSad){
-                candle.clearAnimation(0);
+                candle.clearAnimation(1);
                 candle.setLEDs(136, 0, 209, 0, 17, 8);
                 flag = false;
             }
@@ -207,6 +199,7 @@ public class LED extends SubsystemBase {
             }
         }
         else if(!Robot.robotContainer.s_Vision.isDead()){
+            candle.clearAnimation(1);
             if(orange){
                 if(!flag){
                     timer.reset();
