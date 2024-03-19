@@ -55,8 +55,8 @@ public class RunNote extends Command {
     }
 
     if(RunElevator.trapStage1){
-      s_Intake.intake();
-      s_Shooter.setShooter(20);
+      s_Intake.intakeSlowly();
+      s_Shooter.setShooter(5);
       deadIntake = false;
       noteGood = false;
       spitBack = false;

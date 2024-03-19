@@ -20,7 +20,6 @@ public class RunElevator extends Command {
   private final double wristSixMoreSmidgens = 6.5;
   private final double wristAmp = 45.5;
   private final double wristPreTrap = 51;
-  private final double wristSlamDunk = 74.2;
   private final double wristTrap = 37.15;
   private final double wristSource = 65;
   private final double elevatorHandoff = 28.2;
@@ -124,7 +123,7 @@ public class RunElevator extends Command {
           handoff = true;
         }
         if(handoff && !Robot.robotContainer.s_Shooter.isSafe() && Robot.robotContainer.s_Shooter.isAtPosition() && s_Elevator.isAtPosition() && !Robot.robotContainer.s_Intake.getBabyShooterSensor()){
-          s_Elevator.runBabyShooterForward();
+          s_Elevator.runBabyShooterForwardSlowly();
           trapStage1 = true;
         }
         if(Robot.robotContainer.s_Intake.getBabyShooterSensor()){
@@ -205,13 +204,11 @@ public class RunElevator extends Command {
           s_Elevator.setElevatorFast();
           s_Elevator.setBabyWrist(wristHandoff);
           s_Elevator.setElevator(elevatorClimb);
-          //s_Elevator.setBabyShooterCoast();
         }
         else if(retracting && !trapStage2){
           s_Elevator.setElevatorSlow();
           s_Elevator.setBabyWrist(wristPreTrap);
           s_Elevator.setElevator(elevatorProtect);
-          //s_Elevator.setBabyShooterCoast();
         }
 
         if(trap){
@@ -230,10 +227,6 @@ public class RunElevator extends Command {
             }
           }
           if(trapStage2 && s_Elevator.isAtPosition()){
-            /*if(!trapPosition){
-              //s_Elevator.setBabyShooterBrake();
-              s_Elevator.setBabyWrist(wristSlamDunk);
-            }*/
             if(s_Elevator.isAtPosition()){
               s_Elevator.setBabyWrist(wristTrap);
               trapPosition = true;

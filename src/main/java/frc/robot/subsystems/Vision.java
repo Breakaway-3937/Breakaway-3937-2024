@@ -41,8 +41,8 @@ public class Vision extends SubsystemBase {
     private final GenericEntry distanceEntry, targetID, compAngleEntry, compWristEntry;
     private double fieldRelVelocityX, fieldRelVelocityY;
     private double xFlyAngle, yFlyAngle, originalAngle, xFlyWrist, yFlyWrist, velocityAngleOffset;
-    private double velocityCompAngle = 0.05;
-    private double velocityCompWrist = 0.1;
+    private double velocityCompAngle = 0.1;
+    private double velocityCompWrist = 0.3;
     private PhotonTrackedTarget target;
     private boolean poseBad = false;
 
