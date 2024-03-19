@@ -8,12 +8,6 @@
         {
           "type": "named",
           "data": {
-            "name": "Subwoofer"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "Shoot"
           }
         },
@@ -24,15 +18,33 @@
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "3.5 Note S1 #1"
+          }
+        },
+        {
           "type": "named",
           "data": {
-            "name": "Auto"
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Vision"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.5
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Four Note A"
+            "pathName": "Juke #2"
           }
         },
         {

@@ -1,6 +1,12 @@
 {
   "version": 1.0,
-  "startingPose": null,
+  "startingPose": {
+    "position": {
+      "x": 1.39784299924834,
+      "y": 5.535530663936646
+    },
+    "rotation": 180.0
+  },
   "command": {
     "type": "sequential",
     "data": {
@@ -8,6 +14,12 @@
         {
           "type": "named",
           "data": {
+            "name": "Subwoofer"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "Shoot"
           }
         },
@@ -18,33 +30,15 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "Three Note S1 #1"
-          }
-        },
-        {
           "type": "named",
           "data": {
-            "name": "Shoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Vision"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.5
+            "name": "Auto"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Three Note S1 #2"
+            "pathName": "4 Note M"
           }
         },
         {
@@ -57,18 +51,6 @@
           "type": "named",
           "data": {
             "name": "Vision"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.5
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Three Note S1 #3"
           }
         }
       ]

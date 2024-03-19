@@ -71,54 +71,6 @@
         "x": 4.065036964084879,
         "y": 1.3461208260329092
       },
-      "nextControl": {
-        "x": 2.973801661889038,
-        "y": 3.1648463296926597
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 5.873761747523496,
-        "y": 0.7952030189774663
-      },
-      "prevControl": {
-        "x": 3.8337079994945618,
-        "y": 0.8823848030812675
-      },
-      "nextControl": {
-        "x": 6.659167604049494,
-        "y": 0.7616386661344746
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 8.290395152218876,
-        "y": 0.7952030189774663
-      },
-      "prevControl": {
-        "x": 7.37744475488951,
-        "y": 0.7683515367030734
-      },
-      "nextControl": {
-        "x": 8.58171910128403,
-        "y": 0.8037713704205589
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 3.2423164846329695,
-        "y": 2.9231829892231223
-      },
-      "prevControl": {
-        "x": 3.8263362241010195,
-        "y": 1.285242570485141
-      },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
@@ -129,26 +81,9 @@
       "waypointRelativePos": 1.5499999999999998,
       "rotationDegrees": 180.0,
       "rotateFast": true
-    },
-    {
-      "waypointRelativePos": 6.199999999999999,
-      "rotationDegrees": 180.0,
-      "rotateFast": true
     }
   ],
-  "constraintZones": [
-    {
-      "name": "Shoot",
-      "minWaypointRelativePos": 3.8,
-      "maxWaypointRelativePos": 4.15,
-      "constraints": {
-        "maxVelocity": 1.0,
-        "maxAcceleration": 4.5,
-        "maxAngularVelocity": 690.0,
-        "maxAngularAcceleration": 690.0
-      }
-    }
-  ],
+  "constraintZones": [],
   "eventMarkers": [
     {
       "name": "Intake",
@@ -166,39 +101,6 @@
           ]
         }
       }
-    },
-    {
-      "name": "Shoot",
-      "waypointRelativePos": 3.8,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "Shoot"
-              }
-            },
-            {
-              "type": "named",
-              "data": {
-                "name": "Vision"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "Intake",
-      "waypointRelativePos": 5.7,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": []
-        }
-      }
     }
   ],
   "globalConstraints": {
@@ -209,7 +111,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 142.30575953331095,
+    "rotation": 180.0,
     "rotateFast": true
   },
   "reversed": false,

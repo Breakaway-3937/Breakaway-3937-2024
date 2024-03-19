@@ -8,12 +8,6 @@
         {
           "type": "named",
           "data": {
-            "name": "Subwoofer"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "Shoot"
           }
         },
@@ -24,15 +18,9 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "Auto"
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "Five Note A"
+            "pathName": "3.5 Note S2 #1"
           }
         },
         {
@@ -45,6 +33,42 @@
           "type": "named",
           "data": {
             "name": "Vision"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.5
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "3.5 Note S2 #2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Vision"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.5
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "3.5 Note S2 #3"
           }
         }
       ]

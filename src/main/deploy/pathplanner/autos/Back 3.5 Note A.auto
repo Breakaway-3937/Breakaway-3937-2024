@@ -1,12 +1,6 @@
 {
   "version": 1.0,
-  "startingPose": {
-    "position": {
-      "x": 1.39784299924834,
-      "y": 5.535530663936646
-    },
-    "rotation": 180.0
-  },
+  "startingPose": null,
   "command": {
     "type": "sequential",
     "data": {
@@ -38,7 +32,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Four Note M"
+            "pathName": "Back 3.5 Note A #1"
           }
         },
         {
@@ -51,6 +45,42 @@
           "type": "named",
           "data": {
             "name": "Vision"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.5
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Back 3.5 Note A #2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Vision"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.5
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Back 3.5 Note A #3"
           }
         }
       ]

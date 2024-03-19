@@ -20,19 +20,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Three Note S2"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Vision"
+            "pathName": "1 Note S"
           }
         }
       ]

@@ -8,6 +8,12 @@
         {
           "type": "named",
           "data": {
+            "name": "Subwoofer"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "Shoot"
           }
         },
@@ -18,9 +24,27 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Auto"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "Three Note S3"
+            "pathName": "5 Note A"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Vision"
           }
         }
       ]
