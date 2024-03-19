@@ -205,30 +205,41 @@ public class RunElevator extends Command {
           s_Elevator.setElevatorFast();
           s_Elevator.setBabyWrist(wristHandoff);
           s_Elevator.setElevator(elevatorClimb);
+          //s_Elevator.setBabyShooterCoast();
         }
         else if(retracting && !trapStage2){
           s_Elevator.setElevatorSlow();
           s_Elevator.setBabyWrist(wristPreTrap);
           s_Elevator.setElevator(elevatorProtect);
+          //s_Elevator.setBabyShooterCoast();
         }
 
         if(trap){
           if(xboxController.getRawButton(8)){
             trapStage2 = true;
             s_Elevator.setElevatorEvenSlower();
+            s_Elevator.setBabyShooterBrake();
           }
           if(trapStage2 && !trapPosition){
             s_Elevator.setElevator(elevatorTrap);
+            if(s_Elevator.getElevator() < 40.0){
+              s_Elevator.setBabyShooterCoast();
+            }
+            else{
+              s_Elevator.setBabyShooterBrake();
+            }
           }
           if(trapStage2 && s_Elevator.isAtPosition()){
-            if(!trapPosition){
+            /*if(!trapPosition){
+              //s_Elevator.setBabyShooterBrake();
               s_Elevator.setBabyWrist(wristSlamDunk);
-            }
+            }*/
             if(s_Elevator.isAtPosition()){
               s_Elevator.setBabyWrist(wristTrap);
               trapPosition = true;
             }
             if(s_Elevator.isAtPosition() && trapPosition){
+              s_Elevator.setBabyShooterCoast();
               s_Elevator.runBabyShooterForward();
               timer.start();
             }

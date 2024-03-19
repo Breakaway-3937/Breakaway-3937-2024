@@ -52,6 +52,14 @@ public class Elevator extends SubsystemBase {
     ePid.setSmartMotionMaxAccel(500, 0);
   }
 
+  public void setBabyShooterCoast(){
+    babyShooter.setIdleMode(IdleMode.kCoast);
+  }
+
+  public void setBabyShooterBrake(){
+    babyShooter.setIdleMode(IdleMode.kBrake);
+  }
+
   public void runBabyShooterForward(){
     babyShooter.set(0.9);
   }
