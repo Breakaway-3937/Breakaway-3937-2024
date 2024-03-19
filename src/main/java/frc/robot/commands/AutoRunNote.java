@@ -66,7 +66,22 @@ public class AutoRunNote extends Command {
     }
 
     //Shoot
-    if(s_Shooter.autoFire()){
+    if(s_Shooter.forceFire()){
+      s_Shooter.runShooter();
+      s_Shooter.setWristShooting();
+      s_Intake.intake();
+      deadIntake = false;
+      sendForward = false;
+      spitBack = false;
+      if(!s_Intake.botFull()){
+        noteGood = false;
+        s_Shooter.setAutoFire(false);
+        s_Intake.setAutoIntake(false);
+        Swerve.setAddVisionMeasurement(false);
+        s_Shooter.setForceFire(false);
+      }
+    }
+    else if(s_Shooter.autoFire()){
       s_Shooter.runShooter();
       s_Shooter.setWristShooting();
       if(s_Shooter.atSpeed() && s_Shooter.isAtPosition() && noteGood){
@@ -80,6 +95,7 @@ public class AutoRunNote extends Command {
         s_Shooter.setAutoFire(false);
         s_Intake.setAutoIntake(false);
         Swerve.setAddVisionMeasurement(false);
+        s_Shooter.setForceFire(false);
       }
     }
     //Sensor Detects, Stop Intake

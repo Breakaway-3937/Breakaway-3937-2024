@@ -139,7 +139,7 @@
   "constraintZones": [
     {
       "name": "Shoot",
-      "minWaypointRelativePos": 1.2,
+      "minWaypointRelativePos": 1.25,
       "maxWaypointRelativePos": 1.4500000000000002,
       "constraints": {
         "maxVelocity": 1.0,
@@ -153,7 +153,7 @@
       "minWaypointRelativePos": 2.65,
       "maxWaypointRelativePos": 3.0,
       "constraints": {
-        "maxVelocity": 1.5,
+        "maxVelocity": 0.9,
         "maxAcceleration": 4.5,
         "maxAngularVelocity": 690.0,
         "maxAngularAcceleration": 690.0
@@ -164,7 +164,7 @@
       "minWaypointRelativePos": 4.6,
       "maxWaypointRelativePos": 5.3,
       "constraints": {
-        "maxVelocity": 1.5,
+        "maxVelocity": 1.0,
         "maxAcceleration": 4.5,
         "maxAngularVelocity": 690.0,
         "maxAngularAcceleration": 690.0
@@ -297,6 +297,80 @@
               "type": "named",
               "data": {
                 "name": "Vision"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Shoot",
+      "waypointRelativePos": 6.449999999999999,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Shoot"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "Vision"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Force Fire",
+      "waypointRelativePos": 3.8,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Force Fire"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Force Fire",
+      "waypointRelativePos": 2.4,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Force Fire"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Force Fire",
+      "waypointRelativePos": 5.75,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Force Fire"
               }
             }
           ]

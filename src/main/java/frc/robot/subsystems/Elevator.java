@@ -48,8 +48,8 @@ public class Elevator extends SubsystemBase {
   }
 
   public void setElevatorEvenSlower(){
-    ePid.setSmartMotionMaxVelocity(1000, 0);
-    ePid.setSmartMotionMaxAccel(500, 0);
+    ePid.setSmartMotionMaxVelocity(2000, 0);
+    ePid.setSmartMotionMaxAccel(1500, 0);
   }
 
   public void setBabyShooterCoast(){
@@ -65,7 +65,7 @@ public class Elevator extends SubsystemBase {
   }
 
   public void runBabyShooterForwardSlowly(){
-    babyShooter.set(0.5);
+    babyShooter.set(0.8);
   }
 
   public void runBabyShooterReverse(){

@@ -39,7 +39,7 @@ public class Shooter extends SubsystemBase {
   private final Follower followerRequest = new Follower(Constants.Shooter.SHOOTER_MOTOR_ID, true);
   private final GenericEntry shooterEncoderEntry, wristEncoderEntry, shooterOffset, wristOffset;
   private double speed, position;
-  private boolean subwoofer, podium, longShooting, autoFire;
+  private boolean subwoofer, podium, longShooting, autoFire, forceFire;
   private final InterpolatingDoubleTreeMap shooterMap = new InterpolatingDoubleTreeMap();
   private final InterpolatingDoubleTreeMap wristMap = new InterpolatingDoubleTreeMap();
   public static boolean sixMoreSmidgens, shooterSad;
@@ -202,6 +202,14 @@ public class Shooter extends SubsystemBase {
 
   public void setAutoFire(boolean autoFire){
     this.autoFire = autoFire;
+  }
+
+  public boolean forceFire(){
+    return forceFire;
+  }
+
+  public void setForceFire(boolean forceFire){
+    this.forceFire = forceFire;
   }
 
   public void setCoastMode(){
