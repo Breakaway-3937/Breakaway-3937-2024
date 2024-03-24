@@ -21,7 +21,8 @@ public class RunNote extends Command {
    * Formerly runIntakeBackwardsUntilShooterSensorReturnsAFalseValue and runIntakeBackwardsUntilIntakeSensorReturnsATrueValue
    */
   private boolean spitBack;
-  private boolean deadIntake, sendForward, noteGood;
+  private boolean deadIntake, sendForward;
+  public static boolean noteGood;
 
   /** Creates a new RunNote. */
   public RunNote(Intake s_Intake, Shooter s_Shooter, XboxController xboxController) {
@@ -72,7 +73,7 @@ public class RunNote extends Command {
     }
     else if(RunElevator.startStage1){
       if(s_Shooter.isAtPosition()){
-        s_Intake.intake();
+        s_Intake.intakeSlowly();
         s_Shooter.setShooter(5);
       }
     }

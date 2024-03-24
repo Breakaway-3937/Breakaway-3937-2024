@@ -41,10 +41,10 @@ public class Vision extends SubsystemBase {
     private final GenericEntry distanceEntry, targetID, compAngleEntry, compWristEntry;
     private double fieldRelVelocityX, fieldRelVelocityY;
     private double xFlyAngle, yFlyAngle, originalAngle, xFlyWrist, yFlyWrist, velocityAngleOffset;
-    private double velocityCompAngle = 0.1;
-    private double velocityCompWrist = 0.3;
+    private double velocityCompAngle = 0.05;
+    private double velocityCompWrist = 0.4;
     private PhotonTrackedTarget target;
-    private boolean poseBad = false;
+    private boolean frontPoseBad, backPoseBad = false;
 
 
   /** Creates a new Vision. */
@@ -255,10 +255,10 @@ public class Vision extends SubsystemBase {
       if(pose.isPresent()){
         for(int i = 0; i < pose.get().targetsUsed.size(); i++){
           if(Math.abs(pose.get().targetsUsed.get(i).getBestCameraToTarget().getTranslation().getX()) > 6){
-            poseBad = true;
+            frontPoseBad = true;
           }
         }
-        if(!poseBad){
+        if(!frontPoseBad){
           s_Swerve.updatePoseVision(pose.get());
         }
         Logger.recordOutput("Front Cam Used Tag", pose.get().targetsUsed.get(0).getFiducialId());
@@ -269,25 +269,32 @@ public class Vision extends SubsystemBase {
       if(pose.isPresent()){
         for(int i = 0; i < pose.get().targetsUsed.size(); i++){
           if(Math.abs(pose.get().targetsUsed.get(i).getBestCameraToTarget().getTranslation().getX()) > 6){
-            poseBad = true;
+            backPoseBad = true;
           }
         }
-        if(!poseBad){
+        if(!backPoseBad){
           s_Swerve.updatePoseVision(pose.get());
         }
         Logger.recordOutput("Back Cam Used Tag", pose.get().targetsUsed.get(0).getFiducialId());
       }
     }
 
-    Logger.recordOutput("Pose Bad", poseBad);
+    Logger.recordOutput("Front Pose Bad", frontPoseBad);
+    Logger.recordOutput("Back Pose Bad", backPoseBad);
 
     if(target != null){
       Logger.recordOutput("Target ID", target.getFiducialId());
       targetID.setDouble(target.getFiducialId());
     }
 
-    fieldRelVelocityX = ChassisSpeeds.fromRobotRelativeSpeeds(s_Swerve.getSpeed(), Rotation2d.fromDegrees(s_Swerve.getGyroYaw().getDegrees() + 180)).vxMetersPerSecond;
-    fieldRelVelocityY = ChassisSpeeds.fromRobotRelativeSpeeds(s_Swerve.getSpeed(), Rotation2d.fromDegrees(s_Swerve.getGyroYaw().getDegrees() + 180)).vyMetersPerSecond;
+    if(Robot.getRedAlliance() && DriverStation.isAutonomousEnabled()){
+      fieldRelVelocityX = ChassisSpeeds.fromRobotRelativeSpeeds(s_Swerve.getSpeed(), Rotation2d.fromDegrees(s_Swerve.getGyroYaw().getDegrees())).vxMetersPerSecond;
+      fieldRelVelocityY = ChassisSpeeds.fromRobotRelativeSpeeds(s_Swerve.getSpeed(), Rotation2d.fromDegrees(s_Swerve.getGyroYaw().getDegrees())).vyMetersPerSecond;
+    }
+    else{
+      fieldRelVelocityX = ChassisSpeeds.fromRobotRelativeSpeeds(s_Swerve.getSpeed(), Rotation2d.fromDegrees(s_Swerve.getGyroYaw().getDegrees() + 180)).vxMetersPerSecond;
+      fieldRelVelocityY = ChassisSpeeds.fromRobotRelativeSpeeds(s_Swerve.getSpeed(), Rotation2d.fromDegrees(s_Swerve.getGyroYaw().getDegrees() + 180)).vyMetersPerSecond;
+    }
 
     velocityCompAngle = compAngleEntry.getDouble(velocityCompAngle);
     velocityCompWrist = compWristEntry.getDouble(velocityCompWrist);
@@ -304,6 +311,7 @@ public class Vision extends SubsystemBase {
       targetY = Constants.Vision.TARGET_Y_RED;
     }
 
-    poseBad = false;
+    frontPoseBad = false;
+    backPoseBad = false;
   }
 }

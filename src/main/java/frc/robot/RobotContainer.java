@@ -75,7 +75,7 @@ public class RobotContainer {
         s_Swerve.setDefaultCommand(new TeleopSwerve(s_Swerve, () -> translationController.getRawAxis(translationAxis), () -> translationController.getRawAxis(strafeAxis), () -> rotationController.getRawAxis(rotationAxis), () -> robotRelative));
         s_Elevator.setDefaultCommand(c_RunElevator);
         autoChooser = AutoBuilder.buildAutoChooser("DO NOTHING");
-        Shuffleboard.getTab("Auto").add("Auto", autoChooser).withPosition(0, 0);
+        Shuffleboard.getTab("Auto").add("Auto", autoChooser).withPosition(0, 0).withSize(2, 1);
         Shuffleboard.selectTab("Auto");
         // Configure the button bindings
         configureButtonBindings();

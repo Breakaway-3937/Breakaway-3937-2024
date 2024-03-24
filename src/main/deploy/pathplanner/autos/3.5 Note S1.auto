@@ -30,12 +30,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "Vision"
-          }
-        },
-        {
           "type": "wait",
           "data": {
             "waitTime": 1.5
@@ -51,12 +45,6 @@
           "type": "named",
           "data": {
             "name": "Shoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Vision"
           }
         },
         {

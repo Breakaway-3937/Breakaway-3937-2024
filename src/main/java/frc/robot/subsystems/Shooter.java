@@ -55,7 +55,7 @@ public class Shooter extends SubsystemBase {
     shooterEncoderEntry = Shuffleboard.getTab("Shooter").add("Shooter", getShooterVelocity()).withPosition(0,0).getEntry();
     wristEncoderEntry = Shuffleboard.getTab("Shooter").add("Wrist", getWrist()).withPosition(1, 0).getEntry();
     shooterOffset = Shuffleboard.getTab("Shooter").add("Shooter Offset", 0).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", -500, "max", 500)).withPosition(0, 1).getEntry();
-    wristOffset = Shuffleboard.getTab("Shooter").add("Wrist Offset", 0).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", -2, "max", 2)).withPosition(2, 1).getEntry();
+    wristOffset = Shuffleboard.getTab("Shooter").add("Wrist Offset", 0.1).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", -2, "max", 2)).withPosition(2, 1).getEntry();
 
     shooterMap.put(1.88, 50.0);
     shooterMap.put(2.4, 51.6);
@@ -135,11 +135,11 @@ public class Shooter extends SubsystemBase {
       position = 21;
     }
     else if(subwoofer){
-      speed = 3000.0 / 60.0;
-      position = 17.5;
+      speed = 2500.0 / 60.0;
+      position = 17.6;
     }
     else if(longShooting){
-      speed = 3000.0 / 60.0;
+      speed = 2500.0 / 60.0;
       position = 21;
     }
     else{

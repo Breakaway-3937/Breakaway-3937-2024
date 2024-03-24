@@ -38,31 +38,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "4 Note M"
+            "pathName": "Red 4 Note M"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Shoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Vision"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.5
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "4 Note M #2"
           }
         }
       ]

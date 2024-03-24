@@ -19,6 +19,7 @@ public class RunElevator extends Command {
   private final double wristProtect = 3;
   private final double wristSixMoreSmidgens = 6.5;
   private final double wristAmp = 45.5;
+  private final double wristDoublePreTrap = 51;
   private final double wristPreTrap = 60;
   private final double wristTrap = 37.15;
   private final double wristSource = 65;
@@ -136,7 +137,7 @@ public class RunElevator extends Command {
         if(!startStage1 && !startStage2){
           s_Elevator.setElevator(elevatorHandoff);
           s_Elevator.setBabyWrist(wristHandoff);
-          if(Robot.robotContainer.s_Intake.botFull()){
+          if(RunNote.noteGood){
             handoff = true;
           }
         }
@@ -207,7 +208,7 @@ public class RunElevator extends Command {
         }
         else if(retracting && !trapStage2){
           s_Elevator.setElevatorSlow();
-          s_Elevator.setBabyWrist(wristPreTrap);
+          s_Elevator.setBabyWrist(wristDoublePreTrap);
           s_Elevator.setElevator(elevatorProtect);
         }
 
@@ -219,8 +220,9 @@ public class RunElevator extends Command {
           }
           if(trapStage2 && !trapPosition){
             s_Elevator.setElevator(elevatorTrap);
+            s_Elevator.setBabyWrist(wristPreTrap);
             if(s_Elevator.getElevator() < 40.0){
-              s_Elevator.setBabyShooterCoast();
+              s_Elevator.setBabyShooterBrake();
             }
             else{
               s_Elevator.setBabyShooterBrake();

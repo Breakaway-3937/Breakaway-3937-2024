@@ -153,7 +153,7 @@ public final class Constants {
             public static final int DRIVE_MOTOR_ID = 10;
             public static final int ANGLE_MOTOR_ID = 11;
             public static final int CANCODER_ID = 24;
-            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(87.53);
+            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(8.08);
             public static final Rotation2d ANGLE_OFFSET_PRACTICE = Rotation2d.fromDegrees(162.87);
             public static final SwerveModuleConstants CONSTANTS = 
                 new SwerveModuleConstants(DRIVE_MOTOR_ID, ANGLE_MOTOR_ID, CANCODER_ID, ANGLE_OFFSET, ANGLE_OFFSET_PRACTICE);
@@ -202,7 +202,7 @@ public final class Constants {
         public static final String NOTE_CAMERA_NAME = "HD_USB_Camera";
         public static final Transform3d FRONT_CAMERA_TRANSFORM = new Transform3d(new Translation3d(-0.198, -0.172, 0.29), new Rotation3d(0.174533, 0, 0));
         public static final Transform3d BACK_CAMERA_TRANSFORM = new Transform3d(new Translation3d(-0.198, 0.172, 0.29), new Rotation3d(0.174533, 0, Math.PI));
-        public static final Vector<N3> TAG_VISION_STDS = VecBuilder.fill(0.00025, 0.00025, Units.degreesToRadians(0));
+        public static final Vector<N3> TAG_VISION_STDS = VecBuilder.fill(0.025, 0.025, Units.degreesToRadians(0));
 
         public static final double TARGET_X_BLUE = -0.04;
         public static final double TARGET_X_RED = 16.58;
