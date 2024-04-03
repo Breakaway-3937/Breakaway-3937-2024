@@ -142,7 +142,7 @@ public class RunElevator extends Command {
           }
         }
         if(xboxController.getRawButton(8) && !startStage2){
-          s_Elevator.runBabyShooterForward();
+          s_Elevator.runBabyShooterForwardSlowly();
           startStage1 = true;
         }
         if(Robot.robotContainer.s_Intake.getBabyShooterSensor() && !Robot.robotContainer.s_Intake.getShooterSensor() && !Robot.robotContainer.s_Intake.getPopTartSensor()){
@@ -215,7 +215,6 @@ public class RunElevator extends Command {
         if(trap){
           if(xboxController.getRawButton(8)){
             trapStage2 = true;
-            s_Elevator.setElevatorEvenSlower();
             s_Elevator.setBabyShooterBrake();
           }
           if(trapStage2 && !trapPosition){

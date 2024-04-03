@@ -47,7 +47,7 @@ public class Align extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(RunElevator.amp){
+    if(RunElevator.amp && Robot.robotContainer.s_Intake.botFull()){
       translationVal = MathUtil.applyDeadband(translationSup.getAsDouble(), Constants.Controllers.STICK_DEADBAND);
       strafeVal = MathUtil.applyDeadband(strafeSup.getAsDouble(), Constants.Controllers.STICK_DEADBAND);
       if(!Robot.getRedAlliance()){
@@ -82,7 +82,7 @@ public class Align extends Command {
             true
         );
     }
-    else if(!RunElevator.deadShooter){
+    else if(!RunElevator.deadShooter || (RunElevator.amp && !Robot.robotContainer.s_Intake.botFull())){
       /* Get Values, Deadband*/
       translationVal = MathUtil.applyDeadband(translationSup.getAsDouble(), Constants.Controllers.STICK_DEADBAND);
       strafeVal = MathUtil.applyDeadband(strafeSup.getAsDouble(), Constants.Controllers.STICK_DEADBAND);
@@ -121,12 +121,12 @@ public class Align extends Command {
         );
       }
 
-      if(Math.abs(s_Vision.getAprilTagRotationSpeed()) < 0.15 && !flag){
+      if(Math.abs(s_Vision.getAprilTagYaw()) < 3 && !flag){
         Robot.robotContainer.s_LED.reset();
         Robot.robotContainer.s_LED.green();
         flag = true;
       }
-      if(Math.abs(s_Vision.getAprilTagRotationSpeed()) >= 0.15){
+      if(Math.abs(s_Vision.getAprilTagYaw()) >= 3){
         flag = false;
         Robot.robotContainer.s_LED.reset();
       }

@@ -66,6 +66,12 @@ public class LED extends SubsystemBase {
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
+        if(DriverStation.isFMSAttached()){
+            candle.configBrightnessScalar(1);
+        }
+        else{
+            candle.configBrightnessScalar(0.25);
+        }
         if(DriverStation.isDisabled() && Robot.robotContainer.s_Vision.isDead()){
             bad.setNumLed(Constants.NUM_LEDS);
             candle.animate(bad);
@@ -127,7 +133,7 @@ public class LED extends SubsystemBase {
                     fade.setG(40);
                     fade.setB(0);
                 }
-                else if(timer.get() > 1){
+                else if(timer.get() > 3){
                     flag1 = true;
                 }
                 if(!flag1){
@@ -162,7 +168,7 @@ public class LED extends SubsystemBase {
                     fade.setG(255);
                     fade.setB(0);
                 }
-                else if(timer.get() > 1){
+                else if(timer.get() > 3){
                     flag1 = true;
                 }
                 if(!flag1){
@@ -187,7 +193,7 @@ public class LED extends SubsystemBase {
                     fade.setG(0);
                     fade.setB(0);
                 }
-                else if(timer.get() > 1){
+                else if(timer.get() > 3){
                     flag1 = true;
                 }
                 if(!flag1){
@@ -215,7 +221,7 @@ public class LED extends SubsystemBase {
                     fade.setG(40);
                     fade.setB(0);
                 }
-                else if(timer.get() > 1){
+                else if(timer.get() > 3){
                     flag1 = true;
                 }
                 if(!flag1){
@@ -250,7 +256,7 @@ public class LED extends SubsystemBase {
                     fade.setG(255);
                     fade.setB(0);
                 }
-                else if(timer.get() > 1){
+                else if(timer.get() > 3){
                     flag1 = true;
                 }
                 if(!flag1){
@@ -275,7 +281,7 @@ public class LED extends SubsystemBase {
                     fade.setG(0);
                     fade.setB(0);
                 }
-                else if(timer.get() > 1){
+                else if(timer.get() > 3){
                     flag1 = true;
                 }
                 if(!flag1){

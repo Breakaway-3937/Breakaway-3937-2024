@@ -42,9 +42,10 @@ public class Vision extends SubsystemBase {
     private double fieldRelVelocityX, fieldRelVelocityY;
     private double xFlyAngle, yFlyAngle, originalAngle, xFlyWrist, yFlyWrist, velocityAngleOffset;
     private double velocityCompAngle = 0.05;
-    private double velocityCompWrist = 0.4;
+    private double velocityCompWrist = 0.45;
     private PhotonTrackedTarget target;
     private boolean frontPoseBad, backPoseBad = false;
+    private double ambiguity, targetYaw = Double.POSITIVE_INFINITY;
 
 
   /** Creates a new Vision. */
@@ -82,6 +83,10 @@ public class Vision extends SubsystemBase {
       return Optional.empty();
     }
   }
+
+  public double getAprilTagYaw(){
+    return targetYaw;
+  }
   
   public double getAprilTagRotationSpeed(){
     if(frontCamera.getLatestResult().hasTargets() && Robot.getFront() || backCamera.getLatestResult().hasTargets() && !Robot.getFront()){
@@ -101,6 +106,7 @@ public class Vision extends SubsystemBase {
           velocityAngleOffset = Math.toDegrees(Math.atan2(yFlyAngle, xFlyAngle)) - originalAngle;
 
           if(target != null){
+            targetYaw = target.getYaw();
             return velocityAngleOffset - target.getYaw() * 0.8 / 9.0;
           }
           else{
@@ -121,6 +127,7 @@ public class Vision extends SubsystemBase {
           velocityAngleOffset = Math.toDegrees(Math.atan2(yFlyAngle, xFlyAngle)) - originalAngle;
           
           if(target != null){
+            targetYaw = target.getYaw();
             return velocityAngleOffset - target.getYaw() * 0.8 / 9.0;
           }
           else{
@@ -147,6 +154,7 @@ public class Vision extends SubsystemBase {
           velocityAngleOffset = Math.toDegrees(Math.atan2(yFlyAngle, xFlyAngle)) - originalAngle;
 
           if(target != null){
+            targetYaw = target.getYaw();
             return velocityAngleOffset - target.getYaw() * 0.8 / 9.0;
           }
           else{
@@ -167,6 +175,7 @@ public class Vision extends SubsystemBase {
           velocityAngleOffset = Math.toDegrees(Math.atan2(yFlyAngle, xFlyAngle)) - originalAngle;
           
           if(target != null){
+            targetYaw = target.getYaw();
             return velocityAngleOffset - target.getYaw() * 0.8 / 9.0;
           }
           else{
@@ -179,11 +188,21 @@ public class Vision extends SubsystemBase {
       }
     }
     else{
-      if(Robot.getFront()){
-        return (PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromDegrees(0))).rotateBy(Rotation2d.fromDegrees(180)).getDegrees()) * 8.0 / 42.0;
+      if(Robot.getRedAlliance()){
+        if(Robot.getFront()){
+          return PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromDegrees(0))).rotateBy(Rotation2d.fromDegrees(180)).getDegrees() * 8.0 / 42.0;
+        }
+        else{
+          return PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromDegrees(0))).getDegrees() * 8.0 / 42.0;
+        }
       }
       else{
-        return PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromDegrees(0))).getDegrees() * 8.0 / 42.0;
+        if(Robot.getFront()){
+          return PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromDegrees(0))).getDegrees() * 8.0 / 42.0;
+        }
+        else{
+          return PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromDegrees(0))).rotateBy(Rotation2d.fromDegrees(180)).getDegrees() * 8.0 / 42.0;
+        }
       }
     }
   }
@@ -250,7 +269,8 @@ public class Vision extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    if(frontCamera.getLatestResult().hasTargets()){
+    var frontResult = frontCamera.getLatestResult();
+    if(frontResult.hasTargets()){
       var pose = getFrontEstimatedGlobalPose();
       if(pose.isPresent()){
         for(int i = 0; i < pose.get().targetsUsed.size(); i++){
@@ -258,12 +278,14 @@ public class Vision extends SubsystemBase {
             frontPoseBad = true;
           }
         }
-        if(!frontPoseBad){
+        if(!frontPoseBad && frontResult.getBestTarget().getPoseAmbiguity() < 0.2){
+          ambiguity = frontResult.getBestTarget().getPoseAmbiguity();
           s_Swerve.updatePoseVision(pose.get());
         }
         Logger.recordOutput("Front Cam Used Tag", pose.get().targetsUsed.get(0).getFiducialId());
       }
     }
+    var backResult = backCamera.getLatestResult();
     if(backCamera.getLatestResult().hasTargets() && DriverStation.isTeleopEnabled()){
       var pose = getBackEstimatedGlobalPose();
       if(pose.isPresent()){
@@ -272,7 +294,7 @@ public class Vision extends SubsystemBase {
             backPoseBad = true;
           }
         }
-        if(!backPoseBad){
+        if(!backPoseBad && backResult.getBestTarget().getPoseAmbiguity() < 0.2 && backResult.getBestTarget().getPoseAmbiguity() < ambiguity){
           s_Swerve.updatePoseVision(pose.get());
         }
         Logger.recordOutput("Back Cam Used Tag", pose.get().targetsUsed.get(0).getFiducialId());

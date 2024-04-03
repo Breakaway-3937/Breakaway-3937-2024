@@ -139,8 +139,8 @@ public class Shooter extends SubsystemBase {
       position = 17.6;
     }
     else if(longShooting){
-      speed = 2500.0 / 60.0;
-      position = 21;
+      speed = 2400.0 / 60.0;
+      position = 19;
     }
     else{
       speed = shooterMap.get(Robot.robotContainer.s_Vision.getDistance() + shooterOffset.getDouble(0));
