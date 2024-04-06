@@ -39,7 +39,7 @@ public class Shooter extends SubsystemBase {
   private final Follower followerRequest = new Follower(Constants.Shooter.SHOOTER_MOTOR_ID, true);
   private final GenericEntry shooterEncoderEntry, wristEncoderEntry, shooterOffset, wristOffset;
   private double speed, position;
-  private boolean subwoofer, podium, longShooting, autoFire, forceFire;
+  private boolean subwoofer, podium, longShooting, autoFire, forceFire, closeShot;
   private final InterpolatingDoubleTreeMap shooterMap = new InterpolatingDoubleTreeMap();
   private final InterpolatingDoubleTreeMap wristMap = new InterpolatingDoubleTreeMap();
   public static boolean sixMoreSmidgens, shooterSad;
@@ -55,8 +55,9 @@ public class Shooter extends SubsystemBase {
     shooterEncoderEntry = Shuffleboard.getTab("Shooter").add("Shooter", getShooterVelocity()).withPosition(0,0).getEntry();
     wristEncoderEntry = Shuffleboard.getTab("Shooter").add("Wrist", getWrist()).withPosition(1, 0).getEntry();
     shooterOffset = Shuffleboard.getTab("Shooter").add("Shooter Offset", 0).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", -500, "max", 500)).withPosition(0, 1).getEntry();
-    wristOffset = Shuffleboard.getTab("Shooter").add("Wrist Offset", 0.1).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", -2, "max", 2)).withPosition(2, 1).getEntry();
+    wristOffset = Shuffleboard.getTab("Shooter").add("Wrist Offset", 0).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", -2, "max", 2)).withPosition(2, 1).getEntry();
 
+    shooterMap.put(1.29, 41.6);
     shooterMap.put(1.88, 50.0);
     shooterMap.put(2.4, 51.6);
     shooterMap.put(3.0, 53.3);
@@ -66,6 +67,7 @@ public class Shooter extends SubsystemBase {
     shooterMap.put(5.0, 76.6);
     shooterMap.put(6.3, 76.66);
 
+    wristMap.put(1.29, 17.6);
     wristMap.put(1.88, 18.75);
     wristMap.put(2.4, 20.0);
     wristMap.put(3.0, 20.9);
@@ -84,24 +86,35 @@ public class Shooter extends SubsystemBase {
     subwoofer = true;
     podium = false;
     longShooting = false;
+    closeShot = false;
   }
 
   public void setPodiumShooting(){
     subwoofer = false;
     podium = true;
     longShooting = false;
+    closeShot = false;
   }
 
   public void setLongShooting(){
     subwoofer = false;
     podium = false;
     longShooting = true;
+    closeShot = false;
+  }
+
+  public void setCloseShot(){
+    subwoofer = false;
+    podium = false;
+    longShooting = false;
+    closeShot = true;
   }
 
   public void setAutoShooting(){
     subwoofer = false;
     podium = false;
     longShooting = false;
+    closeShot = false;
   }
 
   public void runShooter(){
@@ -140,6 +153,10 @@ public class Shooter extends SubsystemBase {
     }
     else if(longShooting){
       speed = 2400.0 / 60.0;
+      position = 19;
+    }
+    else if(closeShot){
+      speed = shooterMap.get(Robot.robotContainer.s_Vision.getDistance() + shooterOffset.getDouble(0));
       position = 19;
     }
     else{

@@ -6,33 +6,9 @@
     "data": {
       "commands": [
         {
-          "type": "named",
-          "data": {
-            "name": "Subwoofer"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.5
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Auto"
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "Back 3.5 Note A #1"
+            "pathName": "Back 3.5 Note A1 #1"
           }
         },
         {
@@ -50,13 +26,13 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.5
+            "waitTime": 0.5
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Back 3.5 Note A #2"
+            "pathName": "Back 3.5 Note A1 #2"
           }
         },
         {
@@ -74,13 +50,13 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.5
+            "waitTime": 0.5
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Back 3.5 Note A #3"
+            "pathName": "Back 3.5 Note A1 #3"
           }
         }
       ]

@@ -32,16 +32,16 @@
     },
     {
       "anchor": {
-        "x": 8.406033707741717,
-        "y": 7.436411005137533
+        "x": 8.374700515304339,
+        "y": 5.765307408477413
       },
       "prevControl": {
-        "x": 7.406033707741717,
-        "y": 7.436411005137533
+        "x": 5.94115590266804,
+        "y": 5.410197894187137
       },
       "nextControl": {
-        "x": 9.406033707741717,
-        "y": 7.436411005137533
+        "x": 8.737013634424228,
+        "y": 5.8181771340142205
       },
       "isLocked": false,
       "linkedName": null
@@ -67,7 +67,19 @@
       "rotateFast": true
     }
   ],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "Shoot",
+      "minWaypointRelativePos": 0.0,
+      "maxWaypointRelativePos": 0.6000000000000001,
+      "constraints": {
+        "maxVelocity": 1.0,
+        "maxAcceleration": 4.5,
+        "maxAngularVelocity": 690.0,
+        "maxAngularAcceleration": 690.0
+      }
+    }
+  ],
   "eventMarkers": [
     {
       "name": "Intake",
@@ -80,6 +92,46 @@
               "type": "named",
               "data": {
                 "name": "Intake"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Shoot",
+      "waypointRelativePos": 0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Shoot"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "Vision"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Force Fire",
+      "waypointRelativePos": 0.4,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Force Fire"
               }
             }
           ]

@@ -26,7 +26,6 @@ public class AutoRunNote extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    s_Shooter.setWrist(protect);
     spitBack = false;
     deadIntake = false;
     sendForward = false;
@@ -63,6 +62,11 @@ public class AutoRunNote extends Command {
       sendForward = false;
       noteGood = true;
       s_Intake.stop();
+    }
+
+    if(noteGood){
+      s_Shooter.setWristShooting();
+      s_Shooter.runShooter();
     }
 
     //Shoot
@@ -105,10 +109,12 @@ public class AutoRunNote extends Command {
 
     //Wrist Protect
     if(!s_Shooter.autoFire()){
-      s_Shooter.setWrist(protect);
-      s_Shooter.stopShooter();
-      s_Shooter.setSpeedToZero();
-      Shooter.sixMoreSmidgens = false;
+      if(!noteGood){
+        s_Shooter.setWrist(protect);
+        s_Shooter.stopShooter();
+        s_Shooter.setSpeedToZero();
+        Shooter.sixMoreSmidgens = false;
+      }
     }
   }
 
