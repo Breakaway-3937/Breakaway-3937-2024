@@ -42,7 +42,7 @@ public class Vision extends SubsystemBase {
     private double fieldRelVelocityX, fieldRelVelocityY;
     private double xFlyAngle, yFlyAngle, originalAngle, xFlyWrist, yFlyWrist, velocityAngleOffset;
     private double velocityCompAngle = 0.05;
-    private double velocityCompWrist = 0.45;
+    private double velocityCompWrist = 0.425;
     private PhotonTrackedTarget target;
     private boolean frontPoseBad, backPoseBad = false;
     private double ambiguity, targetYaw = Double.POSITIVE_INFINITY;
@@ -286,7 +286,7 @@ public class Vision extends SubsystemBase {
       }
     }
     var backResult = backCamera.getLatestResult();
-    if(backCamera.getLatestResult().hasTargets() && DriverStation.isTeleopEnabled()){
+    if(backResult.hasTargets() && DriverStation.isTeleopEnabled()){
       var pose = getBackEstimatedGlobalPose();
       if(pose.isPresent()){
         for(int i = 0; i < pose.get().targetsUsed.size(); i++){
