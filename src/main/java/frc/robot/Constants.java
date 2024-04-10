@@ -58,7 +58,7 @@ public final class Constants {
     }
 
     public static final class Swerve {
-        public static final Vector<N3> STATE_STDS = VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(0));
+        public static final Vector<N3> STATE_STDS = VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5));
 
         public static final int PIGEON_ID = 20;
 
@@ -202,7 +202,7 @@ public final class Constants {
         public static final String NOTE_CAMERA_NAME = "HD_USB_Camera";
         public static final Transform3d FRONT_CAMERA_TRANSFORM = new Transform3d(new Translation3d(-0.198, -0.172, 0.29), new Rotation3d(0.174533, 0, 0));
         public static final Transform3d BACK_CAMERA_TRANSFORM = new Transform3d(new Translation3d(-0.198, 0.172, 0.29), new Rotation3d(0.174533, 0, Math.PI));
-        public static final Vector<N3> TAG_VISION_STDS = VecBuilder.fill(0.025, 0.025, Units.degreesToRadians(0));
+        public static final Vector<N3> TAG_VISION_STDS = VecBuilder.fill(0.025, 0.025, Units.degreesToRadians(10));
 
         public static final double TARGET_X_BLUE = -0.04;
         public static final double TARGET_X_RED = 16.58;
