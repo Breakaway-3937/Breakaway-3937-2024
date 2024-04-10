@@ -23,11 +23,13 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
+import frc.robot.commands.RunElevator;
 
 public class Shooter extends SubsystemBase {
   private final TalonFX shooterMotor, followerShooterMotor;
@@ -39,10 +41,11 @@ public class Shooter extends SubsystemBase {
   private final Follower followerRequest = new Follower(Constants.Shooter.SHOOTER_MOTOR_ID, true);
   private final GenericEntry shooterEncoderEntry, wristEncoderEntry, shooterOffset, wristOffset;
   private double speed, position;
-  private boolean subwoofer, podium, longShooting, autoFire, forceFire, closeShot;
+  private boolean subwoofer, podium, longShooting, autoFire, forceFire;
   private final InterpolatingDoubleTreeMap shooterMap = new InterpolatingDoubleTreeMap();
   private final InterpolatingDoubleTreeMap wristMap = new InterpolatingDoubleTreeMap();
   public static boolean sixMoreSmidgens, shooterSad;
+  private boolean flag, flag1;
 
   /** Creates a new Shooter. */
   public Shooter() {
@@ -86,35 +89,24 @@ public class Shooter extends SubsystemBase {
     subwoofer = true;
     podium = false;
     longShooting = false;
-    closeShot = false;
   }
 
   public void setPodiumShooting(){
     subwoofer = false;
     podium = true;
     longShooting = false;
-    closeShot = false;
   }
 
   public void setLongShooting(){
     subwoofer = false;
     podium = false;
     longShooting = true;
-    closeShot = false;
-  }
-
-  public void setCloseShot(){
-    subwoofer = false;
-    podium = false;
-    longShooting = false;
-    closeShot = true;
   }
 
   public void setAutoShooting(){
     subwoofer = false;
     podium = false;
     longShooting = false;
-    closeShot = false;
   }
 
   public void runShooter(){
@@ -153,10 +145,6 @@ public class Shooter extends SubsystemBase {
     }
     else if(longShooting){
       speed = 2400.0 / 60.0;
-      position = 19;
-    }
-    else if(closeShot){
-      speed = shooterMap.get(Robot.robotContainer.s_Vision.getDistance() + shooterOffset.getDouble(0));
       position = 19;
     }
     else{
@@ -298,5 +286,16 @@ public class Shooter extends SubsystemBase {
     Logger.recordOutput("Shooter", getShooterVelocity() * 60.0);
     wristEncoderEntry.setDouble(getWrist());
     Logger.recordOutput("Wrist", getWrist());
+
+    if(!DriverStation.isAutonomous() && !RunElevator.deadShooter && !longShooting && !flag){
+      flag1 = false;
+      setBrakeMode();
+      flag = true;
+    }
+    else if(!DriverStation.isAutonomous() && (RunElevator.deadShooter || longShooting) && !flag1){
+      flag = false;
+      setCoastMode();
+      flag1 = true;
+    }
   }
 }

@@ -274,7 +274,7 @@ public class Vision extends SubsystemBase {
       var pose = getFrontEstimatedGlobalPose();
       if(pose.isPresent()){
         for(int i = 0; i < pose.get().targetsUsed.size(); i++){
-          if(Math.abs(pose.get().targetsUsed.get(i).getBestCameraToTarget().getTranslation().getX()) > 6){
+          if(Math.abs(pose.get().targetsUsed.get(i).getBestCameraToTarget().getTranslation().getX()) > 6.0){
             frontPoseBad = true;
           }
         }
@@ -290,7 +290,7 @@ public class Vision extends SubsystemBase {
       var pose = getBackEstimatedGlobalPose();
       if(pose.isPresent()){
         for(int i = 0; i < pose.get().targetsUsed.size(); i++){
-          if(Math.abs(pose.get().targetsUsed.get(i).getBestCameraToTarget().getTranslation().getX()) > 6){
+          if(Math.abs(pose.get().targetsUsed.get(i).getBestCameraToTarget().getTranslation().getX()) > 6.0){
             backPoseBad = true;
           }
         }
