@@ -1,10 +1,22 @@
 {
   "version": 1.0,
-  "startingPose": null,
+  "startingPose": {
+    "position": {
+      "x": 1.39784299924834,
+      "y": 5.535530663936646
+    },
+    "rotation": 180.0
+  },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Subwoofer"
+          }
+        },
         {
           "type": "named",
           "data": {
@@ -18,15 +30,27 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Auto"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "3.5 Note S2 #1"
+            "pathName": "Fast 4 Note M #1"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Vision"
           }
         },
         {
@@ -38,25 +62,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "3.5 Note S2 #2"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "3.5 Note S2 #3"
+            "pathName": "Fast 4 Note M #3"
           }
         }
       ]
