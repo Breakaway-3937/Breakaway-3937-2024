@@ -209,5 +209,8 @@ public class Swerve extends SubsystemBase {
         Logger.recordOutput("Yaw", getGyroYaw());
         Logger.recordOutput("Swerve States", getModuleStates());
         Logger.recordOutput("Pose", getPose());
+        Logger.recordOutput("Velocity X", getSpeed().vxMetersPerSecond);
+        Logger.recordOutput("Velocity Y", getSpeed().vyMetersPerSecond);
+        Logger.recordOutput("Angular Velocity", getSpeed().omegaRadiansPerSecond);
     }
 }
