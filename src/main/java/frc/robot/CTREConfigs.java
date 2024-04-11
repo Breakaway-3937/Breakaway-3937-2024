@@ -43,12 +43,18 @@ public final class CTREConfigs {
 
         /* Gear Ratio Config */
         swerveDriveFXConfig.Feedback.SensorToMechanismRatio = Constants.Swerve.DRIVE_GEAR_RATIO;
+        //swerveDriveFXConfig.Feedback.SensorToMechanismRatio = 6.12 / 1.0; TODO L3 Change
 
         /* Current Limiting */
         swerveDriveFXConfig.CurrentLimits.SupplyCurrentLimitEnable = Constants.Swerve.DRIVE_ENABLE_CURRENT_LIMIT;
         swerveDriveFXConfig.CurrentLimits.SupplyCurrentLimit = Constants.Swerve.DRIVE_CONTINUOUS_CURRENT_LIMIT;
         swerveDriveFXConfig.CurrentLimits.SupplyCurrentThreshold = Constants.Swerve.DRIVE_PEAK_CURRENT_LIMIT;
         swerveDriveFXConfig.CurrentLimits.SupplyTimeThreshold = Constants.Swerve.DRIVE_PEAK_CURRENT_DURATION;
+
+        /*TODO Stator Limits 
+        swerveDriveFXConfig.CurrentLimits.StatorCurrentLimitEnable = true;
+        swerveDriveFXConfig.CurrentLimits.StatorCurrentLimit = 80;
+        */
 
         /* PID Config */
         swerveDriveFXConfig.Slot0.kP = Constants.Swerve.DRIVE_KP;
