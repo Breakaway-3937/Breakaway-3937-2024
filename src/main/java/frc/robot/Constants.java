@@ -80,6 +80,7 @@ public final class Constants {
 
 
         public static final double DRIVE_GEAR_RATIO = (6.75 / 1.0);
+        //public static final double DRIVE_GEAR_RATIO = (6.12 / 1.0); TODO L3
         public static final double ANGLE_GEAR_RATIO = (12.8 / 1.0);
 
         /* Motor Inverts */
