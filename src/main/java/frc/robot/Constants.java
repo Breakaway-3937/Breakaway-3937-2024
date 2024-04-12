@@ -96,10 +96,15 @@ public final class Constants {
         public static final double ANGLE_PEAK_CURRENT_DURATION = 0.1;
         public static final boolean ANGLE_ENABLE_CURRENT_LIMIT = true;
 
-        public static final int DRIVE_CONTINUOUS_CURRENT_LIMIT = 35;
-        public static final int DRIVE_PEAK_CURRENT_LIMIT = 50;
-        public static final double DRIVE_PEAK_CURRENT_DURATION = 0.1;
-        public static final boolean DRIVE_ENABLE_CURRENT_LIMIT = true;
+        public class SupplyLimits {
+            public static final int DRIVE_CONTINUOUS_CURRENT_LIMIT = 35;
+            public static final int DRIVE_PEAK_CURRENT_LIMIT = 50;
+            public static final double DRIVE_PEAK_CURRENT_DURATION = 0.1;
+            public static final boolean DRIVE_ENABLE_CURRENT_LIMIT = true;
+        }
+
+        public static final int STATOR_DRIVE_CURRENT_LIMIT = 80;
+        public static final boolean STATOR_DRIVE_ENABLE_CURRENT_LIMIT = true;
 
         public static final double OPEN_LOOP_RAMP = 0.25;
         public static final double CLOSED_LOOP_RAMP = 0.0;
