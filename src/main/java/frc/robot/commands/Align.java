@@ -65,7 +65,7 @@ public class Align extends Command {
     }
     else if(RunElevator.climbing){
       translationVal = MathUtil.applyDeadband(translationSup.getAsDouble(), Constants.Controllers.STICK_DEADBAND);
-      strafeVal = s_Vision.getAprilTagStrafeSpeed();
+      strafeVal = MathUtil.applyDeadband(strafeSup.getAsDouble(), Constants.Controllers.STICK_DEADBAND);
       if((Robot.robotContainer.s_Swerve.getHeading().getDegrees() + 3600000) % 360 > 90 && (Robot.robotContainer.s_Swerve.getHeading().getDegrees() + 3600000) % 360 < 270){
         rotationVal = pValue * (180 - (s_Swerve.getGyroYaw().getDegrees() + 3600000) % 360);
       }
@@ -78,7 +78,7 @@ public class Align extends Command {
       s_Swerve.drive(
             new Translation2d(translationVal, strafeVal).times(Constants.Swerve.MAX_SPEED), 
             rotationVal, 
-            false, 
+            !robotCentricSup.getAsBoolean(),
             true
         );
     }
