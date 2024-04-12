@@ -1,6 +1,12 @@
 {
   "version": 1.0,
-  "startingPose": null,
+  "startingPose": {
+    "position": {
+      "x": 1.36,
+      "y": 3.363095988278491
+    },
+    "rotation": 120.65645024613762
+  },
   "command": {
     "type": "sequential",
     "data": {
@@ -9,6 +15,12 @@
           "type": "named",
           "data": {
             "name": "Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Vision"
           }
         },
         {
@@ -30,6 +42,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Vision"
+          }
+        },
+        {
           "type": "wait",
           "data": {
             "waitTime": 0.5
@@ -45,6 +63,12 @@
           "type": "named",
           "data": {
             "name": "Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Vision"
           }
         },
         {
