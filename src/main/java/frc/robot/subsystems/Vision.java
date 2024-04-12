@@ -42,7 +42,7 @@ public class Vision extends SubsystemBase {
     private double fieldRelVelocityX, fieldRelVelocityY;
     private double xFlyAngle, yFlyAngle, originalAngle, xFlyWrist, yFlyWrist, velocityAngleOffset;
     private double velocityCompAngle = 0.05;
-    private double velocityCompWrist = 0.425;
+    private double velocityCompWrist = 0.4;
     private PhotonTrackedTarget target;
     private boolean frontPoseBad, backPoseBad = false;
     private double ambiguity, targetYaw = Double.POSITIVE_INFINITY;
@@ -207,16 +207,6 @@ public class Vision extends SubsystemBase {
     }
   }
 
-  public double getAprilTagStrafeSpeed(){
-    var result = frontCamera.getLatestResult();
-    if(result.hasTargets()){
-      return -result.getBestTarget().getYaw() * 8.0 / 148.0;
-    }
-    else{
-      return 0;
-    }
-  }
-
   public double getDistance(){
     robotX = s_Swerve.getPose().getX();
     robotY = s_Swerve.getPose().getY();
@@ -278,7 +268,7 @@ public class Vision extends SubsystemBase {
             frontPoseBad = true;
           }
         }
-        if(!frontPoseBad && frontResult.getBestTarget().getPoseAmbiguity() < 0.2){
+        if(!frontPoseBad && frontResult.getBestTarget().getPoseAmbiguity() < 0.2 && frontResult.getBestTarget().getPoseAmbiguity() >= 0){
           ambiguity = frontResult.getBestTarget().getPoseAmbiguity();
           s_Swerve.updatePoseVision(pose.get());
         }
@@ -294,7 +284,7 @@ public class Vision extends SubsystemBase {
             backPoseBad = true;
           }
         }
-        if(!backPoseBad && backResult.getBestTarget().getPoseAmbiguity() < 0.2 && backResult.getBestTarget().getPoseAmbiguity() < ambiguity){
+        if(!backPoseBad && backResult.getBestTarget().getPoseAmbiguity() < 0.2 && backResult.getBestTarget().getPoseAmbiguity() >= 0 && backResult.getBestTarget().getPoseAmbiguity() < ambiguity){
           s_Swerve.updatePoseVision(pose.get());
         }
         Logger.recordOutput("Back Cam Used Tag", pose.get().targetsUsed.get(0).getFiducialId());
