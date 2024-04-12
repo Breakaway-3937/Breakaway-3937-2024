@@ -157,7 +157,6 @@ public class Shooter extends SubsystemBase {
     if(position > 23){
       sixMoreSmidgens = true;
     }
-    //4.78
     if((position > 0 && position < 4.5) || (position > 10.16 && position < 23.5)){
       pid.setReference(position, ControlType.kSmartMotion);
       shooterSad = false;
