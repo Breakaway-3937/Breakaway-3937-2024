@@ -62,8 +62,7 @@ public final class Constants {
 
         public static final int PIGEON_ID = 20;
 
-        public static final COTSTalonFXSwerveConstants CHOSEN_MODULE = COTSTalonFXSwerveConstants.SDS.MK4.KrakenX60(COTSTalonFXSwerveConstants.SDS.MK4.driveRatios.L2);
-        //public static final COTSTalonFXSwerveConstants CHOSEN_MODULE = COTSTalonFXSwerveConstants.SDS.MK4.KrakenX60(COTSTalonFXSwerveConstants.SDS.MK4.driveRatios.L3); TODO L3 Change
+        public static final COTSTalonFXSwerveConstants CHOSEN_MODULE = COTSTalonFXSwerveConstants.SDS.MK4.KrakenX60(COTSTalonFXSwerveConstants.SDS.MK4.driveRatios.L3);
 
         /* Drivetrain Constants */
         public static final double DRIVE_BASE_RADIUS = 0.3804;
@@ -78,9 +77,7 @@ public final class Constants {
             new Translation2d(-WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0),
             new Translation2d(-WHEEL_BASE / 2.0, -TRACK_WIDTH / 2.0));
 
-
-        public static final double DRIVE_GEAR_RATIO = (6.75 / 1.0);
-        //public static final double DRIVE_GEAR_RATIO = (6.12 / 1.0); TODO L3
+        public static final double DRIVE_GEAR_RATIO = (6.12 / 1.0);
         public static final double ANGLE_GEAR_RATIO = (12.8 / 1.0);
 
         /* Motor Inverts */
