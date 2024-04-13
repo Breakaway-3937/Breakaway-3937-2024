@@ -38,7 +38,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Fast 4 Note M #1"
+            "pathName": "Fast 5 Note M #1"
           }
         },
         {
@@ -62,7 +62,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Fast 4 Note M #3"
+            "pathName": "Fast 5 Note M #3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Vision"
           }
         }
       ]

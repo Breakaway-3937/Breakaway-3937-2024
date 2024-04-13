@@ -76,6 +76,18 @@
           "data": {
             "pathName": "Back 3.5 Note A1 #3"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Vision"
+          }
         }
       ]
     }

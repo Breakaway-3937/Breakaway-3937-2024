@@ -243,7 +243,7 @@
     },
     {
       "name": "Force Fire",
-      "waypointRelativePos": 3.7,
+      "waypointRelativePos": 3.5999999999999996,
       "command": {
         "type": "parallel",
         "data": {
@@ -260,7 +260,7 @@
     },
     {
       "name": "Force Fire",
-      "waypointRelativePos": 5.55,
+      "waypointRelativePos": 5.4,
       "command": {
         "type": "parallel",
         "data": {
@@ -277,8 +277,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 4.5,
-    "maxAcceleration": 4.5,
+    "maxVelocity": 5.0,
+    "maxAcceleration": 5.0,
     "maxAngularVelocity": 690.0,
     "maxAngularAcceleration": 690.0
   },

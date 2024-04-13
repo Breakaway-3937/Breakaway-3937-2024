@@ -54,12 +54,6 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "Back 3 Note A2 #2"
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "Shoot"
@@ -69,12 +63,6 @@
           "type": "named",
           "data": {
             "name": "Vision"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
           }
         }
       ]

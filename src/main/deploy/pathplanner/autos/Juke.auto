@@ -18,12 +18,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "Vision"
-          }
-        },
-        {
           "type": "wait",
           "data": {
             "waitTime": 1.0
