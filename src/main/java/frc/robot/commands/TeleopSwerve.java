@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.subsystems.Swerve;
 
 import java.util.function.BooleanSupplier;
@@ -35,7 +36,7 @@ public class TeleopSwerve extends Command {
         double strafeVal = MathUtil.applyDeadband(strafeSup.getAsDouble(), Constants.Controllers.STICK_DEADBAND);
         double rotationVal = MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.Controllers.STICK_DEADBAND);
 
-        if(robotCentricSup.getAsBoolean()){
+        if(robotCentricSup.getAsBoolean() && !Robot.robotContainer.s_Intake.botFull() && !RunElevator.climbing){
             translationVal *= -1;
             strafeVal *= -1;
         }

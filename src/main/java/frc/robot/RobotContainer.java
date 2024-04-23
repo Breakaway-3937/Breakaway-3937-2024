@@ -94,6 +94,7 @@ public class RobotContainer {
         button8.whileTrue(c_Align);
         leftStick.onTrue(new InstantCommand(() -> s_Shooter.setLongShooting()));
         rightStick.onTrue(new InstantCommand(() -> s_Shooter.setAutoShooting()));
+        leftStick.and(rightStick).onTrue(new InstantCommand(() -> s_Shooter.setPoopShooting()));
         right.onTrue(new InstantCommand(() -> s_Shooter.setSubShooting()));
         left.onTrue(new InstantCommand(() -> s_Shooter.setPodiumShooting()));
     }

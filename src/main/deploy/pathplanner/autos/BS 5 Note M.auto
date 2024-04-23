@@ -2,15 +2,21 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.362712725425451,
-      "y": 3.36
+      "x": 1.39784299924834,
+      "y": 5.535530663936646
     },
-    "rotation": 120.66
+    "rotation": 180.0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Subwoofer"
+          }
+        },
         {
           "type": "named",
           "data": {
@@ -24,9 +30,21 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Auto"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "3.5 Note S2 #1"
+            "pathName": "OP 5 Note M #1"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
           }
         },
         {
@@ -50,7 +68,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "3.5 Note S2 #2"
+            "pathName": "BS 5 Note M #1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BS 5 Note M #2"
           }
         },
         {

@@ -63,6 +63,14 @@ public class Elevator extends SubsystemBase {
     babyShooter.set(0.5);
   }
 
+  public void runBabyShooterForwardSomewhatSuperSlowly(){
+    babyShooter.set(0.4);
+  }
+
+  public void runBabyShooterForwardSuperSlowly(){
+    babyShooter.set(0.2);
+  }
+
   public void runBabyShooterReverse(){
     babyShooter.set(-0.9);
   }

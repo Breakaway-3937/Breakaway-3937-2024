@@ -244,7 +244,7 @@
     },
     {
       "name": "Force Fire",
-      "waypointRelativePos": 2.7,
+      "waypointRelativePos": 2.5,
       "command": {
         "type": "parallel",
         "data": {
@@ -261,7 +261,7 @@
     },
     {
       "name": "Force Fire",
-      "waypointRelativePos": 4.3,
+      "waypointRelativePos": 4.15,
       "command": {
         "type": "parallel",
         "data": {
