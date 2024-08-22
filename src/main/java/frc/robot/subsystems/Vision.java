@@ -36,7 +36,7 @@ public class Vision extends SubsystemBase {
     private final PhotonCamera frontCamera, backCamera, noteCamera;
     private AprilTagFieldLayout atfl;
     private final PhotonPoseEstimator frontPoseEstimator, backPoseEstimator;
-    private final Swerve s_Swerve;
+    private final SwerveCTRE s_Swerve;
     private double targetX, targetY, robotX, robotY;
     private final GenericEntry distanceEntry, targetID, compAngleEntry, compWristEntry;
     private double fieldRelVelocityX, fieldRelVelocityY;
@@ -49,7 +49,7 @@ public class Vision extends SubsystemBase {
 
 
   /** Creates a new Vision. */
-  public Vision(Swerve s_Swerve) {
+  public Vision(SwerveCTRE s_Swerve) {
     this.s_Swerve = s_Swerve;
 
     frontCamera = new PhotonCamera(Constants.Vision.FRONT_CAMERA_NAME);

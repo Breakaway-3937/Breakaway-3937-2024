@@ -2,9 +2,11 @@ package frc.robot;
 
 import org.littletonrobotics.junction.Logger;
 
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -12,8 +14,10 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
+import frc.robot.Constants.Swerve;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 
@@ -24,6 +28,10 @@ import frc.robot.subsystems.*;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+
+    private int MaxSpeed = 10;
+    private int MaxAngularRate = 10;
+
     /* Controllers */
     private final Joystick translationController = new Joystick(Constants.Controllers.TRANSLATION_CONTROLLER.getPort());
     private final Joystick rotationController = new Joystick(Constants.Controllers.ROTATION_CONTROLLER.getPort());
@@ -47,7 +55,9 @@ public class RobotContainer {
     private final POVButton right = new POVButton(xboxController, Constants.Controllers.RIGHT);
 
     /* Subsystems */
-    public final Swerve s_Swerve = new Swerve();
+    public static final SwerveCTRE s_Swerve = TunerConstants.DriveTrain;
+    SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric();
+
     public final LED s_LED = new LED();
     public final Vision s_Vision = new Vision(s_Swerve);
     public final Shooter s_Shooter = new Shooter();
@@ -55,8 +65,8 @@ public class RobotContainer {
     public final Elevator s_Elevator = new Elevator();
 
     /* Commands */
-    public final Music c_Music = new Music(s_Swerve);
-    private final Align c_Align = new Align(s_Swerve, s_Vision, () -> translationController.getRawAxis(translationAxis), () -> translationController.getRawAxis(strafeAxis), () -> rotationController.getRawAxis(rotationAxis), this::robotRelative);
+    //public final Music c_Music = new Music(s_Swerve);
+    //private final Align c_Align = new Align(s_Swerve, s_Vision, () -> translationController.getRawAxis(translationAxis), () -> translationController.getRawAxis(strafeAxis), () -> rotationController.getRawAxis(rotationAxis), this::robotRelative);
     public final RunNote c_RunNote = new RunNote(s_Intake, s_Shooter, xboxController);
     public final AutoRunNote c_AutoRunNote = new AutoRunNote(s_Intake, s_Shooter);
     private final RunElevator c_RunElevator = new RunElevator(s_Elevator, xboxController);
@@ -67,11 +77,11 @@ public class RobotContainer {
     public RobotContainer() {
         NamedCommands.registerCommand("Shoot", new InstantCommand(() -> s_Shooter.setAutoFire(true)));
         NamedCommands.registerCommand("Intake", new InstantCommand(() -> s_Intake.setAutoIntake(true)));
-        NamedCommands.registerCommand("Vision", new InstantCommand(() -> Swerve.setAddVisionMeasurement(true)));
+        NamedCommands.registerCommand("Vision", new InstantCommand(() -> SwerveCTRE.setAddVisionMeasurement(true)));
         NamedCommands.registerCommand("Subwoofer", new InstantCommand(() -> s_Shooter.setSubShooting()));
         NamedCommands.registerCommand("Auto", new InstantCommand(() -> s_Shooter.setAutoShooting()));
         NamedCommands.registerCommand("Force Fire", new InstantCommand(() -> s_Shooter.setForceFire(true)));
-        s_Swerve.setDefaultCommand(new TeleopSwerve(s_Swerve, () -> translationController.getRawAxis(translationAxis), () -> translationController.getRawAxis(strafeAxis), () -> rotationController.getRawAxis(rotationAxis), this::robotRelative));
+        //s_Swerve.setDefaultCommand(new TeleopSwerve(s_Swerve, () -> translationController.getRawAxis(translationAxis), () -> translationController.getRawAxis(strafeAxis), () -> rotationController.getRawAxis(rotationAxis), this::robotRelative));
         s_Elevator.setDefaultCommand(c_RunElevator);
         autoChooser = AutoBuilder.buildAutoChooser("DO NOTHING");
         Shuffleboard.getTab("Auto").add("Auto", autoChooser).withPosition(0, 0).withSize(2, 1);
@@ -89,14 +99,21 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         translationButton.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
-        rotationButton.whileTrue(c_Align);
+        //rotationButton.whileTrue(c_Align);
         button7.whileTrue(new InstantCommand(() -> robotRelative = true)).onFalse(new InstantCommand(() -> robotRelative = false));
-        button8.whileTrue(c_Align);
+        //button8.whileTrue(c_Align);
         leftStick.onTrue(new InstantCommand(() -> s_Shooter.setLongShooting()));
         rightStick.onTrue(new InstantCommand(() -> s_Shooter.setAutoShooting()));
         leftStick.and(rightStick).onTrue(new InstantCommand(() -> s_Shooter.setPoopShooting()));
         right.onTrue(new InstantCommand(() -> s_Shooter.setSubShooting()));
         left.onTrue(new InstantCommand(() -> s_Shooter.setPodiumShooting()));
+
+        s_Swerve.setDefaultCommand( // Drivetrain will execute this command periodically
+        s_Swerve.applyRequest(() -> drive.withVelocityX(translationController.getY() * MaxSpeed)// negative Y (forward)
+            .withVelocityY(translationController.getX() * MaxSpeed) // Drive left with negative X (left)
+            .withRotationalRate(rotationController.getX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+        ).ignoringDisable(true));
+
     }
 
     public boolean robotRelative(){
