@@ -117,7 +117,7 @@ public class Robot extends LoggedRobot {
     }
 
     if(DriverStation.isAutonomousEnabled() && redAlliance){
-      if((robotContainer.s_Swerve.getHeading().getDegrees() + 3600000) % 360 < 90 || (robotContainer.s_Swerve.getHeading().getDegrees() + 3600000) % 360 > 270){
+      if((robotContainer.s_Swerve.getPigeon2().getAngle() + 3600000) % 360 < 90 || (robotContainer.s_Swerve.getPigeon2().getAngle() + 3600000) % 360 > 270){
         front = true;
       }
       else{
@@ -125,7 +125,7 @@ public class Robot extends LoggedRobot {
       }
     }
     else{
-      if((robotContainer.s_Swerve.getHeading().getDegrees() + 3600000) % 360 < 90 || (robotContainer.s_Swerve.getHeading().getDegrees() + 3600000) % 360 > 270){
+      if((robotContainer.s_Swerve.getPigeon2().getAngle() + 3600000) % 360 < 90 || (robotContainer.s_Swerve.getPigeon2().getAngle() + 3600000) % 360 > 270){
         front = false;
       }
       else{
@@ -183,9 +183,9 @@ public class Robot extends LoggedRobot {
     }
     robotContainer.s_Shooter.setDefaultCommand(robotContainer.c_RunNote);
 
-    if(redAlliance){
+    /*if(redAlliance){
       robotContainer.s_Swerve.heading180();
-    }
+    }*/
 
     robotContainer.s_Shooter.setCoastMode();
     

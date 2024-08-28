@@ -2,6 +2,8 @@ package frc.robot;
 
 import org.littletonrobotics.junction.Logger;
 
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
@@ -14,7 +16,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
+import frc.robot.Constants.Swerve;
 import frc.robot.commands.*;
+import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.*;
 
 /**
@@ -24,6 +28,18 @@ import frc.robot.subsystems.*;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+    private double MaxSpeed = TunerConstants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed
+    private double MaxAngularRate = (16 - 6) * Math.PI; // 3/4 of a rotation per second max angular velocity
+
+    private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
+      .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+      .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
+                                                               // driving in open loop
+    private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
+    private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
+
+    private final Telemetry logger = new Telemetry(MaxSpeed);
+
     /* Controllers */
     private final Joystick translationController = new Joystick(Constants.Controllers.TRANSLATION_CONTROLLER.getPort());
     private final Joystick rotationController = new Joystick(Constants.Controllers.ROTATION_CONTROLLER.getPort());
@@ -47,7 +63,7 @@ public class RobotContainer {
     private final POVButton right = new POVButton(xboxController, Constants.Controllers.RIGHT);
 
     /* Subsystems */
-    public final Swerve s_Swerve = new Swerve();
+    public final CommandSwerveDrivetrain s_Swerve = TunerConstants.DriveTrain; // My drivetrain
     public final LED s_LED = new LED();
     public final Vision s_Vision = new Vision(s_Swerve);
     public final Shooter s_Shooter = new Shooter();
@@ -61,20 +77,19 @@ public class RobotContainer {
     public final AutoRunNote c_AutoRunNote = new AutoRunNote(s_Intake, s_Shooter);
     private final RunElevator c_RunElevator = new RunElevator(s_Elevator, xboxController);
 
-    private final SendableChooser<Command> autoChooser;
+    //private final SendableChooser<Command> autoChooser;
 
     /** The container for the robot. Contains subsystems, IO devices, and commands. */
     public RobotContainer() {
         NamedCommands.registerCommand("Shoot", new InstantCommand(() -> s_Shooter.setAutoFire(true)));
         NamedCommands.registerCommand("Intake", new InstantCommand(() -> s_Intake.setAutoIntake(true)));
-        NamedCommands.registerCommand("Vision", new InstantCommand(() -> Swerve.setAddVisionMeasurement(true)));
+        //NamedCommands.registerCommand("Vision", new InstantCommand(() -> Swerve.setAddVisionMeasurement(true))); //FIXME
         NamedCommands.registerCommand("Subwoofer", new InstantCommand(() -> s_Shooter.setSubShooting()));
         NamedCommands.registerCommand("Auto", new InstantCommand(() -> s_Shooter.setAutoShooting()));
         NamedCommands.registerCommand("Force Fire", new InstantCommand(() -> s_Shooter.setForceFire(true)));
-        s_Swerve.setDefaultCommand(new TeleopSwerve(s_Swerve, () -> translationController.getRawAxis(translationAxis), () -> translationController.getRawAxis(strafeAxis), () -> rotationController.getRawAxis(rotationAxis), this::robotRelative));
         s_Elevator.setDefaultCommand(c_RunElevator);
-        autoChooser = AutoBuilder.buildAutoChooser("DO NOTHING");
-        Shuffleboard.getTab("Auto").add("Auto", autoChooser).withPosition(0, 0).withSize(2, 1);
+        //autoChooser = AutoBuilder.buildAutoChooser("DO NOTHING");
+        //Shuffleboard.getTab("Auto").add("Auto", autoChooser).withPosition(0, 0).withSize(2, 1);
         Shuffleboard.selectTab("Auto");
         // Configure the button bindings
         configureButtonBindings();
@@ -87,8 +102,15 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
+        s_Swerve.setDefaultCommand( // Drivetrain will execute this command periodically
+        s_Swerve.applyRequest(() -> drive.withVelocityX(-translationController.getRawAxis(translationAxis) * MaxSpeed) // Drive forward with
+                                                                                           // negative Y (forward)
+            .withVelocityY(-translationController.getRawAxis(strafeAxis) * MaxSpeed) // Drive left with negative X (left)
+            .withRotationalRate(rotationController.getRawAxis(rotationAxis) * MaxAngularRate) // Drive counterclockwise with negative X (left)
+        ));
+
         /* Driver Buttons */
-        translationButton.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
+        translationButton.onTrue(new InstantCommand(() -> s_Swerve.getPigeon2().setYaw(0)));
         rotationButton.whileTrue(c_Align);
         button7.whileTrue(new InstantCommand(() -> robotRelative = true)).onFalse(new InstantCommand(() -> robotRelative = false));
         button8.whileTrue(c_Align);
@@ -109,7 +131,8 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        Logger.recordOutput("Auto", autoChooser.getSelected().getName());
-        return autoChooser.getSelected();
+        //Logger.recordOutput("Auto", autoChooser.getSelected().getName());
+        //return autoChooser.getSelected();
+        return null;
     }
 }

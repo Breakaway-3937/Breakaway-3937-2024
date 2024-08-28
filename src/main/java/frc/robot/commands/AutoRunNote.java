@@ -5,7 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 
@@ -81,7 +81,7 @@ public class AutoRunNote extends Command {
         noteGood = false;
         s_Shooter.setAutoFire(false);
         s_Intake.setAutoIntake(false);
-        Swerve.setAddVisionMeasurement(false);
+        //Swerve.setAddVisionMeasurement(false); //FIXME
         s_Shooter.setForceFire(false);
       }
     }
@@ -98,7 +98,7 @@ public class AutoRunNote extends Command {
         noteGood = false;
         s_Shooter.setAutoFire(false);
         s_Intake.setAutoIntake(false);
-        Swerve.setAddVisionMeasurement(false);
+        //Swerve.setAddVisionMeasurement(false); //FIXME
         s_Shooter.setForceFire(false);
       }
     }

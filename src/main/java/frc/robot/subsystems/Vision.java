@@ -36,7 +36,7 @@ public class Vision extends SubsystemBase {
     private final PhotonCamera frontCamera, backCamera, noteCamera;
     private AprilTagFieldLayout atfl;
     private final PhotonPoseEstimator frontPoseEstimator, backPoseEstimator;
-    private final Swerve s_Swerve;
+    private final CommandSwerveDrivetrain s_Swerve;
     private double targetX, targetY, robotX, robotY;
     private final GenericEntry distanceEntry, targetID, compAngleEntry, compWristEntry;
     private double fieldRelVelocityX, fieldRelVelocityY;
@@ -49,7 +49,7 @@ public class Vision extends SubsystemBase {
 
 
   /** Creates a new Vision. */
-  public Vision(Swerve s_Swerve) {
+  public Vision(CommandSwerveDrivetrain s_Swerve) {
     this.s_Swerve = s_Swerve;
 
     frontCamera = new PhotonCamera(Constants.Vision.FRONT_CAMERA_NAME);
@@ -77,7 +77,7 @@ public class Vision extends SubsystemBase {
 
   public Optional<Rotation2d> getRotationTargetOverride(){
     if(Robot.robotContainer.s_Intake.botFull()){
-      return Optional.of(PhotonUtils.getYawToPose(new Pose2d(s_Swerve.getPose().getX(), s_Swerve.getPose().getY(), Rotation2d.fromDegrees(0)), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromDegrees(0))));
+      return Optional.of(PhotonUtils.getYawToPose(new Pose2d(s_Swerve.getState().Pose.getX(), s_Swerve.getState().Pose.getX(), Rotation2d.fromDegrees(0)), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromDegrees(0))));
     }
     else{
       return Optional.empty();
@@ -190,26 +190,26 @@ public class Vision extends SubsystemBase {
     else{
       if(Robot.getRedAlliance()){
         if(Robot.getFront()){
-          return PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromDegrees(0))).rotateBy(Rotation2d.fromDegrees(180)).getDegrees() * 8.0 / 42.0;
+          return PhotonUtils.getYawToPose(s_Swerve.getState().Pose, new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromDegrees(0))).rotateBy(Rotation2d.fromDegrees(180)).getDegrees() * 8.0 / 42.0;
         }
         else{
-          return PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromDegrees(0))).getDegrees() * 8.0 / 42.0;
+          return PhotonUtils.getYawToPose(s_Swerve.getState().Pose, new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromDegrees(0))).getDegrees() * 8.0 / 42.0;
         }
       }
       else{
         if(Robot.getFront()){
-          return PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromDegrees(0))).getDegrees() * 8.0 / 42.0;
+          return PhotonUtils.getYawToPose(s_Swerve.getState().Pose, new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromDegrees(0))).getDegrees() * 8.0 / 42.0;
         }
         else{
-          return PhotonUtils.getYawToPose(s_Swerve.getPose(), new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromDegrees(0))).rotateBy(Rotation2d.fromDegrees(180)).getDegrees() * 8.0 / 42.0;
+          return PhotonUtils.getYawToPose(s_Swerve.getState().Pose, new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromDegrees(0))).rotateBy(Rotation2d.fromDegrees(180)).getDegrees() * 8.0 / 42.0;
         }
       }
     }
   }
 
   public double getDistance(){
-    robotX = s_Swerve.getPose().getX();
-    robotY = s_Swerve.getPose().getY();
+    robotX = s_Swerve.getState().Pose.getX();
+    robotY = s_Swerve.getState().Pose.getY();
           
     if(Robot.getRedAlliance()){
       xFlyWrist = (targetX - robotX) - (fieldRelVelocityX * velocityCompWrist);
@@ -270,7 +270,7 @@ public class Vision extends SubsystemBase {
         }
         if(!frontPoseBad && frontResult.getBestTarget().getPoseAmbiguity() < 0.2 && frontResult.getBestTarget().getPoseAmbiguity() >= 0){
           ambiguity = frontResult.getBestTarget().getPoseAmbiguity();
-          s_Swerve.updatePoseVision(pose.get());
+          //s_Swerve.updatePoseVision(pose.get());
         }
         Logger.recordOutput("Front Cam Used Tag", pose.get().targetsUsed.get(0).getFiducialId());
       }
@@ -285,7 +285,7 @@ public class Vision extends SubsystemBase {
           }
         }
         if(!backPoseBad && backResult.getBestTarget().getPoseAmbiguity() < 0.2 && backResult.getBestTarget().getPoseAmbiguity() >= 0 && backResult.getBestTarget().getPoseAmbiguity() < ambiguity){
-          s_Swerve.updatePoseVision(pose.get());
+          //s_Swerve.updatePoseVision(pose.get());
         }
         Logger.recordOutput("Back Cam Used Tag", pose.get().targetsUsed.get(0).getFiducialId());
       }
@@ -300,12 +300,12 @@ public class Vision extends SubsystemBase {
     }
 
     if(Robot.getRedAlliance() && DriverStation.isAutonomousEnabled()){
-      fieldRelVelocityX = ChassisSpeeds.fromRobotRelativeSpeeds(s_Swerve.getSpeed(), Rotation2d.fromDegrees(s_Swerve.getGyroYaw().getDegrees())).vxMetersPerSecond;
-      fieldRelVelocityY = ChassisSpeeds.fromRobotRelativeSpeeds(s_Swerve.getSpeed(), Rotation2d.fromDegrees(s_Swerve.getGyroYaw().getDegrees())).vyMetersPerSecond;
+      fieldRelVelocityX = ChassisSpeeds.fromRobotRelativeSpeeds(s_Swerve.getState().speeds, Rotation2d.fromDegrees(s_Swerve.getPigeon2().getAngle())).vxMetersPerSecond;
+      fieldRelVelocityY = ChassisSpeeds.fromRobotRelativeSpeeds(s_Swerve.getState().speeds, Rotation2d.fromDegrees(s_Swerve.getPigeon2().getAngle())).vyMetersPerSecond;
     }
     else{
-      fieldRelVelocityX = ChassisSpeeds.fromRobotRelativeSpeeds(s_Swerve.getSpeed(), Rotation2d.fromDegrees(s_Swerve.getGyroYaw().getDegrees() + 180)).vxMetersPerSecond;
-      fieldRelVelocityY = ChassisSpeeds.fromRobotRelativeSpeeds(s_Swerve.getSpeed(), Rotation2d.fromDegrees(s_Swerve.getGyroYaw().getDegrees() + 180)).vyMetersPerSecond;
+      fieldRelVelocityX = ChassisSpeeds.fromRobotRelativeSpeeds(s_Swerve.getState().speeds, Rotation2d.fromDegrees(s_Swerve.getPigeon2().getAngle() + 180)).vxMetersPerSecond;
+      fieldRelVelocityY = ChassisSpeeds.fromRobotRelativeSpeeds(s_Swerve.getState().speeds, Rotation2d.fromDegrees(s_Swerve.getPigeon2().getAngle() + 180)).vyMetersPerSecond;
     }
 
     velocityCompAngle = compAngleEntry.getDouble(velocityCompAngle);

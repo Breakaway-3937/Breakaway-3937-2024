@@ -8,15 +8,15 @@ import com.ctre.phoenix6.Orchestra;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
-import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 public class Music extends Command {
-  private final Swerve s_Swerve;
+  private final CommandSwerveDrivetrain s_Swerve;
   private final Orchestra orchestra;
   private int count;
   private double time;
   /** Creates a new Music. */
-  public Music(Swerve s_Swerve) {
+  public Music(CommandSwerveDrivetrain s_Swerve) {
     this.s_Swerve = s_Swerve;
     orchestra = new Orchestra();
     // Use addRequirements() here to declare subsystem dependencies.
@@ -28,8 +28,8 @@ public class Music extends Command {
   public void initialize() {
     count = (int) (Math.random() * 12);
     for(int i = 0; i < 4; i++){
-      orchestra.addInstrument(s_Swerve.mSwerveMods[i].getDriveMotor());
-      orchestra.addInstrument(s_Swerve.mSwerveMods[i].getAngleMotor());
+      orchestra.addInstrument(s_Swerve.getModule(i).getDriveMotor());
+      orchestra.addInstrument(s_Swerve.getModule(i).getSteerMotor());
     }
     orchestra.addInstrument(Robot.robotContainer.s_Intake.getLoaderMotor());
     orchestra.addInstrument(Robot.robotContainer.s_Shooter.getShooterMotors().getFirst());
