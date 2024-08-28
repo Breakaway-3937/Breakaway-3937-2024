@@ -7,6 +7,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -14,6 +15,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants.Swerve;
@@ -71,8 +73,8 @@ public class RobotContainer {
     public final Elevator s_Elevator = new Elevator();
 
     /* Commands */
-    public final Music c_Music = new Music(s_Swerve);
-    private final Align c_Align = new Align(s_Swerve, s_Vision, () -> translationController.getRawAxis(translationAxis), () -> translationController.getRawAxis(strafeAxis), () -> rotationController.getRawAxis(rotationAxis), this::robotRelative);
+    //public final Music c_Music = new Music(s_Swerve);
+    //private final Align c_Align = new Align(s_Swerve, s_Vision, () -> translationController.getRawAxis(translationAxis), () -> translationController.getRawAxis(strafeAxis), () -> rotationController.getRawAxis(rotationAxis), this::robotRelative);
     public final RunNote c_RunNote = new RunNote(s_Intake, s_Shooter, xboxController);
     public final AutoRunNote c_AutoRunNote = new AutoRunNote(s_Intake, s_Shooter);
     private final RunElevator c_RunElevator = new RunElevator(s_Elevator, xboxController);
@@ -113,12 +115,19 @@ public class RobotContainer {
         translationButton.onTrue(new InstantCommand(() -> s_Swerve.getPigeon2().setYaw(0)));
         rotationButton.whileTrue(c_Align);
         button7.whileTrue(new InstantCommand(() -> robotRelative = true)).onFalse(new InstantCommand(() -> robotRelative = false));
-        button8.whileTrue(c_Align);
+        //button8.whileTrue(c_Align);
         leftStick.onTrue(new InstantCommand(() -> s_Shooter.setLongShooting()));
         rightStick.onTrue(new InstantCommand(() -> s_Shooter.setAutoShooting()));
         leftStick.and(rightStick).onTrue(new InstantCommand(() -> s_Shooter.setPoopShooting()));
         right.onTrue(new InstantCommand(() -> s_Shooter.setSubShooting()));
         left.onTrue(new InstantCommand(() -> s_Shooter.setPodiumShooting()));
+
+        s_Swerve.setDefaultCommand( // Drivetrain will execute this command periodically
+        s_Swerve.applyRequest(() -> drive.withVelocityX(translationController.getY() * MaxSpeed)// negative Y (forward)
+            .withVelocityY(translationController.getX() * MaxSpeed) // Drive left with negative X (left)
+            .withRotationalRate(rotationController.getX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+        ).ignoringDisable(true));
+
     }
 
     public boolean robotRelative(){
