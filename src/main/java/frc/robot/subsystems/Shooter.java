@@ -303,7 +303,7 @@ public class Shooter extends SubsystemBase {
     Logger.recordOutput("Wrist", getWrist());
 
     if(DriverStation.isAutonomous()){
-      InstantCommand com = new InstantCommand()
+      InstantCommand com = new InstantCommand(); //TODO Ask Ethan What this is
     }
 
     if(!DriverStation.isAutonomous() && !RunElevator.deadShooter && !longShooting && !flag){
