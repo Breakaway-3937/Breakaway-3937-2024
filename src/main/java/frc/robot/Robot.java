@@ -26,8 +26,6 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * project.
  */
 public class Robot extends LoggedRobot {
-  public static final CTREConfigs ctreConfigs = new CTREConfigs();
-
   private Command autonomousCommand;
 
   public static RobotContainer robotContainer;
@@ -479,7 +477,7 @@ public class Robot extends LoggedRobot {
 
 
 
-
+// Luke is Coach's Teddy Bear 
 
 
 
