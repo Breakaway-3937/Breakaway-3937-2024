@@ -14,9 +14,12 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
@@ -87,7 +90,11 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     }
 
     public void addVisionMeasurement(Pose2d pose, double timeStamp) {
-        this.addVisionMeasurement(pose, timeStamp);
+        super.addVisionMeasurement(pose, timeStamp, calculateVisionStdDevs(pose));
+    }
+
+    public Matrix<N3, N1> calculateVisionStdDevs(Pose2d pose) {
+        return null;
     }
 
     public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
