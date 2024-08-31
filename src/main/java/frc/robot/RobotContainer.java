@@ -101,12 +101,20 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
+        if(Robot.isSimulation()) {
         s_Swerve.setDefaultCommand( // Drivetrain will execute this command periodically
-        s_Swerve.applyRequest(() -> drive.withVelocityX(-translationController.getRawAxis(translationAxis) * MaxSpeed) // Drive forward with
-                                                                                           // negative Y (forward)
-            .withVelocityY(-translationController.getRawAxis(strafeAxis) * MaxSpeed) // Drive left with negative X (left)
-            .withRotationalRate(rotationController.getRawAxis(rotationAxis) * MaxAngularRate) // Drive counterclockwise with negative X (left)
+        s_Swerve.applyRequest(() -> drive.withVelocityX(-xboxController.getRawAxis(translationAxis) * MaxSpeed) 
+                                         .withVelocityY(-xboxController.getRawAxis(0) * MaxSpeed) 
+                                         .withRotationalRate(xboxController.getRawAxis(4) * (3*3.14)))); 
+        }
+        else {
+        s_Swerve.setDefaultCommand( // Drivetrain will execute this command periodically
+        s_Swerve.applyRequest(() -> drive.withVelocityX(-translationController.getRawAxis(translationAxis) * MaxSpeed) 
+                                         .withVelocityY(-translationController.getRawAxis(strafeAxis) * MaxSpeed) 
+                                         .withRotationalRate(rotationController.getRawAxis(rotationAxis) * MaxAngularRate) 
         ));
+        }
+        
 
         /* Driver Buttons */
         translationButton.onTrue(new InstantCommand(() -> s_Swerve.getPigeon2().setYaw(0)));

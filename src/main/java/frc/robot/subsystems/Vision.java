@@ -13,6 +13,9 @@ import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonUtils;
+import org.photonvision.simulation.PhotonCameraSim;
+import org.photonvision.simulation.SimCameraProperties;
+import org.photonvision.simulation.VisionSystemSim;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
@@ -28,14 +31,18 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
+import frc.robot.RobotContainer;
 
 public class Vision extends SubsystemBase {
     private final PhotonCamera frontCamera, backCamera, noteCamera;
     private AprilTagFieldLayout atfl;
     private final PhotonPoseEstimator frontPoseEstimator, backPoseEstimator;
+    private PhotonCameraSim cameraSim;
+    private VisionSystemSim visionSim;
     private final CommandSwerveDrivetrain s_Swerve;
     private double targetX, targetY, robotX, robotY;
     private final GenericEntry distanceEntry, targetID, compAngleEntry, compWristEntry;
@@ -73,6 +80,28 @@ public class Vision extends SubsystemBase {
 
     compAngleEntry = Shuffleboard.getTab("Shooter").add("Comp Angle Offset", velocityCompAngle).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1)).withPosition(0, 2).getEntry();
     compWristEntry = Shuffleboard.getTab("Shooter").add("Comp Wrist Offset", velocityCompWrist).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1)).withPosition(2, 2).getEntry();
+  
+    if(Robot.isSimulation()) {
+       // Create the vision system simulation which handles cameras and targets on the field.
+            visionSim = new VisionSystemSim("main");
+            // Add all the AprilTags inside the tag layout as visible targets to this simulated field.
+            visionSim.addAprilTags(atfl);
+            // Create simulated camera properties. These can be set to mimic your actual camera.
+            var cameraProp = new SimCameraProperties();
+            cameraProp.setCalibration(960, 720, Rotation2d.fromDegrees(90));
+            cameraProp.setCalibError(0.35, 0.10);
+            cameraProp.setFPS(15);
+            cameraProp.setAvgLatencyMs(50);
+            cameraProp.setLatencyStdDevMs(15);
+            // Create a PhotonCameraSim which will update the linked PhotonCamera's values with visible
+            // targets.
+            cameraSim = new PhotonCameraSim(frontCamera, cameraProp);
+            // Add the simulated camera to view the targets on this simulated field.
+            visionSim.addCamera(cameraSim, Constants.Vision.FRONT_CAMERA_TRANSFORM);
+
+            cameraSim.enableDrawWireframe(true);
+    }
+  
   }
 
   public Optional<Rotation2d> getRotationTargetOverride(){
@@ -256,8 +285,30 @@ public class Vision extends SubsystemBase {
     }
   }
 
+  public void simulationPeriodic(Pose2d robotSimPose) {
+        visionSim.update(robotSimPose);
+    }
+
+    /** Reset pose history of the robot in the vision system simulation. */
+    public void resetSimPose(Pose2d pose) {
+        if (Robot.isSimulation()) visionSim.resetRobotPose(pose);
+    }
+
+    /** A Field2d for visualizing our robot and objects on the field. */
+    public Field2d getSimDebugField() {
+        if (!Robot.isSimulation()) return null;
+        return visionSim.getDebugField();
+    }
+
   @Override
   public void periodic() {
+    if(Robot.isSimulation()) {
+      var debugField = getSimDebugField();
+      simulationPeriodic(s_Swerve.getState().Pose);
+      debugField.getObject("EstimatedRobot").setPose(s_Swerve.getState().Pose);
+    }
+
+
     // This method will be called once per scheduler run
     var frontResult = frontCamera.getLatestResult();
     if(frontResult.hasTargets()){
@@ -287,7 +338,7 @@ public class Vision extends SubsystemBase {
         if(!backPoseBad && backResult.getBestTarget().getPoseAmbiguity() < 0.2 && backResult.getBestTarget().getPoseAmbiguity() >= 0 && backResult.getBestTarget().getPoseAmbiguity() < ambiguity){
           //s_Swerve.updatePoseVision(pose.get());
         }
-        Logger.recordOutput("Back Cam Used Tag", pose.get().targetsUsed.get(0).getFiducialId());
+        Logger.recordOutput("Back Cam Used Tag", pose.get().targetsUsed.get(0).getFiducialId());        
       }
     }
 
