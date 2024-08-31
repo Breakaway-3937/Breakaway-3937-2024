@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
 
@@ -23,10 +24,14 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -53,6 +58,7 @@ public class Vision extends SubsystemBase {
     private PhotonTrackedTarget target;
     private boolean frontPoseBad, backPoseBad = false;
     private double ambiguity, targetYaw = Double.POSITIVE_INFINITY;
+    private ArrayList<Pose3d> usedTags = new ArrayList<Pose3d>();
 
 
   /** Creates a new Vision. */
@@ -323,7 +329,12 @@ public class Vision extends SubsystemBase {
           ambiguity = frontResult.getBestTarget().getPoseAmbiguity();
           //s_Swerve.updatePoseVision(pose.get());
         }
-        Logger.recordOutput("Front Cam Used Tag", pose.get().targetsUsed.get(0).getFiducialId());
+        for(var targets : pose.get().targetsUsed){
+          usedTags.add(frontPoseEstimator.getFieldTags().getTagPose(targets.getFiducialId()).get());
+        }
+        
+        //Logger.recordOutput("Front Cam Used Tag", pose.get().targetsUsed.get(0).getFiducialId());
+        Logger.recordOutput("Front Cam Used Tags", usedTags.toArray(new Pose3d[usedTags.size()]));
       }
     }
     var backResult = backCamera.getLatestResult();
@@ -337,8 +348,13 @@ public class Vision extends SubsystemBase {
         }
         if(!backPoseBad && backResult.getBestTarget().getPoseAmbiguity() < 0.2 && backResult.getBestTarget().getPoseAmbiguity() >= 0 && backResult.getBestTarget().getPoseAmbiguity() < ambiguity){
           //s_Swerve.updatePoseVision(pose.get());
+          s_Swerve.addVisionMeasurement(pose.get().estimatedPose.toPose2d(), pose.get().timestampSeconds, Constants.Vision.TAG_VISION_STDS_BACK);
         }
-        Logger.recordOutput("Back Cam Used Tag", pose.get().targetsUsed.get(0).getFiducialId());        
+        for(var targets : pose.get().targetsUsed){
+          usedTags.add(backPoseEstimator.getFieldTags().getTagPose(targets.getFiducialId()).get());
+        }
+        //Logger.recordOutput("Back Cam Used Tag",); 
+        Logger.recordOutput("Back Cam Used Tags", usedTags.toArray(new Pose3d[usedTags.size()]));
       }
     }
 
