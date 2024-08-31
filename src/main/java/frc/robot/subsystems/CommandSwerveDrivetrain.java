@@ -89,14 +89,6 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         return m_kinematics.toChassisSpeeds(getState().ModuleStates);
     }
 
-    public void addVisionMeasurement(Pose2d pose, double timeStamp) {
-        super.addVisionMeasurement(pose, timeStamp, calculateVisionStdDevs(pose));
-    }
-
-    public Matrix<N3, N1> calculateVisionStdDevs(Pose2d pose) {
-        return null;
-    }
-
     public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
         return run(() -> this.setControl(requestSupplier.get()));
     }
