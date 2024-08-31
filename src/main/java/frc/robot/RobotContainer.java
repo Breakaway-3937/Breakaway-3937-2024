@@ -101,7 +101,7 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
-        if(Robot.isSimulation()) {
+        if(Constants.USE_XBOX_CONTROLLER) {
         s_Swerve.setDefaultCommand( // Drivetrain will execute this command periodically
         s_Swerve.applyRequest(() -> drive.withVelocityX(-xboxController.getRawAxis(translationAxis) * MaxSpeed) 
                                          .withVelocityY(-xboxController.getRawAxis(0) * MaxSpeed) 

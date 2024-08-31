@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.RobotController;
 public final class Constants {
     public static final boolean ROBOT_RELATIVE = false;
     public static final boolean OPEN_LOOP = true;
+    public static final boolean USE_XBOX_CONTROLLER = false;
     public static final int CANDLE_ID = 25;
     public static final int PDH_ID = 26;
     public static final int NUM_LEDS = 26;
