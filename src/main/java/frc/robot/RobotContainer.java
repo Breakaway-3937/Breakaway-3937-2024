@@ -26,11 +26,8 @@ import frc.robot.subsystems.*;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-    private double MaxSpeed = TunerConstants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed
-    private double MaxAngularRate = (16 - 6) * Math.PI; // 3/4 of a rotation per second max angular velocity
-
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-      .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+      .withDeadband(Constants.Swerve.MAX_SPEED * 0.1).withRotationalDeadband(Constants.Swerve.MAX_ANGULAR_RATE * 0.1) // Add a 10% deadband
       .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
                                                                // driving in open loop
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
@@ -59,7 +56,7 @@ public class RobotContainer {
     private final POVButton right = new POVButton(xboxController, Constants.Controllers.RIGHT);
 
     /* Subsystems */
-    public final CommandSwerveDrivetrain s_Swerve = TunerConstants.DriveTrain; // My drivetrain
+    public final Swerve s_Swerve = TunerConstants.DriveTrain; // My drivetrain
     public final LED s_LED = new LED();
     public final Vision s_Vision = new Vision(s_Swerve);
     public final Shooter s_Shooter = new Shooter();
@@ -74,7 +71,7 @@ public class RobotContainer {
     private final RunElevator c_RunElevator = new RunElevator(s_Elevator, xboxController);
 
     /* Telemetry */
-    private final Telemetry logger = new Telemetry(MaxSpeed);
+    private final Telemetry logger = new Telemetry(Constants.Swerve.MAX_SPEED);
 
     private final SendableChooser<Command> autoChooser;
 
@@ -82,7 +79,7 @@ public class RobotContainer {
     public RobotContainer() {
         NamedCommands.registerCommand("Shoot", new InstantCommand(() -> s_Shooter.setAutoFire(true)));
         NamedCommands.registerCommand("Intake", new InstantCommand(() -> s_Intake.setAutoIntake(true)));
-        //NamedCommands.registerCommand("Vision", new InstantCommand(() -> Swerve.setAddVisionMeasurement(true))); //FIXME
+        NamedCommands.registerCommand("Vision", new InstantCommand(() -> Vision.setAddVisionMeasurement(true)));
         NamedCommands.registerCommand("Subwoofer", new InstantCommand(() -> s_Shooter.setSubShooting()));
         NamedCommands.registerCommand("Auto", new InstantCommand(() -> s_Shooter.setAutoShooting()));
         NamedCommands.registerCommand("Force Fire", new InstantCommand(() -> s_Shooter.setForceFire(true)));
@@ -102,17 +99,17 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         if(Constants.USE_XBOX_CONTROLLER) {
-        s_Swerve.setDefaultCommand( // Drivetrain will execute this command periodically
-        s_Swerve.applyRequest(() -> drive.withVelocityX(-xboxController.getRawAxis(translationAxis) * MaxSpeed) 
-                                         .withVelocityY(-xboxController.getRawAxis(0) * MaxSpeed) 
-                                         .withRotationalRate(xboxController.getRawAxis(4) * (3*3.14)))); 
+            s_Swerve.setDefaultCommand( // Drivetrain will execute this command periodically
+            s_Swerve.applyRequest(() -> drive.withVelocityX(-xboxController.getRawAxis(translationAxis) * Constants.Swerve.MAX_SPEED) 
+                                             .withVelocityY(-xboxController.getRawAxis(0) * Constants.Swerve.MAX_SPEED) 
+                                             .withRotationalRate(xboxController.getRawAxis(4) * Constants.Swerve.MAX_ANGULAR_RATE)));
         }
         else {
-        s_Swerve.setDefaultCommand( // Drivetrain will execute this command periodically
-        s_Swerve.applyRequest(() -> drive.withVelocityX(-translationController.getRawAxis(translationAxis) * MaxSpeed) 
-                                         .withVelocityY(-translationController.getRawAxis(strafeAxis) * MaxSpeed) 
-                                         .withRotationalRate(rotationController.getRawAxis(rotationAxis) * MaxAngularRate) 
-        ));
+            s_Swerve.setDefaultCommand( // Drivetrain will execute this command periodically
+            s_Swerve.applyRequest(() -> drive.withVelocityX(-translationController.getRawAxis(translationAxis) * Constants.Swerve.MAX_SPEED) 
+                                             .withVelocityY(-translationController.getRawAxis(strafeAxis) * Constants.Swerve.MAX_SPEED) 
+                                             .withRotationalRate(rotationController.getRawAxis(rotationAxis) * Constants.Swerve.MAX_ANGULAR_RATE) 
+            ));
         }
         
 
