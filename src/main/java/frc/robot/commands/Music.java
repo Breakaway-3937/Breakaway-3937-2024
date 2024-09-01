@@ -8,15 +8,15 @@ import com.ctre.phoenix6.Orchestra;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
-import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Swerve;
 
 public class Music extends Command {
-  private final CommandSwerveDrivetrain s_Swerve;
+  private final Swerve s_Swerve;
   private final Orchestra orchestra;
   private int count;
   private double time;
   /** Creates a new Music. */
-  public Music(CommandSwerveDrivetrain s_Swerve) {
+  public Music(Swerve s_Swerve) {
     this.s_Swerve = s_Swerve;
     orchestra = new Orchestra();
     // Use addRequirements() here to declare subsystem dependencies.
