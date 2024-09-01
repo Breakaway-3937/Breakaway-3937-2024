@@ -18,12 +18,11 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Robot;
-import frc.robot.Constants.Swerve;
-import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Vision;
 
 public class Align extends Command {
-  private final CommandSwerveDrivetrain s_Swerve;
+  private final Swerve s_Swerve;
   private final Vision s_Vision;
   private final DoubleSupplier translationSup;
   private final DoubleSupplier strafeSup;
@@ -39,7 +38,7 @@ public class Align extends Command {
                                                                       .withVelocityY(0);
 
   /** Creates a new Align. */
-  public Align(CommandSwerveDrivetrain s_Swerve, Vision s_Vision, DoubleSupplier translationSup, DoubleSupplier strafeSup, DoubleSupplier rotationSup, BooleanSupplier robotCentricSup) {
+  public Align(Swerve s_Swerve, Vision s_Vision, DoubleSupplier translationSup, DoubleSupplier strafeSup, DoubleSupplier rotationSup, BooleanSupplier robotCentricSup) {
     this.s_Swerve = s_Swerve;
     this.s_Vision = s_Vision;
     // Use addRequirements() here to declare subsystem dependencies.
