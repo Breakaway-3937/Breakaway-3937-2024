@@ -48,7 +48,7 @@ public class Vision extends SubsystemBase {
     private final PhotonPoseEstimator frontPoseEstimator, backPoseEstimator;
     private PhotonCameraSim cameraSim;
     private VisionSystemSim visionSim;
-    private final CommandSwerveDrivetrain s_Swerve;
+    private final Swerve s_Swerve;
     private double targetX, targetY, robotX, robotY;
     private final GenericEntry distanceEntry, targetID, compAngleEntry, compWristEntry;
     private double fieldRelVelocityX, fieldRelVelocityY;
@@ -57,12 +57,14 @@ public class Vision extends SubsystemBase {
     private double velocityCompWrist = 0.4;
     private PhotonTrackedTarget target;
     private boolean frontPoseBad, backPoseBad = false;
+    private static boolean addVisionMeasurement = false;
     private double ambiguity, targetYaw = Double.POSITIVE_INFINITY;
-    private ArrayList<Pose3d> usedTags = new ArrayList<Pose3d>();
+    private Pose3d[] usedTagsFront;
+    private Pose3d[] usedTagsBack;
 
 
   /** Creates a new Vision. */
-  public Vision(CommandSwerveDrivetrain s_Swerve) {
+  public Vision(Swerve s_Swerve) {
     this.s_Swerve = s_Swerve;
 
     frontCamera = new PhotonCamera(Constants.Vision.FRONT_CAMERA_NAME);
@@ -273,6 +275,10 @@ public class Vision extends SubsystemBase {
   public boolean getNoteTargets(){
     return noteCamera.getLatestResult().hasTargets();
   }
+
+  public static void setAddVisionMeasurement(boolean newAddVisionMeasurement){
+    addVisionMeasurement = newAddVisionMeasurement;
+  }
   
   public Optional<EstimatedRobotPose> getFrontEstimatedGlobalPose(){
     return frontPoseEstimator.update();
@@ -327,14 +333,18 @@ public class Vision extends SubsystemBase {
         }
         if(!frontPoseBad && frontResult.getBestTarget().getPoseAmbiguity() < 0.2 && frontResult.getBestTarget().getPoseAmbiguity() >= 0){
           ambiguity = frontResult.getBestTarget().getPoseAmbiguity();
-          //s_Swerve.updatePoseVision(pose.get());
+          if(!DriverStation.isAutonomousEnabled() || addVisionMeasurement) {
+            s_Swerve.addVisionMeasurement(pose.get().estimatedPose.toPose2d(), pose.get().timestampSeconds, Constants.Vision.TAG_VISION_STDS_FRONT);
+          }
         }
-        for(var targets : pose.get().targetsUsed){
-          usedTags.add(frontPoseEstimator.getFieldTags().getTagPose(targets.getFiducialId()).get());
+
+        for(int i = 0; i < pose.get().targetsUsed.size(); i++){
+          usedTagsFront = new Pose3d[pose.get().targetsUsed.size()];
+          usedTagsFront[i] = frontPoseEstimator.getFieldTags().getTagPose(pose.get().targetsUsed.get(i).getFiducialId()).get();
         }
         
         //Logger.recordOutput("Front Cam Used Tag", pose.get().targetsUsed.get(0).getFiducialId());
-        Logger.recordOutput("Front Cam Used Tags", usedTags.toArray(new Pose3d[usedTags.size()]));
+        Logger.recordOutput("Front Cam Used Tags", usedTagsFront);
       }
     }
     var backResult = backCamera.getLatestResult();
@@ -347,14 +357,18 @@ public class Vision extends SubsystemBase {
           }
         }
         if(!backPoseBad && backResult.getBestTarget().getPoseAmbiguity() < 0.2 && backResult.getBestTarget().getPoseAmbiguity() >= 0 && backResult.getBestTarget().getPoseAmbiguity() < ambiguity){
-          //s_Swerve.updatePoseVision(pose.get());
-          s_Swerve.addVisionMeasurement(pose.get().estimatedPose.toPose2d(), pose.get().timestampSeconds, Constants.Vision.TAG_VISION_STDS_BACK);
+          if(!DriverStation.isAutonomousEnabled() || addVisionMeasurement){
+            s_Swerve.addVisionMeasurement(pose.get().estimatedPose.toPose2d(), pose.get().timestampSeconds, Constants.Vision.TAG_VISION_STDS_BACK);
+          }
         }
-        for(var targets : pose.get().targetsUsed){
-          usedTags.add(backPoseEstimator.getFieldTags().getTagPose(targets.getFiducialId()).get());
+
+        for(int i = 0; i < pose.get().targetsUsed.size(); i++){
+          usedTagsBack = new Pose3d[pose.get().targetsUsed.size()];
+          usedTagsBack[i] = backPoseEstimator.getFieldTags().getTagPose(pose.get().targetsUsed.get(i).getFiducialId()).get();
         }
+
         //Logger.recordOutput("Back Cam Used Tag",); 
-        Logger.recordOutput("Back Cam Used Tags", usedTags.toArray(new Pose3d[usedTags.size()]));
+        Logger.recordOutput("Back Cam Used Tags", usedTagsBack);
       }
     }
 
@@ -367,12 +381,12 @@ public class Vision extends SubsystemBase {
     }
 
     if(Robot.getRedAlliance() && DriverStation.isAutonomousEnabled()){
-      fieldRelVelocityX = ChassisSpeeds.fromRobotRelativeSpeeds(s_Swerve.getState().speeds, Rotation2d.fromDegrees(s_Swerve.getPigeon2().getAngle())).vxMetersPerSecond;
-      fieldRelVelocityY = ChassisSpeeds.fromRobotRelativeSpeeds(s_Swerve.getState().speeds, Rotation2d.fromDegrees(s_Swerve.getPigeon2().getAngle())).vyMetersPerSecond;
+      fieldRelVelocityX = ChassisSpeeds.fromRobotRelativeSpeeds(s_Swerve.getState().speeds, Rotation2d.fromDegrees(s_Swerve.getHeading())).vxMetersPerSecond;
+      fieldRelVelocityY = ChassisSpeeds.fromRobotRelativeSpeeds(s_Swerve.getState().speeds, Rotation2d.fromDegrees(s_Swerve.getHeading())).vyMetersPerSecond;
     }
     else{
-      fieldRelVelocityX = ChassisSpeeds.fromRobotRelativeSpeeds(s_Swerve.getState().speeds, Rotation2d.fromDegrees(s_Swerve.getPigeon2().getAngle() + 180)).vxMetersPerSecond;
-      fieldRelVelocityY = ChassisSpeeds.fromRobotRelativeSpeeds(s_Swerve.getState().speeds, Rotation2d.fromDegrees(s_Swerve.getPigeon2().getAngle() + 180)).vyMetersPerSecond;
+      fieldRelVelocityX = ChassisSpeeds.fromRobotRelativeSpeeds(s_Swerve.getState().speeds, Rotation2d.fromDegrees(s_Swerve.getHeading() + 180)).vxMetersPerSecond;
+      fieldRelVelocityY = ChassisSpeeds.fromRobotRelativeSpeeds(s_Swerve.getState().speeds, Rotation2d.fromDegrees(s_Swerve.getHeading() + 180)).vyMetersPerSecond;
     }
 
     velocityCompAngle = compAngleEntry.getDouble(velocityCompAngle);
