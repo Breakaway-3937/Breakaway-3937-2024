@@ -9,6 +9,7 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.RobotController;
+import frc.robot.generated.TunerConstants;
 
 public final class Constants {
     public static final boolean ROBOT_RELATIVE = false;
@@ -51,6 +52,9 @@ public final class Constants {
 
     public static final class Swerve {
         public static final Vector<N3> STATE_STDS = VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5));
+
+        public static final double MAX_SPEED = TunerConstants.kSpeedAt12VoltsMps;
+        public static final double MAX_ANGULAR_RATE = (!Robot.isSimulation()) ? (16 - 6) * Math.PI : 3 * Math.PI;
     }
 
     public static final class Intake {
