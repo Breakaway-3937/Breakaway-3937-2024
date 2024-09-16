@@ -106,8 +106,8 @@ public class RobotContainer {
         }
         else {
             s_Swerve.setDefaultCommand( // Drivetrain will execute this command periodically
-            s_Swerve.applyRequest(() -> drive.withVelocityX(-translationController.getRawAxis(translationAxis) * Constants.Swerve.MAX_SPEED) 
-                                             .withVelocityY(-translationController.getRawAxis(strafeAxis) * Constants.Swerve.MAX_SPEED) 
+            s_Swerve.applyRequest(() -> drive.withVelocityX(translationController.getRawAxis(translationAxis) * Constants.Swerve.MAX_SPEED) 
+                                             .withVelocityY(translationController.getRawAxis(strafeAxis) * Constants.Swerve.MAX_SPEED) 
                                              .withRotationalRate(rotationController.getRawAxis(rotationAxis) * Constants.Swerve.MAX_ANGULAR_RATE) 
             ));
         }
