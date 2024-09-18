@@ -336,7 +336,7 @@ public class Vision extends SubsystemBase {
         }
 
         for(int i = 0; i < pose.get().targetsUsed.size(); i++){
-          usedTagsFront = new Pose3d[pose.get().targetsUsed.size()];
+          //usedTagsFront = new Pose3d[pose.get().targetsUsed.size()];
           usedTagsFront[i] = frontPoseEstimator.getFieldTags().getTagPose(pose.get().targetsUsed.get(i).getFiducialId()).get();
         }
         
@@ -360,7 +360,7 @@ public class Vision extends SubsystemBase {
         }
 
         for(int i = 0; i < pose.get().targetsUsed.size(); i++){
-          usedTagsBack = new Pose3d[pose.get().targetsUsed.size()];
+          //usedTagsBack = new Pose3d[pose.get().targetsUsed.size()];
           usedTagsBack[i] = backPoseEstimator.getFieldTags().getTagPose(pose.get().targetsUsed.get(i).getFiducialId()).get();
         }
 
