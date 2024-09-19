@@ -24,14 +24,12 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -40,7 +38,6 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
-import frc.robot.RobotContainer;
 
 public class Vision extends SubsystemBase {
     private final PhotonCamera frontCamera, backCamera, noteCamera;
@@ -339,7 +336,7 @@ public class Vision extends SubsystemBase {
         }
 
         for(int i = 0; i < pose.get().targetsUsed.size(); i++){
-          usedTagsFront = new Pose3d[pose.get().targetsUsed.size()];
+          //usedTagsFront = new Pose3d[pose.get().targetsUsed.size()];
           usedTagsFront[i] = frontPoseEstimator.getFieldTags().getTagPose(pose.get().targetsUsed.get(i).getFiducialId()).get();
         }
         
@@ -365,7 +362,7 @@ public class Vision extends SubsystemBase {
         }
 
         for(int i = 0; i < pose.get().targetsUsed.size(); i++){
-          usedTagsBack = new Pose3d[pose.get().targetsUsed.size()];
+          //usedTagsBack = new Pose3d[pose.get().targetsUsed.size()];
           usedTagsBack[i] = backPoseEstimator.getFieldTags().getTagPose(pose.get().targetsUsed.get(i).getFiducialId()).get();
         }
 
@@ -374,6 +371,7 @@ public class Vision extends SubsystemBase {
         }
 
         //Logger.recordOutput("Back Cam Used Tag",); 
+        Logger.recordOutput("Back Cam Used Tags", usedTagsBack);
       }
     }
 
