@@ -54,7 +54,7 @@ public final class Constants {
         public static final Vector<N3> STATE_STDS = VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5));
 
         public static final double MAX_SPEED = TunerConstants.kSpeedAt12VoltsMps;
-        public static final double MAX_ANGULAR_RATE = (!Robot.isSimulation()) ? (16 - 6) * Math.PI : 3 * Math.PI;
+        public static final double MAX_ANGULAR_RATE = (!Robot.isSimulation()) ? (6) * Math.PI : 3 * Math.PI;
     }
 
     public static final class Intake {

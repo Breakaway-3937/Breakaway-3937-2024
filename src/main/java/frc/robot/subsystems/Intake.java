@@ -35,7 +35,7 @@ public class Intake extends SubsystemBase {
   private final LaserCan babyShooter;
   private final GenericEntry popTartSensor, shooterSensor, babyShooterSensor;
   private final Follower followerRequest = new Follower(Constants.Intake.LEAD_INTAKE_MOTOR_ID, true);
-  private boolean flag, flag1, flag2, note;
+  private boolean flag, flag1, flag2, note, laserCanNull;
   public boolean autoIntake;
 
   /** Creates a new Intake. */
@@ -47,7 +47,7 @@ public class Intake extends SubsystemBase {
     configMotors();
     popTart = new AnalogInput(Constants.Intake.POP_TART_SENSOR_ID);
     shooter = new AnalogInput(Constants.Intake.SHOOTER_SENSOR_ID);
-    babyShooter = new LaserCan(30); //FIXME
+    babyShooter = new LaserCan(33); //FIXME
     popTartSensor = Shuffleboard.getTab("Intake").add("Pop-Tart Sensor", 0).withPosition(0, 0).getEntry();
     shooterSensor = Shuffleboard.getTab("Intake").add("Shooter Sensor", 0).withPosition(1, 0).getEntry();
     babyShooterSensor = Shuffleboard.getTab("Intake").add("Baby Shooter Sensor", 0).withPosition(2, 0).getEntry();
@@ -133,7 +133,13 @@ public class Intake extends SubsystemBase {
   }
 
   public boolean getBabyShooterSensor(){
-    if(babyShooter.getMeasurement().distance_mm > 4000){
+    int distance = 0;
+
+    if(!laserCanNull){
+      distance = babyShooter.getMeasurement().distance_mm;
+    }
+    
+    if(distance > 15 && distance < 150){
       return true;
     }
     else{
@@ -184,13 +190,16 @@ public class Intake extends SubsystemBase {
     popTartSensor.setDouble(popTart.getValue());
     shooterSensor.setDouble(shooter.getValue());
     if(babyShooter.getMeasurement() != null) {
+      laserCanNull = false;
       babyShooterSensor.setDouble(babyShooter.getMeasurement().distance_mm);
+      Logger.recordOutput("Baby Shooter", babyShooter.getMeasurement().distance_mm);
     }
     else {
       babyShooterSensor.setDouble(-1);
+      laserCanNull = true;
     }
     Logger.recordOutput("Pop-Tart Sensor", popTart.getValue());
     Logger.recordOutput("Shooter Sensor", shooter.getValue());
-    Logger.recordOutput("Baby Shooter", babyShooter.getMeasurement().distance_mm);
+    //Logger.recordOutput("Baby Shooter", babyShooter.getMeasurement().distance_mm);
   }
 }

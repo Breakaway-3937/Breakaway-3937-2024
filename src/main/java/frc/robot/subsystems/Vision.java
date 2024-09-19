@@ -344,7 +344,9 @@ public class Vision extends SubsystemBase {
         }
         
         //Logger.recordOutput("Front Cam Used Tag", pose.get().targetsUsed.get(0).getFiducialId());
-        Logger.recordOutput("Front Cam Used Tags", usedTagsFront);
+        if(usedTagsFront != null) {
+          //Logger.recordOutput("Front Cam Used Tags", usedTagsFront);
+        }
       }
     }
     var backResult = backCamera.getLatestResult();
@@ -367,8 +369,11 @@ public class Vision extends SubsystemBase {
           usedTagsBack[i] = backPoseEstimator.getFieldTags().getTagPose(pose.get().targetsUsed.get(i).getFiducialId()).get();
         }
 
+        if(usedTagsBack != null){
+          //Logger.recordOutput("Back Cam Used Tags", usedTagsBack);
+        }
+
         //Logger.recordOutput("Back Cam Used Tag",); 
-        Logger.recordOutput("Back Cam Used Tags", usedTagsBack);
       }
     }
 
