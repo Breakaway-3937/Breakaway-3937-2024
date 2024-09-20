@@ -27,9 +27,8 @@ import frc.robot.subsystems.*;
  */
 public class RobotContainer {
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-      .withDeadband(Constants.Swerve.MAX_SPEED * 0.1).withRotationalDeadband(Constants.Swerve.MAX_ANGULAR_RATE * 0.1) // Add a 10% deadband
-      .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
-                                                               // driving in open loop
+      .withDeadband(Constants.Swerve.MAX_SPEED * 0.1).withRotationalDeadband(Constants.Swerve.MAX_ANGULAR_RATE * 0.1)
+      .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
@@ -56,7 +55,7 @@ public class RobotContainer {
     private final POVButton right = new POVButton(xboxController, Constants.Controllers.RIGHT);
 
     /* Subsystems */
-    public final Swerve s_Swerve = TunerConstants.DriveTrain; // My drivetrain
+    public final Swerve s_Swerve = TunerConstants.DriveTrain;
     public final LED s_LED = new LED();
     public final Vision s_Vision = new Vision(s_Swerve);
     public final Shooter s_Shooter = new Shooter();
@@ -99,13 +98,13 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         if(Constants.USE_XBOX_CONTROLLER) {
-            s_Swerve.setDefaultCommand( // Drivetrain will execute this command periodically
+            s_Swerve.setDefaultCommand(
             s_Swerve.applyRequest(() -> drive.withVelocityX(-xboxController.getRawAxis(translationAxis) * Constants.Swerve.MAX_SPEED) 
-                                             .withVelocityY(-xboxController.getRawAxis(0) * Constants.Swerve.MAX_SPEED) 
-                                             .withRotationalRate(xboxController.getRawAxis(4) * Constants.Swerve.MAX_ANGULAR_RATE)));
+                                             .withVelocityY(-xboxController.getRawAxis(strafeAxis) * Constants.Swerve.MAX_SPEED) 
+                                             .withRotationalRate(xboxController.getRawAxis(rotationAxis) * Constants.Swerve.MAX_ANGULAR_RATE)));
         }
         else {
-            s_Swerve.setDefaultCommand( // Drivetrain will execute this command periodically
+            s_Swerve.setDefaultCommand(
             s_Swerve.applyRequest(() -> drive.withVelocityX(translationController.getRawAxis(translationAxis) * Constants.Swerve.MAX_SPEED) 
                                              .withVelocityY(translationController.getRawAxis(strafeAxis) * Constants.Swerve.MAX_SPEED) 
                                              .withRotationalRate(rotationController.getRawAxis(rotationAxis) * Constants.Swerve.MAX_ANGULAR_RATE) 
