@@ -1,5 +1,6 @@
 package frc.robot.generated;
 
+import com.ctre.phoenix6.configs.AudioConfigs;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
@@ -43,8 +44,8 @@ public class TunerConstants {
 
     // Initial configs for the drive and steer motors and the CANcoder; these cannot be null.
     // Some configs will be overwritten; check the `with*InitialConfigs()` API documentation.
-    private static final TalonFXConfiguration driveInitialConfigs = new TalonFXConfiguration();
-    private static final TalonFXConfiguration steerInitialConfigs = new TalonFXConfiguration()
+    private static final TalonFXConfiguration driveInitialConfigs = new TalonFXConfiguration().withAudio(new AudioConfigs().withAllowMusicDurDisable(true));
+    private static final TalonFXConfiguration steerInitialConfigs = new TalonFXConfiguration().withAudio(new AudioConfigs().withAllowMusicDurDisable(true))
         .withCurrentLimits(
             new CurrentLimitsConfigs()
                 // Swerve azimuth does not require much torque output, so we can set a relatively low
