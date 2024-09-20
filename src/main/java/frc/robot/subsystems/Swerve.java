@@ -10,13 +10,10 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -28,9 +25,9 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.generated.TunerConstants;
 
 public class Swerve extends SwerveDrivetrain implements Subsystem {
-    private static final double kSimLoopPeriod = 0.005; // 5 ms
-    private Notifier m_simNotifier = null;
-    private double m_lastSimTime;
+    private static final double kSimLoopPeriod = 0.005;
+    private Notifier simNotifier = null;
+    private double lastSimTime;
 
     private final SwerveRequest.ApplyChassisSpeeds AutoRequest = new SwerveRequest.ApplyChassisSpeeds();
 
@@ -41,17 +38,18 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     /* Keep track if we've ever applied the operator perspective before or not */
     private boolean hasAppliedOperatorPerspective = false;
 
-    public Swerve(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency, SwerveModuleConstants... modules) {
-        super(driveTrainConstants, OdometryUpdateFrequency, modules);
+    public Swerve(SwerveDrivetrainConstants driveTrainConstants, double odometryUpdateFrequency, SwerveModuleConstants... modules) {
+        super(driveTrainConstants, odometryUpdateFrequency, modules);
         configurePathPlanner();
-        if (Utils.isSimulation()) {
+        if(Utils.isSimulation()) {
             startSimThread();
         }
     }
+    
     public Swerve(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
         super(driveTrainConstants, modules);
         configurePathPlanner();
-        if (Utils.isSimulation()) {
+        if(Utils.isSimulation()) {
             startSimThread();
         }
     }
@@ -63,25 +61,17 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
         }
 
         AutoBuilder.configureHolonomic(
-            ()->this.getState().Pose, // Supplier of current robot pose
-            this::seedFieldRelative,  // Consumer for seeding pose against auto
+            () -> this.getState().Pose,
+            this::seedFieldRelative,
             this::getCurrentRobotChassisSpeeds,
-            (speeds)->this.setControl(AutoRequest.withSpeeds(speeds)), // Consumer of ChassisSpeeds to drive the robot
+            (speeds) -> this.setControl(AutoRequest.withSpeeds(speeds)),
             new HolonomicPathFollowerConfig(new PIDConstants(10, 0, 0),
                                             new PIDConstants(10, 0, 0),
                                             TunerConstants.kSpeedAt12VoltsMps,
                                             driveBaseRadius,
                                             new ReplanningConfig()),
-            () -> DriverStation.getAlliance().orElse(Alliance.Blue)==Alliance.Red, // Assume the path needs to be flipped for Red vs Blue, this is normally the case
-            this); // Subsystem for requirements
-    }
-
-    public Command getAutoPath(String pathName) {
-        return new PathPlannerAuto(pathName);
-    }
-
-    public Command autoPathPlan(Pose2d target) {
-        return AutoBuilder.pathfindToPose(target, new PathConstraints(0, 0, 0, 0)); //FIXME
+            () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
+            this);
     }
 
     public ChassisSpeeds getCurrentRobotChassisSpeeds() {
@@ -97,18 +87,18 @@ public class Swerve extends SwerveDrivetrain implements Subsystem {
     }
 
     private void startSimThread() {
-        m_lastSimTime = Utils.getCurrentTimeSeconds();
+        lastSimTime = Utils.getCurrentTimeSeconds();
 
         /* Run simulation at a faster rate so PID gains behave more reasonably */
-        m_simNotifier = new Notifier(() -> {
+        simNotifier = new Notifier(() -> {
             final double currentTime = Utils.getCurrentTimeSeconds();
-            double deltaTime = currentTime - m_lastSimTime;
-            m_lastSimTime = currentTime;
+            double deltaTime = currentTime - lastSimTime;
+            lastSimTime = currentTime;
 
             /* use the measured time delta, get battery voltage from WPILib */
             updateSimState(deltaTime, RobotController.getBatteryVoltage());
         });
-        m_simNotifier.startPeriodic(kSimLoopPeriod);
+        simNotifier.startPeriodic(kSimLoopPeriod);
     }
 
     @Override
