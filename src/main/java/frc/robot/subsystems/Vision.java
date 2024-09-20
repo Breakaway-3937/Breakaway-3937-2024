@@ -221,22 +221,16 @@ public class Vision extends SubsystemBase {
       }
     }
     else{
-      if(Robot.getRedAlliance()){
-        if(Robot.getFront()){
-          return PhotonUtils.getYawToPose(s_Swerve.getState().Pose, new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromDegrees(0))).rotateBy(Rotation2d.fromDegrees(180)).getDegrees() * 8.0 / 42.0;
-        }
-        else{
-          return PhotonUtils.getYawToPose(s_Swerve.getState().Pose, new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromDegrees(0))).getDegrees() * 8.0 / 42.0;
-        }
-      }
-      else{
-        if(Robot.getFront()){
-          return PhotonUtils.getYawToPose(s_Swerve.getState().Pose, new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromDegrees(0))).getDegrees() * 8.0 / 42.0;
-        }
-        else{
-          return PhotonUtils.getYawToPose(s_Swerve.getState().Pose, new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromDegrees(0))).rotateBy(Rotation2d.fromDegrees(180)).getDegrees() * 8.0 / 42.0;
-        }
-      }
+      return 0;
+    }
+  }
+
+  public Rotation2d getOdometryRotationSpeed(){
+    if(Robot.getFront()){
+      return PhotonUtils.getYawToPose(s_Swerve.getState().Pose, new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromDegrees(0)));
+    }
+    else{
+      return PhotonUtils.getYawToPose(s_Swerve.getState().Pose, new Pose2d(new Translation2d(targetX, targetY), Rotation2d.fromDegrees(0))).rotateBy(Rotation2d.fromDegrees(180));
     }
   }
 
@@ -266,17 +260,6 @@ public class Vision extends SubsystemBase {
     else{
       return 0;
     }
-  }
-
-  public double getAngleToAprilTag(){
-    double dub;
-    if(getNoteTargets()){
-      dub = getAprilTagRotationSpeed() / (0.8 / 9.0);
-    }
-    else{
-      dub = getAprilTagRotationSpeed();
-    }
-    return dub;
   }
 
   public boolean getNoteTargets(){
