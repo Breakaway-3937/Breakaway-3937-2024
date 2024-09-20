@@ -12,6 +12,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.utility.PhoenixPIDController;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import frc.robot.subsystems.Swerve;
@@ -20,7 +21,7 @@ import frc.robot.subsystems.Vision;
 public class Align extends Command {
     private final Swerve drivetrain;
     private final Vision vision;
-    private final CommandPS4Controller joystick;
+    private final Joystick joystick;
 
     private final SwerveRequest.FieldCentricFacingAngle swerveRequestFacing = new SwerveRequest.FieldCentricFacingAngle()
     .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
@@ -29,7 +30,7 @@ public class Align extends Command {
     .withVelocityY(0.0);
 
   /** Creates a new Align. */
-  public Align(Swerve drivetrain, Vision vision, CommandPS4Controller joystick) {
+  public Align(Swerve drivetrain, Vision vision, Joystick joystick) {
     this.drivetrain = drivetrain;
     this.vision = vision;
     this.joystick = joystick;
@@ -48,8 +49,8 @@ public class Align extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    drivetrain.setControl(swerveRequestFacing.withVelocityX(-joystick.getLeftY() * 5)
-                                             .withVelocityY(-joystick.getLeftX() * 5)
+    drivetrain.setControl(swerveRequestFacing.withVelocityX(-joystick.getRawAxis(joystick.getPort()) * 5)
+                                             .withVelocityY(-joystick.getRawAxis(joystick.getPort()) * 5)
                                              .withTargetDirection(Rotation2d.fromDegrees(vision.getAngleToAprilTag())));
   }
 
