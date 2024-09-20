@@ -5,7 +5,6 @@
 package frc.robot.subsystems;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
 
@@ -317,7 +316,6 @@ public class Vision extends SubsystemBase {
       debugField.getObject("EstimatedRobot").setPose(s_Swerve.getState().Pose);
     }
 
-
     // This method will be called once per scheduler run
     var frontResult = frontCamera.getLatestResult();
     if(frontResult.hasTargets()){
@@ -336,16 +334,13 @@ public class Vision extends SubsystemBase {
         }
 
         for(int i = 0; i < pose.get().targetsUsed.size(); i++){
-          //usedTagsFront = new Pose3d[pose.get().targetsUsed.size()];
           usedTagsFront[i] = frontPoseEstimator.getFieldTags().getTagPose(pose.get().targetsUsed.get(i).getFiducialId()).get();
         }
         
-        //Logger.recordOutput("Front Cam Used Tag", pose.get().targetsUsed.get(0).getFiducialId());
-        if(usedTagsFront != null) {
-          //Logger.recordOutput("Front Cam Used Tags", usedTagsFront);
-        }
+        Logger.recordOutput("Front Cam Used Tags", (usedTagsFront.length == 0) ? new Pose3d[]{new Pose3d(-1, -1, -1, new Rotation3d())} : usedTagsFront);
       }
     }
+
     var backResult = backCamera.getLatestResult();
     if(backResult.hasTargets() && DriverStation.isTeleopEnabled()){
       var pose = getBackEstimatedGlobalPose();
@@ -362,16 +357,10 @@ public class Vision extends SubsystemBase {
         }
 
         for(int i = 0; i < pose.get().targetsUsed.size(); i++){
-          //usedTagsBack = new Pose3d[pose.get().targetsUsed.size()];
           usedTagsBack[i] = backPoseEstimator.getFieldTags().getTagPose(pose.get().targetsUsed.get(i).getFiducialId()).get();
         }
 
-        if(usedTagsBack != null){
-          //Logger.recordOutput("Back Cam Used Tags", usedTagsBack);
-        }
-
-        //Logger.recordOutput("Back Cam Used Tag",); 
-        Logger.recordOutput("Back Cam Used Tags", usedTagsBack);
+        Logger.recordOutput("Back Cam Used Tags", (usedTagsBack.length == 0) ? new Pose3d[]{new Pose3d(-1, -1, -1, new Rotation3d())} : usedTagsBack);
       }
     }
 
