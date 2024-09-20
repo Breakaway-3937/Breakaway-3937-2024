@@ -26,7 +26,6 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -168,7 +167,7 @@ public class Shooter extends SubsystemBase {
       position = wristMap.get(Robot.robotContainer.s_Vision.getDistance() + wristOffset.getDouble(0));
     }
     if(!Robot.getFront()){
-      //position = 2 * 12.0033218 - position;
+      position = 2 * 12.0033218 - position;
     }
     if(position > 23){
       sixMoreSmidgens = true;
@@ -301,10 +300,6 @@ public class Shooter extends SubsystemBase {
     Logger.recordOutput("Shooter", getShooterVelocity() * 60.0);
     wristEncoderEntry.setDouble(getWrist());
     Logger.recordOutput("Wrist", getWrist());
-
-    if(DriverStation.isAutonomous()){
-      InstantCommand com = new InstantCommand(); //TODO Ask Ethan What this is
-    }
 
     if(!DriverStation.isAutonomous() && !RunElevator.deadShooter && !longShooting && !flag){
       flag1 = false;
