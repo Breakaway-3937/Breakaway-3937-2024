@@ -268,6 +268,17 @@ public class Vision extends SubsystemBase {
     }
   }
 
+  public double getAngleToAprilTag(){
+    double dub;
+    if(getNoteTargets()){
+      dub = getAprilTagRotationSpeed() / (0.8 / 9.0);
+    }
+    else{
+      dub = getAprilTagRotationSpeed();
+    }
+    return dub;
+  }
+
   public boolean getNoteTargets(){
     return noteCamera.getLatestResult().hasTargets();
   }
