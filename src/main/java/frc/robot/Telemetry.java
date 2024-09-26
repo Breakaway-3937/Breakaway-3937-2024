@@ -1,5 +1,8 @@
 package frc.robot;
 
+import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain.SwerveDriveState;
 
@@ -48,6 +51,7 @@ public class Telemetry {
     private double lastTime = Utils.getCurrentTimeSeconds();
 
     /* Mechanisms to represent the swerve module states */
+    @AutoLogOutput
     private final Mechanism2d[] moduleMechanisms = new Mechanism2d[] {
         new Mechanism2d(1, 1),
         new Mechanism2d(1, 1),
@@ -77,6 +81,8 @@ public class Telemetry {
     public void telemeterize(SwerveDriveState state) {
         /* Telemeterize the pose */
         Pose2d pose = state.Pose;
+        Logger.recordOutput("Robot Pose", pose);
+
         fieldTypePub.set("Field2d");
         fieldPub.set(new double[] {
             pose.getX(),
@@ -97,6 +103,11 @@ public class Telemetry {
         velocityX.set(velocities.getX());
         velocityY.set(velocities.getY());
         odomPeriod.set(state.OdometryPeriod);
+
+        Logger.recordOutput("Speed", velocities.getNorm());
+        Logger.recordOutput("Velocities X", velocities.getX());
+        Logger.recordOutput("Velocities Y", velocities.getY());
+        Logger.recordOutput("Odom Period", state.OdometryPeriod);
 
         /* Telemeterize the module's states */
         for (int i = 0; i < 4; ++i) {
