@@ -55,8 +55,8 @@ public class Vision extends SubsystemBase {
     private boolean frontPoseBad, backPoseBad = false;
     private static boolean addVisionMeasurement = false;
     private double ambiguity, targetYaw = Double.POSITIVE_INFINITY;
-    private Pose3d[] usedTagsFront;
-    private Pose3d[] usedTagsBack;
+    private Pose3d[] usedTagsFront = new Pose3d[32];
+    private Pose3d[] usedTagsBack = new Pose3d[32];
 
 
   /** Creates a new Vision. */
@@ -331,7 +331,7 @@ public class Vision extends SubsystemBase {
           usedTagsFront[i] = frontPoseEstimator.getFieldTags().getTagPose(pose.get().targetsUsed.get(i).getFiducialId()).get();
         }
         
-        Logger.recordOutput("Front Cam Used Tags", (usedTagsFront.length == 0) ? new Pose3d[]{new Pose3d(-1, -1, -1, new Rotation3d())} : usedTagsFront);
+        //Logger.recordOutput("Front Cam Used Tags", (usedTagsFront.length == 0) ? new Pose3d[]{new Pose3d(-1, -1, -1, new Rotation3d())} : usedTagsFront);
       }
     }
 
@@ -354,7 +354,7 @@ public class Vision extends SubsystemBase {
           usedTagsBack[i] = backPoseEstimator.getFieldTags().getTagPose(pose.get().targetsUsed.get(i).getFiducialId()).get();
         }
 
-        Logger.recordOutput("Back Cam Used Tags", (usedTagsBack.length == 0) ? new Pose3d[]{new Pose3d(-1, -1, -1, new Rotation3d())} : usedTagsBack);
+        //Logger.recordOutput("Back Cam Used Tags", (usedTagsBack.length == 0) ? new Pose3d[]{new Pose3d(-1, -1, -1, new Rotation3d())} : usedTagsBack);
       }
     }
 
